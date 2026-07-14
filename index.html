@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tomás Alcalde — Consultor de Negocio & BI | IA aplicada</title>
+<meta name="description" content="Consultor de Negocio & BI e IA aplicada. Retail y consumo masivo. SQL, Python, GCP, Power BI.">
+<style>
+  :root{
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:860px; margin:0 auto; padding:0 22px}
+
+  /* top bar */
+  .top{position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .brand{font-weight:700; letter-spacing:.2px}
+  .lang{display:flex; gap:4px; background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:3px}
+  .lang button{border:0; background:transparent; color:var(--muted); font-weight:600; font-size:13px; padding:5px 12px; border-radius:999px; cursor:pointer}
+  .lang button.on{background:var(--accent); color:#04121f}
+
+  /* hero */
+  header.hero{padding:56px 0 34px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 10px}
+  h1{font-size:clamp(30px,6vw,46px); line-height:1.1; margin:0 0 14px}
+  .lede{font-size:clamp(16px,2.4vw,19px); color:var(--muted); max-width:620px; margin:0 0 22px}
+  .cta{display:flex; flex-wrap:wrap; gap:10px}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; font-weight:600; font-size:14px; border:1px solid var(--line)}
+  .btn.primary{background:var(--accent); color:#04121f; border-color:transparent}
+  .btn.ghost{background:transparent; color:var(--ink)}
+
+  section{padding:34px 0; border-top:1px solid var(--line)}
+  h2{font-size:22px; margin:0 0 20px; display:flex; align-items:center; gap:10px}
+  h2::before{content:""; width:8px; height:22px; background:var(--accent); border-radius:3px; display:inline-block}
+
+  /* metrics */
+  .metrics{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px}
+  .metric{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px}
+  .metric .n{font-size:30px; font-weight:800; color:var(--teal); line-height:1}
+  .metric .l{color:var(--muted); font-size:13.5px; margin-top:8px}
+
+  /* experience */
+  .job{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:14px}
+  .job .h{display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px; align-items:baseline}
+  .job .role{font-weight:700; font-size:17px}
+  .job .co{color:var(--teal2); font-weight:600}
+  .job .when{color:var(--muted); font-size:13px; white-space:nowrap}
+  .job ul{margin:12px 0 0; padding-left:18px; color:var(--muted)}
+  .job li{margin:5px 0}
+
+  /* projects */
+  .proj{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; display:flex; flex-direction:column}
+  .card h3{margin:0 0 8px; font-size:17px}
+  .card p{color:var(--muted); font-size:14.5px; margin:0 0 14px; flex:1}
+  .tag{display:inline-block; font-size:12px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:3px 10px; margin:0 6px 6px 0}
+  .lock{font-size:12px; color:var(--muted)}
+
+  /* skills */
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{background:var(--chip); border:1px solid var(--line); border-radius:8px; padding:6px 12px; font-size:13.5px; font-weight:500}
+
+  footer{padding:38px 0 50px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+  footer a{font-weight:600}
+  .contact{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px}
+
+  [data-en]{display:none}
+  html[lang="en"] [data-es]{display:none}
+  html[lang="en"] [data-en]{display:revert}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <span class="brand">Tomás Alcalde</span>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="es" class="on" onclick="setLang('es')">ES</button>
+      <button id="en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">
+      <span data-es>Consultor de Negocio · BI · IA aplicada</span>
+      <span data-en>Business Consultant · BI · Applied AI</span>
+    </p>
+    <h1>
+      <span data-es>Datos que se convierten en decisiones de negocio.</span>
+      <span data-en>Data turned into business decisions.</span>
+    </h1>
+    <p class="lede">
+      <span data-es>Ingeniero civil industrial (UC) con 4+ años en analítica, BI e ingeniería de datos para retail y consumo masivo. Traduzco datos en resultados operacionales medibles, y aplico IA para amplificar el análisis.</span>
+      <span data-en>Industrial engineer (PUC Chile) with 4+ years in analytics, BI and data engineering for retail and consumer goods. I turn data into measurable operational results, and apply AI to amplify analysis.</span>
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="mailto:talcaldeg@gmail.com">✉ <span data-es>Contáctame</span><span data-en>Contact me</span></a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/tomas-alcalde-gdm" target="_blank" rel="noopener">in · LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/talcaldeg" target="_blank" rel="noopener">⌥ GitHub</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2><span data-es>Impacto</span><span data-en>Impact</span></h2>
+    <div class="metrics">
+      <div class="metric"><div class="n">80%</div><div class="l"><span data-es>menos tiempo en formalización de exportaciones</span><span data-en>less time formalizing exports</span></div></div>
+      <div class="metric"><div class="n">95%</div><div class="l"><span data-es>reducción de pérdidas de stock vehicular</span><span data-en>reduction in vehicle stock losses</span></div></div>
+      <div class="metric"><div class="n">60%</div><div class="l"><span data-es>menos tiempo en tiempos de entrega</span><span data-en>shorter delivery times</span></div></div>
+      <div class="metric"><div class="n">+10-15%</div><div class="l"><span data-es>eficiencia de carga por contenedor</span><span data-en>load efficiency per container</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span data-es>Experiencia</span><span data-en>Experience</span></h2>
+
+    <div class="job">
+      <div class="h">
+        <div><span class="role"><span data-es>Líder de Planificación Comercial & BI</span><span data-en>Commercial Planning & BI Lead</span></span> · <span class="co">St. Andrews</span></div>
+        <span class="when">Sept 2025 — <span data-es>actualidad</span><span data-en>present</span></span>
+      </div>
+      <ul>
+        <li data-es>Lidero la planificación comercial y el BI de uno de los mayores exportadores de mejillón del mundo.</li>
+        <li data-en>Lead commercial planning and BI for one of the world's largest mussel exporters.</li>
+        <li data-es>Reduje 80% el tiempo de formalización de exportaciones (de 10 a 2 HH) y mejoré 10-15% la eficiencia de carga por contenedor.</li>
+        <li data-en>Cut export-formalization time by 80% (10→2 man-hours) and improved load efficiency per container by 10-15%.</li>
+        <li data-es>Stack: SQL Server, Power Query, Power BI (DAX), Excel avanzado.</li>
+        <li data-en>Stack: SQL Server, Power Query, Power BI (DAX), advanced Excel.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="h">
+        <div><span class="role"><span data-es>Ingeniero de Abastecimiento Senior</span><span data-en>Senior Supply Chain Engineer</span></span> · <span class="co">Americar</span></div>
+        <span class="when">Nov 2023 — Nov 2024</span>
+      </div>
+      <ul>
+        <li data-es>Retail automotriz (cadena líder de vehículos usados en Chile): modelos de control de gestión e ingeniería de datos.</li>
+        <li data-en>Automotive retail (leading used-car chain in Chile): management-control models and data engineering.</li>
+        <li data-es>Eliminé 95% de las pérdidas de stock vehicular y reduje 60% los tiempos de entrega.</li>
+        <li data-en>Eliminated 95% of vehicle stock losses and reduced delivery times by 60%.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="h">
+        <div><span class="role"><span data-es>Ingeniero de Desarrollo Logístico</span><span data-en>Logistics Development Engineer</span></span> · <span class="co">Sodimac (Grupo Falabella)</span></div>
+        <span class="when">Ago 2021 — Nov 2023</span>
+      </div>
+      <ul>
+        <li data-es>Analítica e ingeniería de datos en GCP (BigQuery, Dataform, Cloud Functions) para operación logística en 7 países.</li>
+        <li data-en>Analytics and data engineering on GCP (BigQuery, Dataform, Cloud Functions) for logistics across 7 countries.</li>
+        <li data-es>+3 pp en entregas a tiempo; dashboards multi-país para toma de decisiones.</li>
+        <li data-en>+3 pp on-time deliveries; multi-country dashboards for decision-making.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span data-es>Proyectos</span><span data-en>Projects</span></h2>
+    <div class="proj">
+      <div class="card">
+        <h3>gaia-agent</h3>
+        <p>
+          <span data-es>Agente de IA (smolagents CodeAgent, multi-proveedor) desarrollado para el HF Agents Course. Certificado obtenido superando el benchmark GAIA nivel 1.</span>
+          <span data-en>AI agent (smolagents CodeAgent, multi-provider) built for the HF Agents Course. Certificate earned by passing the GAIA level-1 benchmark.</span>
+        </p>
+        <div>
+          <span class="tag">Python</span><span class="tag">smolagents</span><span class="tag">LLM</span>
+        </div>
+        <a class="btn ghost" href="https://github.com/talcaldeg/gaia-agent" target="_blank" rel="noopener" style="margin-top:12px">
+          <span data-es>Ver en GitHub</span><span data-en>View on GitHub</span> →
+        </a>
+      </div>
+      <div class="card">
+        <h3><span data-es>Plataforma de datos — clínica veterinaria</span><span data-en>Data platform — veterinary clinic</span></h3>
+        <p>
+          <span data-es>Consultoría de datos: pipelines ELT en GCP/BigQuery que consolidan múltiples fuentes operacionales y financieras en tableros para decisiones de negocio.</span>
+          <span data-en>Data consulting: ELT pipelines on GCP/BigQuery consolidating multiple operational and financial sources into business dashboards.</span>
+        </p>
+        <div>
+          <span class="tag">GCP</span><span class="tag">BigQuery</span><span class="tag">Looker Studio</span><span class="tag">Python</span>
+        </div>
+        <span class="lock" style="margin-top:12px">🔒 <span data-es>Proyecto de cliente — código privado</span><span data-en>Client project — private codebase</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span data-es>Herramientas</span><span data-en>Toolkit</span></h2>
+    <div class="chips">
+      <span class="chip">SQL</span>
+      <span class="chip">Python</span>
+      <span class="chip">GCP · BigQuery</span>
+      <span class="chip">Dataform</span>
+      <span class="chip">Cloud Functions</span>
+      <span class="chip">Power BI · DAX</span>
+      <span class="chip">Looker Studio</span>
+      <span class="chip">Power Query</span>
+      <span class="chip">ETL / ELT</span>
+      <span class="chip">Git</span>
+      <span class="chip">Excel<span data-en> (advanced)</span><span data-es> avanzado</span></span>
+      <span class="chip"><span data-es>Agentes de IA</span><span data-en>AI agents</span></span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2 style="border:0;padding:0;margin-bottom:16px"><span data-es>Conversemos</span><span data-en>Let's talk</span></h2>
+    <div class="contact">
+      <a class="btn primary" href="mailto:talcaldeg@gmail.com">✉ talcaldeg@gmail.com</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/tomas-alcalde-gdm" target="_blank" rel="noopener">in · LinkedIn</a>
+      <a class="btn ghost" href="https://github.com/talcaldeg" target="_blank" rel="noopener">⌥ GitHub</a>
+    </div>
+    <p>
+      <span data-es>Tomás Alcalde Gueneau de Mussy · Ingeniero Civil Industrial, Pontificia Universidad Católica de Chile · Santiago, Chile</span>
+      <span data-en>Tomás Alcalde Gueneau de Mussy · Industrial Engineer, Pontificia Universidad Católica de Chile · Santiago, Chile</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+  function setLang(l){
+    document.documentElement.lang = l;
+    document.getElementById('es').classList.toggle('on', l==='es');
+    document.getElementById('en').classList.toggle('on', l==='en');
+    try{ localStorage.setItem('lang', l); }catch(e){}
+  }
+  (function(){
+    var saved;
+    try{ saved = localStorage.getItem('lang'); }catch(e){}
+    var l = saved || (navigator.language||'es').slice(0,2);
+    setLang(l==='en'?'en':'es');
+  })();
+</script>
+</body>
+</html>
