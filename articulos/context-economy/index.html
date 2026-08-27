@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What makes an agent expensive is not what it does, it is what it remembers | Tomás Alcalde</title>
+<meta name="description" content="313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there. The numbers, the charts and the pattern that cuts it.">
+<meta property="og:title" content="What makes an agent expensive is not what it does, it is what it remembers">
+<meta property="og:description" content="313 sessions and 2.36 billion tokens of real work: 94 % of the spend is re-reading context that is already there.">
+<meta property="og:type" content="article">
+<link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
+<link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/context-economy/">
+<style>
+  :root{
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
+             border-radius:12px; padding:10px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px; margin:26px 0 32px}
+  .cifra{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .cifra .n{font-size:27px; font-weight:800; color:var(--teal); line-height:1}
+  .cifra .l{color:var(--muted); font-size:13px; margin-top:7px; line-height:1.45}
+
+  table{width:100%; border-collapse:collapse; margin:22px 0 26px; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line)}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <a class="otro" href="../economia-de-contexto/">Leer en español</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Context economy</p>
+  <h1>What makes an agent expensive is not what it does, it is what it remembers</h1>
+  <p class="lede">313 real working sessions with a coding agent, 2.36 billion tokens. 94 % of
+  that went into re-reading old conversation. Here are the numbers, and what I did about them.</p>
+  <p class="meta">August 2026 · Tomás Alcalde · 8 min read</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>The bill started to hurt before I understood why. The work was the usual: queries against a
+production database, reports, some automation, email. Nothing that sounded expensive. But the
+consumption kept climbing and it did not match the feeling of asking for very little.</p>
+
+<p>So I measured it. Coding agents store every session as a <code>.jsonl</code> file on disk,
+with the token accounting of each call to the model. They are sitting right there, for free,
+and almost nobody opens them. I wrote two scripts that read those files and answer two
+different questions: <em>how much did each session spend</em>, and <em>which specific call
+inflated the context</em>. What came out changed how I work, and it forced me to correct a rule
+I had written down wrong myself.</p>
+
+<div class="cifras">
+  <div class="cifra"><div class="n">313</div><div class="l">sessions measured, the 120 days before 27 August 2026</div></div>
+  <div class="cifra"><div class="n">2.36 B</div><div class="l">tokens consumed in total</div></div>
+  <div class="cifra"><div class="n">94 %</div><div class="l">of that total is re-reading context already accumulated</div></div>
+  <div class="cifra"><div class="n">0.8 %</div><div class="l">is what the model actually wrote</div></div>
+</div>
+
+<h2>First: what you pay for is not the work</h2>
+
+<p>The natural intuition is that an agent costs in proportion to what it produces. It is exactly
+the other way around. Out of 2.36 billion tokens, what the model wrote (the code, the answers,
+the analysis) came to 19 million. Less than one percent.</p>
+
+<figure>
+  <img src="img/reparto.png" alt="Stacked bar: 94.4 % re-reading accumulated context, 4.8 % new context, 0.8 % output.">
+  <figcaption>The 2.36 billion tokens split by type. The red band is <code>cache_read</code>:
+  context that was already there and gets read again on every turn.</figcaption>
+</figure>
+
+<p>The reason is structural, and it holds for any conversational agent, not just this one.
+Models have no memory between calls: on every turn the whole conversation is sent again. Turn
+40 means reading the previous 39 turns one more time. Prompt caching makes that re-reading a
+lot cheaper, but it does not remove it, and above all it does not change the fact that the
+amount grows on its own while you work.</p>
+
+<h2>The mechanism: the same work, more expensive each time</h2>
+
+<p>This is the chart that organised the diagnosis. I took the 45 sessions longer than 120
+turns, split each one into ten equal stretches, and averaged how much context the model read in
+each stretch.</p>
+
+<figure>
+  <img src="img/deriva.png" alt="Rising curve: context per turn goes from 69k in the first tenth to 200k in the last.">
+  <figcaption>Context read on each turn, by progress through the session. Average of 45 long
+  sessions. The last stretch costs 2.9 times the first one, doing the same kind of work.</figcaption>
+</figure>
+
+<p>A session starts out reading around 69 thousand tokens per turn and ends reading 200
+thousand. Nobody asked for anything bigger at the end than at the beginning. It is the same
+question, with more history behind it.</p>
+
+<p>Averaged over the whole curve: each turn of a long session costs close to twice what that
+same turn would cost with the session freshly started. That is the tax, and it is paid without
+ever showing up anywhere as a separate line.</p>
+
+<h2>What I believed, and got wrong</h2>
+
+<p>After the first measurement I wrote down a rule that sounded right: <em>cost grows with the
+square of session length</em>. The reasoning was clean. If context grows linearly with turns
+and every turn re-reads all of it, the sum is quadratic. A 300-turn session should cost five
+times what four 75-turn sessions cost.</p>
+
+<p>When I fitted the curve against the 313 real sessions, the exponent did not come out at 2.
+It came out at 1.20.</p>
+
+<figure>
+  <img src="img/curva.png" alt="Log-log scatter of tokens per session against turns, with a fit of exponent 1.20 and R² 0.97.">
+  <figcaption>Each dot is a session. On a log scale a power law shows up as a straight line and
+  the slope is the exponent. Fit over 313 sessions, R² 0.97.</figcaption>
+</figure>
+
+<p>The gap between 2 and 1.2 is not a blackboard detail, it changes the recommendation. At
+exponent 2, splitting one long session into ten saves 90 %. At 1.2 it saves about a third.
+Still a lot, and a third of the bill is a third of the bill, but it is a different conversation.</p>
+
+<p>Why did the theory overshoot? Two things it ignored. There is a large fixed floor: the first
+call of every session already starts at 59 thousand tokens on median, before you type anything,
+because the preamble with the project instructions and the tool definitions always travels.
+That floor is paid by every session, short or long, and it dilutes the part that grows. And
+long sessions do not grow forever either: they hit the context window and the history gets
+compacted.</p>
+
+<div class="destacado"><p>I am leaving this in because it is the part that normally does not get
+published: the rule I was applying came from correct reasoning on an incomplete assumption. The
+number corrected it. A mental model that nobody checks against their own data turns into
+technical folklore fairly quickly.</p></div>
+
+<h2>Where the volume comes from</h2>
+
+<p>Knowing that you pay for re-reading does not tell you what to stop reading. That is what the
+second measurement is for, and it is the one that actually drives decisions.</p>
+
+<p>Every tool result (the contents of a file, the output of a command, an email search) enters
+the context and stays there. Its real cost is not its tokens: it is its tokens multiplied by
+the turns that came after it. A 20-thousand-token dump on turn 3 of an 80-turn session costs
+more than a 100-thousand-token one on the last turn. I call that <strong>carry</strong>, and
+sorting by that column instead of by size completely rearranges the list of culprits.</p>
+
+<figure>
+  <img src="img/arrastre.png" alt="Horizontal bars: reading whole files 54 %, shell commands 28 %, connectors 7 % and 5 %, the rest 3 %, filtered search 2 %.">
+  <figcaption>380 million tokens of carry over the window measured, split by type of call.
+  Reading whole files takes more than half.</figcaption>
+</figure>
+
+<p>54 % is reading whole files. And inside that, the biggest surprise: a good part of it was not
+code files but <strong>the agent's own memory files</strong>. The notes you accumulate so the
+assistant knows how the business works. Every time one of those notes becomes relevant it gets
+loaded in full, and the ones I had let grow unchecked were over 9 thousand tokens each. The
+system that existed to make the agent more efficient was the main source of variable cost.</p>
+
+<h2>The pattern: filter before it enters, not after</h2>
+
+<p>All of the above converges on a single operating rule, and it is boringly simple:
+<strong>whatever enters the context is paid for many times, so it has to be filtered before it
+gets in</strong>. Not afterwards, not by summarising it on the next turn. Once the file is
+inside, the damage is done for the rest of the session.</p>
+
+<p>In practice that meant writing a thin filtered-reading layer. A reader that searches by
+regular expression with surrounding context, with a hard character cap on what reaches the
+screen and the full content dumped to a temporary file in case it is needed. It is very little
+code and has no intellectual charm whatsoever. The effect does:</p>
+
+<table>
+  <tr><th>Listing the last six emails</th><th class="num">tokens entering the context</th></tr>
+  <tr><td>Standard mail connector</td><td class="num">2,730 (average of 190 calls)</td></tr>
+  <tr><td>Local filtered reader</td><td class="num">258</td></tr>
+</table>
+
+<p>An order of magnitude, for the same data on screen. And because the saving multiplies across
+every turn that comes after, in a 100-turn session that single decision is around 250 thousand
+tokens you never pay.</p>
+
+<p>The other three that stuck as habits, in order of how much they returned:</p>
+
+<ul>
+  <li><strong>A new session per topic.</strong> By far the biggest lever, and the hardest one to
+  obey, because the accumulated context always looks like it is about to be useful. It almost
+  never is, and it is paid in full on every turn until the end. In my data, the 142 sessions of
+  30 turns or fewer are 45 % of all sessions and 7 % of the spend; the 20 longest take 39 %.</li>
+  <li><strong>Large outputs go to a file, never into the conversation.</strong> A report, a table
+  dump, a log: to disk, and into the conversation only the summary or a <code>head</code>. I
+  found a single tool result of 132 thousand tokens in one turn; that poisons everything that
+  follows.</li>
+  <li><strong>Search instead of read.</strong> <code>grep</code> with line numbers and then the
+  exact range, rather than opening the whole file to change three lines. Broad searches go to a
+  subagent, which works in its own context and returns only the conclusion.</li>
+</ul>
+
+<p>One I evaluated and dropped: compacting the history pre-emptively at half the window. It does
+save, but it compresses exactly the fine detail (precise figures, file state) and in work with
+production data that detail is the one thing I cannot afford to lose to a mediocre summary. It
+also treats the symptom. If a session is getting heavy, ending it and opening another beats
+summarising it blind.</p>
+
+<h2>How to measure your own</h2>
+
+<p>None of this needs special instrumentation or a vendor that hands you telemetry. The
+transcripts are on your disk and they carry the <code>usage</code> block of every call, with
+input, output and tokens read from cache. A two-hundred-line script walks them and builds the
+session ranking. Another one attributes each tool result to its call and multiplies it by the
+turns that followed.</p>
+
+<p>What matters is not the script but the order of the questions, and there are three:</p>
+
+<ol>
+  <li>What share of the spend is re-reading rather than producing? (If you get less than 80 %,
+  check the measurement.)</li>
+  <li>How much does context per turn grow within a single session, start to finish? That is the
+  tax, and it is what decides whether cutting sessions is worth it.</li>
+  <li>Which specific calls carry the most? That is your list of things to learn to read
+  filtered.</li>
+</ol>
+
+<p>Mine are published in the repository along with the script that generates these four charts,
+with a fixed cut-off date so the window is reproducible rather than drifting every time it runs.</p>
+
+<h2>Why this matters outside my machine</h2>
+
+<p>These measurements come from one person working at a company in southern Chile. They are not
+a study. But the mechanism does not depend on scale, and the companies that started putting
+agents to real work this year are going to run into the same thing when the first bill arrives
+that does not match the intuition.</p>
+
+<p>What I take away is that context discipline looks far more like 1990s memory management than
+like prompt engineering. It is not about writing better instructions. It is about deciding,
+deliberately and sometimes painfully, what does <em>not</em> get in.</p>
+
+<p>And about measuring it, because whoever does not measure their context ends up paying to read it.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · business and BI consultant, applied AI for operations.
+  <a href="../../">Back to home</a></p>
+</div></footer>
+
+</body>
+</html>
