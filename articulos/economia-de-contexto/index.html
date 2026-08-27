@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lo caro de un agente no es lo que hace, es lo que recuerda | Tomás Alcalde</title>
+<meta name="description" content="336 sesiones y 2.423 millones de tokens de trabajo real con un agente de código: el 94 % del gasto es releer contexto ya acumulado. Los números, los gráficos y el patrón que lo corta.">
+<meta property="og:title" content="Lo caro de un agente no es lo que hace, es lo que recuerda">
+<meta property="og:description" content="336 sesiones y 2.423 millones de tokens de trabajo real: el 94 % del gasto es releer contexto ya acumulado.">
+<meta property="og:type" content="article">
+<style>
+  :root{
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
+             border-radius:12px; padding:10px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px; margin:26px 0 32px}
+  .cifra{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .cifra .n{font-size:27px; font-weight:800; color:var(--teal); line-height:1}
+  .cifra .l{color:var(--muted); font-size:13px; margin-top:7px; line-height:1.45}
+
+  table{width:100%; border-collapse:collapse; margin:22px 0 26px; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line)}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <span style="color:var(--muted);font-size:14px">Artículos</span>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Economía de contexto</p>
+  <h1>Lo caro de un agente no es lo que hace, es lo que recuerda</h1>
+  <p class="lede">336 sesiones de trabajo real con un agente de código, 2.423 millones de
+  tokens. El 94 % se fue en releer conversación vieja. Estos son los números, y lo que hice
+  con ellos.</p>
+  <p class="meta">Agosto de 2026 · Tomás Alcalde · lectura de 8 minutos</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>La cuenta empezó a doler antes de que yo entendiera por qué. El trabajo era el mismo de
+siempre: consultas a una base de producción, reportes, algo de automatización, correo. Nada
+que sonara caro. Pero el consumo subía y no calzaba con la sensación de estar pidiendo poco.</p>
+
+<p>Así que me puse a medir. Los agentes de código guardan cada sesión como un archivo
+<code>.jsonl</code> en el disco, con el detalle de tokens de cada llamada al modelo. Están
+ahí, gratis, y casi nadie los abre. Escribí dos scripts que los leen y responden dos preguntas
+distintas: <em>cuánto gastó cada sesión</em> y <em>qué llamada concreta infló el contexto</em>.
+Lo que salió me hizo cambiar cómo trabajo, y de paso me obligó a corregir una regla que yo
+mismo había escrito mal.</p>
+
+<div class="cifras">
+  <div class="cifra"><div class="n">336</div><div class="l">sesiones medidas, 120 días de trabajo real</div></div>
+  <div class="cifra"><div class="n">2.423 M</div><div class="l">tokens consumidos en total</div></div>
+  <div class="cifra"><div class="n">94 %</div><div class="l">de ese total es releer contexto ya acumulado</div></div>
+  <div class="cifra"><div class="n">0,8 %</div><div class="l">es lo que el modelo escribió</div></div>
+</div>
+
+<h2>Primero: lo que se paga no es el trabajo</h2>
+
+<p>La intuición natural es que un agente cuesta según lo que produce. Es exactamente al revés.
+De 2.423 millones de tokens, lo que el modelo escribió (el código, las respuestas, los
+análisis) fueron 19,5 millones. Menos del uno por ciento.</p>
+
+<figure>
+  <img src="img/reparto.png" alt="Barra apilada: 94,4 % releer contexto acumulado, 4,8 % contexto nuevo, 0,8 % output.">
+  <figcaption>Los 2.423 millones de tokens repartidos por tipo. La franja roja es
+  <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno.</figcaption>
+</figure>
+
+<p>La razón es estructural y vale para cualquier agente conversacional, no solo para este.
+Los modelos no tienen memoria entre llamadas: en cada turno se les vuelve a mandar la
+conversación completa. Turno 40 significa leer otra vez los 39 turnos anteriores. El caché de
+prompts abarata esa relectura bastante, pero no la elimina, y sobre todo no cambia el hecho de
+que la cantidad crece sola mientras usted trabaja.</p>
+
+<h2>El mecanismo: el mismo trabajo, más caro cada vez</h2>
+
+<p>Este es el gráfico que ordenó el diagnóstico. Tomé las 46 sesiones de más de 120 turnos,
+partí cada una en diez tramos iguales y promedié cuánto contexto leyó el modelo en cada tramo.</p>
+
+<figure>
+  <img src="img/deriva.png" alt="Curva creciente: el contexto por turno pasa de 69k en el primer décimo a 198k en el último.">
+  <figcaption>Contexto leído en cada turno, según el avance de la sesión. Promedio de 46 sesiones
+  largas. El último tramo cuesta 2,9 veces lo que el primero, haciendo el mismo tipo de trabajo.</figcaption>
+</figure>
+
+<p>Una sesión arranca leyendo unos 69 mil tokens por turno y termina leyendo 198 mil. Nadie
+pidió nada más grande al final que al principio. Es la misma pregunta, con más historia detrás.</p>
+
+<p>Promediando la curva completa: cada turno de una sesión larga cuesta cerca del doble de lo
+que costaría ese mismo turno recién empezada la sesión. Ese es el impuesto, y se paga sin que
+aparezca en ninguna parte como una línea aparte.</p>
+
+<h2>Lo que yo creía, y estaba mal</h2>
+
+<p>Cuando hice la primera medición dejé escrita en mis notas una regla que sonaba bien: <em>el
+costo crece con el cuadrado de la duración de la sesión</em>. El razonamiento era limpio. Si el
+contexto crece linealmente con los turnos y cada turno lo relee entero, la suma es cuadrática.
+Una sesión de 300 turnos debería costar cinco veces lo que cuestan cuatro sesiones de 75.</p>
+
+<p>Al ajustar la curva contra las 336 sesiones reales, el exponente no dio 2. Dio 1,20.</p>
+
+<figure>
+  <img src="img/curva.png" alt="Dispersión log-log de tokens por sesión contra turnos, con ajuste de exponente 1,20 y R² 0,97.">
+  <figcaption>Cada punto es una sesión. En escala logarítmica una potencia se ve como una recta:
+  la pendiente es el exponente. Ajuste sobre 336 sesiones, R² 0,97.</figcaption>
+</figure>
+
+<p>La diferencia entre 2 y 1,2 no es un detalle de pizarra, cambia la recomendación. Con
+exponente 2, partir una sesión larga en diez ahorra el 90 %. Con 1,2 ahorra alrededor de un
+tercio. Sigue siendo mucho, y un tercio de la cuenta es un tercio de la cuenta, pero es otra
+conversación.</p>
+
+<p>¿Por qué el modelo teórico se pasó de largo? Por dos cosas que la teoría ignoraba. Hay un
+piso fijo grande: la primera llamada de cada sesión ya arranca en 59 mil tokens de mediana,
+antes de que uno escriba nada, porque el preámbulo con las instrucciones del proyecto y las
+definiciones de herramientas viaja siempre. Ese piso se paga en toda sesión, corta o larga, y
+diluye la parte que crece. Y las sesiones largas tampoco crecen para siempre:
+chocan con el límite de la ventana y el historial se compacta.</p>
+
+<div class="destacado"><p>Lo dejo escrito porque es la parte que normalmente no se publica:
+la regla que yo estaba aplicando venía de un razonamiento correcto sobre un supuesto falso. El
+número la corrigió. Un modelo mental que nadie contrasta contra datos propios se vuelve
+folklore técnico bastante rápido.</p></div>
+
+<h2>De dónde sale el volumen</h2>
+
+<p>Saber que se paga por releer no dice qué es lo que hay que dejar de leer. Para eso hice la
+segunda medición, que es la que de verdad sirve para tomar decisiones.</p>
+
+<p>Cada resultado de una herramienta (el contenido de un archivo, la salida de un comando, una
+búsqueda de correo) entra al contexto y se queda ahí. Su costo real no son sus tokens: son
+sus tokens multiplicados por los turnos que vinieron después. Un volcado de 20 mil tokens en el
+turno 3 de una sesión de 80 sale más caro que uno de 100 mil en el último turno. A eso le
+llamo <strong>arrastre</strong>, y ordenar por esa columna en vez de por tamaño cambia por
+completo el ranking de culpables.</p>
+
+<figure>
+  <img src="img/arrastre.png" alt="Barras horizontales: leer archivos enteros 54 %, comandos de shell 29 %, conectores 6 % y 5 %, resto 3 %, búsqueda filtrada 2 %.">
+  <figcaption>387 millones de tokens de arrastre en 120 días, repartidos por tipo de llamada.
+  Leer archivos completos se lleva más de la mitad.</figcaption>
+</figure>
+
+<p>El 54 % es leer archivos enteros. Y dentro de eso, la mayor sorpresa: buena parte no eran
+archivos de código, sino <strong>los archivos de memoria del propio agente</strong>. Las notas
+que uno acumula para que el asistente sepa cómo funciona el negocio. Cada vez que una de esas
+notas se vuelve relevante se carga completa, y las que había dejado crecer sin control pasaban
+de 9 mil tokens cada una. El sistema que existía para hacer al agente más eficiente era la
+principal fuente de gasto variable.</p>
+
+<h2>El patrón: filtrar antes de traer, no después</h2>
+
+<p>Todo lo anterior converge en una sola regla operativa, y es aburridamente simple: <strong>lo
+que entra al contexto se paga muchas veces, así que hay que filtrarlo antes de que entre</strong>.
+No después, no resumiéndolo en el turno siguiente. Cuando el archivo ya está adentro, el
+daño está hecho para todo el resto de la sesión.</p>
+
+<p>En la práctica eso significó escribir una capa fina de lectura filtrada. Un lector que
+busca por expresión regular con contexto, con un tope duro de caracteres a pantalla y el
+contenido completo volcado a un archivo temporal por si hace falta. Es poco código y no tiene
+ninguna gracia intelectual. El efecto sí:</p>
+
+<table>
+  <tr><th>Listar los últimos seis correos</th><th class="num">tokens que entran al contexto</th></tr>
+  <tr><td>Conector de correo estándar</td><td class="num">2.730 (promedio de 190 llamadas)</td></tr>
+  <tr><td>Lector local filtrado</td><td class="num">258</td></tr>
+</table>
+
+<p>Un orden de magnitud, para el mismo dato en pantalla. Y como el ahorro se multiplica por
+todos los turnos que vengan después, en una sesión de 100 turnos esa sola decisión son unos
+250 mil tokens que no se pagan.</p>
+
+<p>Las otras tres que quedaron como hábito, en orden de cuánto rindieron:</p>
+
+<ul>
+  <li><strong>Sesión nueva por tema.</strong> La palanca más grande, con diferencia, y la que
+  más cuesta obedecer porque siempre parece que el contexto acumulado va a servir. Casi nunca
+  sirve, y se paga entero en cada turno hasta el final. En mis datos, las 155 sesiones de 30
+  turnos o menos son el 46 % de las sesiones y el 8 % del gasto; las 20 más largas se llevan
+  el 38 %.</li>
+  <li><strong>Las salidas grandes van a archivo, nunca a la conversación.</strong> Un reporte,
+  un volcado de tabla, un log: al disco, y a la conversación el resumen o un <code>head</code>.
+  Llegué a encontrar un resultado de 132 mil tokens en un solo turno; eso envenena todo lo que
+  venga después.</li>
+  <li><strong>Buscar en vez de leer.</strong> <code>grep</code> con número de línea y después
+  el rango exacto, en lugar de abrir el archivo completo para cambiar tres líneas. Las
+  búsquedas amplias van a un subagente, que trabaja en su propio contexto y devuelve solo la
+  conclusión.</li>
+</ul>
+
+<p>Hay una que evalué y descarté: compactar el historial de forma preventiva al llegar a la
+mitad de la ventana. Ahorra, sí, pero comprime justo el detalle fino (cifras exactas, estado
+de los archivos) y en trabajo con datos de producción ese detalle es lo único que no puedo
+permitirme perder por una síntesis mediocre. Además ataca el síntoma. Si la sesión se está
+poniendo pesada, terminarla y abrir otra sale mejor que resumirla a ciegas.</p>
+
+<h2>Cómo medirlo en su operación</h2>
+
+<p>Nada de esto necesita instrumentación especial ni un proveedor que le entregue telemetría.
+Los transcripts están en su disco y traen el bloque <code>usage</code> de cada llamada, con
+input, output y tokens leídos de caché. Un script de doscientas líneas los recorre y le arma
+el ranking de sesiones. Otro atribuye cada resultado de herramienta a su llamada y lo
+multiplica por los turnos posteriores.</p>
+
+<p>Lo importante no es el script sino el orden de las preguntas, y son tres:</p>
+
+<ol>
+  <li>¿Qué proporción del gasto es relectura y no producción? (Si le da menos de 80 %, revise
+  la medición.)</li>
+  <li>¿Cuánto crece el contexto por turno dentro de una misma sesión, de principio a fin? Ése
+  es el impuesto, y es el que decide si conviene cortar sesiones.</li>
+  <li>¿Qué llamadas concretas tienen más arrastre? Ahí está la lista de cosas que hay que
+  aprender a leer filtradas.</li>
+</ol>
+
+<p>Los míos están publicados en el repositorio junto con el script que genera estos cuatro
+gráficos, para que los números se puedan recalcular y ver si el patrón aguanta en otra
+operación.</p>
+
+<h2>Por qué importa fuera de mi máquina</h2>
+
+<p>Estas mediciones salen de una sola persona trabajando en una empresa del sur de Chile. No son
+un estudio. Pero el mecanismo no depende de la escala, y las empresas que este año empezaron a
+poner agentes a trabajar en serio se van a topar con lo mismo cuando llegue la primera factura
+que no calza con la intuición.</p>
+
+<p>La conclusión que me llevo es que la disciplina de contexto se parece mucho más a la gestión
+de memoria de los años noventa que a la ingeniería de prompts. No se trata de escribir mejores
+instrucciones. Se trata de decidir, con criterio y a veces con dolor, qué es lo que
+<em>no</em> entra.</p>
+
+<p>Y de medirlo, porque el que no mide su contexto termina pagando por leerlo.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · consultor de negocio y BI, IA aplicada a operaciones.
+  <a href="../../">Volver al inicio</a></p>
+</div></footer>
+
+</body>
+</html>
