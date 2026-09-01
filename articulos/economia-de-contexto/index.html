@@ -10,6 +10,117 @@
 <meta property="og:type" content="article">
 <link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
 <link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/context-economy/">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
+<link rel="alternate" hreflang="x-default" href="https://talcaldeg.github.io/articulos/context-economy/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/economia-de-contexto/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/economia-de-contexto/img/reparto.png">
+<meta property="article:published_time" content="2026-08-27">
+<meta property="article:author" content="Tomás Alcalde">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lo caro de un agente no es lo que hace, es lo que recuerda">
+<meta name="twitter:description" content="313 sesiones y 2.356 millones de tokens de trabajo real con un agente de código: el 94 % del gasto es releer contexto ya acumulado.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/economia-de-contexto/img/reparto.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "Lo caro de un agente no es lo que hace, es lo que recuerda",
+ "description": "313 sesiones y 2.356 millones de tokens de trabajo real con un agente de código: el 94 % del gasto es releer contexto ya acumulado.",
+ "inLanguage": "es",
+ "url": "https://talcaldeg.github.io/articulos/economia-de-contexto/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/economia-de-contexto/"
+ },
+ "datePublished": "2026-08-27",
+ "dateModified": "2026-09-01",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/economia-de-contexto/img/reparto.png",
+ "keywords": "consumo de tokens, ventana de contexto, agentes de IA, Claude Code, costo de LLM, token usage, context window, prompt caching, AI agent cost",
+ "isBasedOn": "https://github.com/talcaldeg/context-economy",
+ "workTranslation": {
+  "@type": "TechArticle",
+  "url": "https://talcaldeg.github.io/articulos/context-economy/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "¿Por qué sube el costo de un agente de código mientras avanza la sesión?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Porque el modelo no tiene memoria entre llamadas: en cada turno se le vuelve a mandar la conversación completa. Medido sobre 45 sesiones largas, el contexto leído por turno pasa de 69 mil tokens en el primer décimo de la sesión a 200 mil en el último, haciendo el mismo tipo de trabajo. Es 2,9 veces más caro por el solo hecho de llevar más historia detrás."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Cómo reducir el consumo de tokens en Claude Code o en cualquier agente de IA?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con grep y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto antes de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 2.730 a 258 tokens el mismo dato en pantalla."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Conviene cortar la sesión y abrir otra, o seguir en la misma?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Conviene cortar. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97), así que partir una sesión larga en diez ahorra alrededor de un tercio. Ojo con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿El caché de prompts no resuelve el problema?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Lo abarata, no lo elimina. En la medición, el 94 % de los 2.356 millones de tokens es cache_read: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Los archivos de memoria del agente ayudan o encarecen?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 9 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Cómo medir en qué se van los tokens de un agente, sin telemetría del proveedor?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Los transcripts están en su propio disco, como archivos .jsonl, y traen el bloque usage de cada llamada con input, output y tokens leídos de caché. Un script de unas doscientas líneas arma el ranking de sesiones; otro atribuye cada resultado de herramienta a su llamada y lo multiplica por los turnos posteriores, que es el arrastre. Los tres están publicados en context-economy."
+   }
+  }
+ ]
+}
+</script>
 <style>
   :root{
     --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
@@ -292,6 +403,28 @@ instrucciones. Se trata de decidir, con criterio y a veces con dolor, qué es lo
 <em>no</em> entra.</p>
 
 <p>Y de medirlo, porque el que no mide su contexto termina pagando por leerlo.</p>
+
+<h2>Preguntas frecuentes</h2>
+
+<p>Las preguntas que me han llegado después de publicar esto, cada una con la cifra que la responde. Todas salen de la misma medición descrita arriba.</p>
+
+<h3>¿Por qué sube el costo de un agente de código mientras avanza la sesión?</h3>
+<p>Porque el modelo no tiene memoria entre llamadas: en cada turno se le vuelve a mandar la conversación completa. Medido sobre 45 sesiones largas, el contexto leído por turno pasa de 69 mil tokens en el primer décimo de la sesión a 200 mil en el último, haciendo el mismo tipo de trabajo. Es 2,9 veces más caro por el solo hecho de llevar más historia detrás.</p>
+
+<h3>¿Cómo reducir el consumo de tokens en Claude Code o en cualquier agente de IA?</h3>
+<p>Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con <code>grep</code> y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto <em>antes</em> de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 2.730 a 258 tokens el mismo dato en pantalla.</p>
+
+<h3>¿Conviene cortar la sesión y abrir otra, o seguir en la misma?</h3>
+<p>Conviene cortar. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97), así que partir una sesión larga en diez ahorra alrededor de un tercio. Ojo con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2.</p>
+
+<h3>¿El caché de prompts no resuelve el problema?</h3>
+<p>Lo abarata, no lo elimina. En la medición, el 94 % de los 2.356 millones de tokens es <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja.</p>
+
+<h3>¿Los archivos de memoria del agente ayudan o encarecen?</h3>
+<p>Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 9 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve.</p>
+
+<h3>¿Cómo medir en qué se van los tokens de un agente, sin telemetría del proveedor?</h3>
+<p>Los transcripts están en su propio disco, como archivos <code>.jsonl</code>, y traen el bloque <code>usage</code> de cada llamada con input, output y tokens leídos de caché. Un script de unas doscientas líneas arma el ranking de sesiones; otro atribuye cada resultado de herramienta a su llamada y lo multiplica por los turnos posteriores, que es el <strong>arrastre</strong>. Los tres están publicados en <a href="https://github.com/talcaldeg/context-economy">context-economy</a>.</p>
 
 </div></article>
 

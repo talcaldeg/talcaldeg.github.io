@@ -10,6 +10,117 @@
 <meta property="og:type" content="article">
 <link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
 <link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/context-economy/">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/context-economy/">
+<link rel="alternate" hreflang="x-default" href="https://talcaldeg.github.io/articulos/context-economy/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/context-economy/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_CL">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/context-economy/img/reparto.png">
+<meta property="article:published_time" content="2026-08-27">
+<meta property="article:author" content="Tomás Alcalde">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What makes an agent expensive is not what it does, it is what it remembers">
+<meta name="twitter:description" content="313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/context-economy/img/reparto.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "What makes an agent expensive is not what it does, it is what it remembers",
+ "description": "313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there.",
+ "inLanguage": "en",
+ "url": "https://talcaldeg.github.io/articulos/context-economy/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/context-economy/"
+ },
+ "datePublished": "2026-08-27",
+ "dateModified": "2026-09-01",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/context-economy/img/reparto.png",
+ "keywords": "consumo de tokens, ventana de contexto, agentes de IA, Claude Code, costo de LLM, token usage, context window, prompt caching, AI agent cost",
+ "isBasedOn": "https://github.com/talcaldeg/context-economy",
+ "translationOfWork": {
+  "@type": "TechArticle",
+  "url": "https://talcaldeg.github.io/articulos/economia-de-contexto/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Why does a coding agent get more expensive as the session goes on?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because the model has no memory between calls: every turn resends the whole conversation. Measured across 45 long sessions, the context read per turn goes from 69 thousand tokens in the first tenth of the session to 200 thousand in the last one, doing the same kind of work. That is 2.9 times more expensive purely for carrying more history behind it."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you cut token usage in Claude Code or any AI agent?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use grep and read the exact range rather than opening whole files; and filter what enters the context before bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 2,730 tokens down to 258."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is it better to end the session and open a new one, or keep going?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Better to end it. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97), so splitting one long session into ten saves around a third. Beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Does prompt caching not solve this?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "It makes it cheaper, it does not remove it. In the measurement, 94 % of the 2.36 billion tokens is cache_read: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Do the agent's memory files help, or do they cost?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 9 thousand tokens each. Split them into sections and read only the section you need."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you measure where an agent's tokens go, without vendor telemetry?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The transcripts are on your own disk as .jsonl files, carrying the usage block of every call with input, output and cache-read tokens. A script of about two hundred lines builds the session ranking; another attributes each tool result to its call and multiplies it by the turns that came after, which is the carry. All three are published in context-economy."
+   }
+  }
+ ]
+}
+</script>
 <style>
   :root{
     --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
@@ -287,6 +398,28 @@ like prompt engineering. It is not about writing better instructions. It is abou
 deliberately and sometimes painfully, what does <em>not</em> get in.</p>
 
 <p>And about measuring it, because whoever does not measure their context ends up paying to read it.</p>
+
+<h2>Frequently asked questions</h2>
+
+<p>The questions that came back after publishing this, each with the figure that answers it. All of them come from the same measurement described above.</p>
+
+<h3>Why does a coding agent get more expensive as the session goes on?</h3>
+<p>Because the model has no memory between calls: every turn resends the whole conversation. Measured across 45 long sessions, the context read per turn goes from 69 thousand tokens in the first tenth of the session to 200 thousand in the last one, doing the same kind of work. That is 2.9 times more expensive purely for carrying more history behind it.</p>
+
+<h3>How do you cut token usage in Claude Code or any AI agent?</h3>
+<p>Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use <code>grep</code> and read the exact range rather than opening whole files; and filter what enters the context <em>before</em> bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 2,730 tokens down to 258.</p>
+
+<h3>Is it better to end the session and open a new one, or keep going?</h3>
+<p>Better to end it. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97), so splitting one long session into ten saves around a third. Beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2.</p>
+
+<h3>Does prompt caching not solve this?</h3>
+<p>It makes it cheaper, it does not remove it. In the measurement, 94 % of the 2.36 billion tokens is <code>cache_read</code>: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work.</p>
+
+<h3>Do the agent's memory files help, or do they cost?</h3>
+<p>Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 9 thousand tokens each. Split them into sections and read only the section you need.</p>
+
+<h3>How do you measure where an agent's tokens go, without vendor telemetry?</h3>
+<p>The transcripts are on your own disk as <code>.jsonl</code> files, carrying the <code>usage</code> block of every call with input, output and cache-read tokens. A script of about two hundred lines builds the session ranking; another attributes each tool result to its call and multiplies it by the turns that came after, which is the <strong>carry</strong>. All three are published in <a href="https://github.com/talcaldeg/context-economy">context-economy</a>.</p>
 
 </div></article>
 
