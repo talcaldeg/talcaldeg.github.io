@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual gold - Política de privacidad</title>
+<meta name="description" content="Política de privacidad de la aplicación interna de envío de estados de cuenta de Virtual gold.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://talcaldeg.github.io/virtualgold/privacidad.html">
+<style>
+:root { --fondo: #ffffff; --texto: #1c2430; --suave: #5b6675; --acento: #0f1b2d; --borde: #dde2e8; }
+@media (prefers-color-scheme: dark) { :root { --fondo: #0f1b2d; --texto: #e6ebf1; --suave: #9aa7b6; --acento: #e6ebf1; --borde: #2a3a52; } }
+body { margin: 0; background: var(--fondo); color: var(--texto); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 1.7rem; margin: 0 0 4px; color: var(--acento); }
+h2 { font-size: 1.15rem; margin: 32px 0 8px; color: var(--acento); }
+p.fecha { color: var(--suave); margin: 0 0 24px; }
+a { color: inherit; }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--borde); color: var(--suave); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>Política de privacidad</h1>
+<p class="fecha">Virtual gold - aplicación gmail-virtualgold-local. Vigente desde el 23 de septiembre de 2026.</p>
+
+<h2>1. Qué es la aplicación</h2>
+<p>gmail-virtualgold-local es una herramienta de uso exclusivamente interno de Virtual gold. Se ejecuta en un único computador de la empresa y su única función es enviar a los clientes de Virtual gold sus estados de cuenta en PDF desde la casilla virtualgold3@gmail.com, y verificar en esa misma casilla que los envíos se hayan realizado. No es una aplicación pública: no la usan terceros ni se ofrece a otras cuentas de Google.</p>
+
+<h2>2. Datos de Google a los que accede</h2>
+<p>La aplicación solicita, solo sobre la cuenta virtualgold3@gmail.com, los siguientes permisos de la API de Gmail:</p>
+<ul>
+<li><strong>Enviar correo en su nombre</strong> (gmail.send): para enviar los estados de cuenta a cada cliente.</li>
+<li><strong>Leer los correos</strong> (gmail.readonly): para confirmar en Enviados que cada estado de cuenta salió con su adjunto.</li>
+</ul>
+<p>La aplicación no crea borradores, no elimina ni modifica correos, y no accede a contactos, calendario, Drive ni a ningún otro servicio de Google.</p>
+
+<h2>3. Cómo se usan los datos</h2>
+<p>Los datos obtenidos de Gmail se usan solamente para las dos funciones descritas en el punto 1. No se usan para publicidad, perfilamiento, venta de información ni para entrenar modelos de inteligencia artificial.</p>
+
+<h2>4. Almacenamiento</h2>
+<p>El token de autorización de Google se guarda cifrado (DPAPI de Windows) en el computador donde corre la aplicación y no se sube a ningún servidor ni repositorio. La aplicación no mantiene una copia de los correos leídos: la verificación se hace en el momento y no se guarda.</p>
+
+<h2>5. Datos compartidos con terceros</h2>
+<p>Virtual gold no comparte, vende ni transfiere a terceros ningún dato obtenido de la cuenta de Google. Los únicos destinatarios de la información son los propios clientes, cada uno de los cuales recibe solo su estado de cuenta.</p>
+
+<h2>6. Uso limitado</h2>
+<p>El uso y la transferencia a cualquier otra aplicación de la información recibida de las API de Google se ajustan a la <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de datos de usuario de los servicios de API de Google</a>, incluidos los requisitos de uso limitado.</p>
+
+<h2>7. Revocación y eliminación</h2>
+<p>El acceso puede revocarse en cualquier momento desde <a href="https://myaccount.google.com/permissions">la configuración de seguridad de la cuenta de Google</a>. Al revocarlo, el token guardado deja de servir y la aplicación ya no puede leer ni enviar correos.</p>
+
+<h2>8. Contacto</h2>
+<p>Consultas sobre esta política: <a href="mailto:virtualgold3@gmail.com">virtualgold3@gmail.com</a>.</p>
+
+<footer>Virtual gold · <a href="/virtualgold/">Página de la aplicación</a></footer>
+</main>
+</body>
+</html>
