@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lo caro de un agente no es lo que hace, es lo que recuerda | Tomás Alcalde</title>
-<meta name="description" content="313 sesiones, 2.356 millones de tokens: el 94 % del gasto es releer contexto. Cómo reducir el contexto y ahorrar tokens sin perder memoria.">
+<meta name="description" content="Cuatro meses de trabajo real con un agente de código: más del 90 % del gasto es releer contexto ya acumulado. Cómo reducirlo sin perder memoria.">
 <meta property="og:title" content="Lo caro de un agente no es lo que hace, es lo que recuerda">
-<meta property="og:description" content="313 sesiones, 2.356 millones de tokens: el 94 % del gasto es releer contexto. Cómo reducir el contexto y ahorrar tokens sin perder memoria.">
+<meta property="og:description" content="Cuatro meses de trabajo real con un agente de código: más del 90 % del gasto es releer contexto ya acumulado. Cómo reducirlo sin perder memoria.">
 <meta property="og:type" content="article">
 <link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
 <link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/context-economy/">
@@ -23,7 +23,7 @@
 <meta property="article:author" content="Tomás Alcalde">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Lo caro de un agente no es lo que hace, es lo que recuerda">
-<meta name="twitter:description" content="313 sesiones y 2.356 millones de tokens de trabajo real con un agente de código: el 94 % del gasto es releer contexto ya acumulado.">
+<meta name="twitter:description" content="Cuatro meses de trabajo real con un agente de código: más del 90 % del gasto es releer contexto ya acumulado.">
 <meta name="twitter:image" content="https://talcaldeg.github.io/articulos/economia-de-contexto/img/reparto.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -33,7 +33,7 @@
  "@context": "https://schema.org",
  "@type": "TechArticle",
  "headline": "Lo caro de un agente no es lo que hace, es lo que recuerda",
- "description": "313 sesiones y 2.356 millones de tokens de trabajo real con un agente de código: el 94 % del gasto es releer contexto ya acumulado.",
+ "description": "Cuatro meses de trabajo real con un agente de código: más del 90 % del gasto es releer contexto ya acumulado.",
  "inLanguage": "es",
  "url": "https://talcaldeg.github.io/articulos/economia-de-contexto/",
  "mainEntityOfPage": {
@@ -91,7 +91,7 @@
    "name": "¿Conviene cortar la sesión y abrir otra, o seguir en la misma?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Conviene cortar. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97), así que partir una sesión larga en diez ahorra alrededor de un tercio. Ojo con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2."
+    "text": "Depende de cuánto duren sus sesiones. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97): con sesiones de cientos de turnos, como las de esta medición, partirlas ahorraba alrededor de un tercio. Con sesiones ya cortas la cuenta se da vuelta, porque cada sesión nueva vuelve a escribir en caché el prefijo de instrucciones: en la medición de septiembre, cortar a mitad de tarea salió entre -2,7 % y -0,6 %. Ojo también con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2."
    }
   },
   {
@@ -99,7 +99,7 @@
    "name": "¿El caché de prompts no resuelve el problema?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Lo abarata, no lo elimina. En la medición, el 94 % de los 2.356 millones de tokens es cache_read: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja."
+    "text": "Lo abarata, no lo elimina. En la medición, el 94 % de los tokens medidos es cache_read: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja."
    }
   },
   {
@@ -167,8 +167,8 @@
        padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
   figure{margin:30px 0 34px}
-  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
-             border-radius:12px; padding:10px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
   figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
 
   .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
@@ -210,8 +210,10 @@
 <div class="destacado"><p><strong>Corrección, septiembre de 2026.</strong> Los scripts con que
 medí este artículo contaban cada llamada al modelo cerca de 1,9 veces. Con el conteo corregido,
 la misma ventana da 294 sesiones, 1.212 millones de tokens, 96 % de relectura y un exponente de
-1,19. Los totales se parten por la mitad; las conclusiones no cambian. El detalle, y lo que
-medí después, está en <a href="../palancas-chicas/">la segunda parte</a>.</p></div>
+1,19. Los totales se parten por la mitad y el diagnóstico se mantiene. Lo que sí cambió fue la
+recomendación de cortar sesiones: un mes después, con sesiones ya cortas, cortar a mitad de tarea
+salió negativo. El detalle, y lo que medí después, está en <a href="../palancas-chicas/">la segunda
+parte</a>.</p></div>
 
 <p>La cuenta empezó a doler antes de que yo entendiera por qué. El trabajo era el mismo de
 siempre: consultas a una base de producción, reportes, algo de automatización, correo. Nada
@@ -238,8 +240,11 @@ De 2.356 millones de tokens, lo que el modelo escribió (el código, las respues
 análisis) fueron 19 millones. Menos del uno por ciento.</p>
 
 <figure>
-  <img src="img/reparto.png" alt="Barra apilada: 94,4 % releer contexto acumulado, 4,8 % contexto nuevo, 0,8 % output.">
-  <figcaption>Los 2.356 millones de tokens repartidos por tipo. La franja roja es
+  <picture>
+    <source srcset="img/reparto-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/reparto.png" width="1600" height="550" loading="lazy" alt="Barra apilada: 94,4 % releer contexto acumulado, 4,8 % contexto nuevo, 0,8 % output.">
+  </picture>
+  <figcaption>Los 2.356 millones de tokens repartidos por tipo. La franja en color es
   <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno.</figcaption>
 </figure>
 
@@ -255,7 +260,10 @@ que la cantidad crece sola mientras usted trabaja.</p>
 partí cada una en diez tramos iguales y promedié cuánto contexto leyó el modelo en cada tramo.</p>
 
 <figure>
-  <img src="img/deriva.png" alt="Curva creciente: el contexto por turno pasa de 69k en el primer décimo a 200k en el último.">
+  <picture>
+    <source srcset="img/deriva-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/deriva.png" width="1600" height="880" loading="lazy" alt="Curva creciente: el contexto por turno pasa de 69 mil tokens en el primer décimo a 200 mil en el último.">
+  </picture>
   <figcaption>Contexto leído en cada turno, según el avance de la sesión. Promedio de 45 sesiones
   largas. El último tramo cuesta 2,9 veces lo que el primero, haciendo el mismo tipo de trabajo.</figcaption>
 </figure>
@@ -277,7 +285,10 @@ Una sesión de 300 turnos debería costar cinco veces lo que cuestan cuatro sesi
 <p>Al ajustar la curva contra las 313 sesiones reales, el exponente no dio 2. Dio 1,20.</p>
 
 <figure>
-  <img src="img/curva.png" alt="Dispersión log-log de tokens por sesión contra turnos, con ajuste de exponente 1,20 y R² 0,97.">
+  <picture>
+    <source srcset="img/curva-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/curva.png" width="1600" height="1080" loading="lazy" alt="Dispersión log-log de tokens por sesión contra turnos, con ajuste de exponente 1,20 y R² 0,97.">
+  </picture>
   <figcaption>Cada punto es una sesión. En escala logarítmica una potencia se ve como una recta:
   la pendiente es el exponente. Ajuste sobre 313 sesiones, R² 0,97.</figcaption>
 </figure>
@@ -312,7 +323,10 @@ llamo <strong>arrastre</strong>, y ordenar por esa columna en vez de por tamaño
 completo el ranking de culpables.</p>
 
 <figure>
-  <img src="img/arrastre.png" alt="Barras horizontales: leer archivos enteros 54 %, comandos de shell 28 %, conectores 6 % y 5 %, resto 3 %, búsqueda filtrada 2 %.">
+  <picture>
+    <source srcset="img/arrastre-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/arrastre.png" width="1600" height="780" loading="lazy" alt="Barras horizontales: leer archivos enteros 54 %, comandos de shell 28 %, web y otros conectores 7 %, conectores de correo y documentos 6 %, resto 3 %, búsqueda filtrada 2 %.">
+  </picture>
   <figcaption>380 millones de tokens de arrastre en la ventana medida, repartidos por tipo de llamada.
   Leer archivos completos se lleva más de la mitad.</figcaption>
 </figure>
@@ -421,10 +435,10 @@ instrucciones. Se trata de decidir, con criterio y a veces con dolor, qué es lo
 <p>Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con <code>grep</code> y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto <em>antes</em> de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 2.730 a 258 tokens el mismo dato en pantalla.</p>
 
 <h3>¿Conviene cortar la sesión y abrir otra, o seguir en la misma?</h3>
-<p>Conviene cortar. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97), así que partir una sesión larga en diez ahorra alrededor de un tercio. Ojo con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2.</p>
+<p>Depende de cuánto duren sus sesiones. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97): con sesiones de cientos de turnos, como las de esta medición, partirlas ahorraba alrededor de un tercio. Con sesiones ya cortas la cuenta se da vuelta, porque cada sesión nueva vuelve a escribir en caché el prefijo de instrucciones: en <a href="../palancas-chicas/">la medición de septiembre</a>, cortar a mitad de tarea salió entre -2,7 % y -0,6 %. Ojo también con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2.</p>
 
 <h3>¿El caché de prompts no resuelve el problema?</h3>
-<p>Lo abarata, no lo elimina. En la medición, el 94 % de los 2.356 millones de tokens es <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja.</p>
+<p>Lo abarata, no lo elimina. En la medición, el 94 % de los tokens medidos es <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja.</p>
 
 <h3>¿Los archivos de memoria del agente ayudan o encarecen?</h3>
 <p>Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 9 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve.</p>

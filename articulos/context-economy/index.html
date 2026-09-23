@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What makes an agent expensive is not what it does, it is what it remembers | Tomás Alcalde</title>
-<meta name="description" content="313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there. The numbers, the charts and the pattern that cuts it.">
+<meta name="description" content="Four months of real work with a coding agent: over 90 % of the spend is re-reading context that is already there. The numbers, the charts and the pattern that cuts it.">
 <meta property="og:title" content="What makes an agent expensive is not what it does, it is what it remembers">
-<meta property="og:description" content="313 sessions and 2.36 billion tokens of real work: 94 % of the spend is re-reading context that is already there.">
+<meta property="og:description" content="Four months of real work with a coding agent: over 90 % of the spend is re-reading context that is already there.">
 <meta property="og:type" content="article">
 <link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/economia-de-contexto/">
 <link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/context-economy/">
@@ -23,7 +23,7 @@
 <meta property="article:author" content="Tomás Alcalde">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="What makes an agent expensive is not what it does, it is what it remembers">
-<meta name="twitter:description" content="313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there.">
+<meta name="twitter:description" content="Four months of real work with a coding agent: over 90 % of the spend is re-reading context that is already there.">
 <meta name="twitter:image" content="https://talcaldeg.github.io/articulos/context-economy/img/reparto.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -33,7 +33,7 @@
  "@context": "https://schema.org",
  "@type": "TechArticle",
  "headline": "What makes an agent expensive is not what it does, it is what it remembers",
- "description": "313 sessions and 2.36 billion tokens of real work with a coding agent: 94 % of the spend is re-reading context that is already there.",
+ "description": "Four months of real work with a coding agent: over 90 % of the spend is re-reading context that is already there.",
  "inLanguage": "en",
  "url": "https://talcaldeg.github.io/articulos/context-economy/",
  "mainEntityOfPage": {
@@ -91,7 +91,7 @@
    "name": "Is it better to end the session and open a new one, or keep going?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Better to end it. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97), so splitting one long session into ten saves around a third. Beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2."
+    "text": "It depends on how long your sessions run. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97): with sessions of hundreds of turns, like the ones in this measurement, splitting them saved around a third. With sessions that are already short the sum flips, because every new session writes the instruction prefix to the cache again: in the September measurement, cutting mid-task came out between -2.7 % and -0.6 %. Also beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2."
    }
   },
   {
@@ -99,7 +99,7 @@
    "name": "Does prompt caching not solve this?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "It makes it cheaper, it does not remove it. In the measurement, 94 % of the 2.36 billion tokens is cache_read: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work."
+    "text": "It makes it cheaper, it does not remove it. In the measurement, 94 % of the tokens measured is cache_read: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work."
    }
   },
   {
@@ -166,8 +166,8 @@
        padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
   figure{margin:30px 0 34px}
-  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
-             border-radius:12px; padding:10px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
   figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
 
   .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
@@ -207,9 +207,10 @@
 
 <div class="destacado"><p><strong>Correction, September 2026.</strong> The scripts behind this
 article counted each model call about 1.9 times. With the corrected count, the same window gives
-294 sessions, 1,212 million tokens, 96 % re-reading and an exponent of 1.19. The totals halve;
-the conclusions do not change. The details, and what I measured afterwards, are in
-<a href="../small-levers/">the second part</a>.</p></div>
+294 sessions, 1,212 million tokens, 96 % re-reading and an exponent of 1.19. The totals halve
+and the diagnosis holds. What did change was the advice to cut sessions: a month later, with
+sessions already short, cutting mid-task came out negative. The details, and what I measured
+afterwards, are in <a href="../small-levers/">the second part</a>.</p></div>
 
 <p>The bill started to hurt before I understood why. The work was the usual: queries against a
 production database, reports, some automation, email. Nothing that sounded expensive. But the
@@ -236,8 +237,11 @@ the other way around. Out of 2.36 billion tokens, what the model wrote (the code
 the analysis) came to 19 million. Less than one percent.</p>
 
 <figure>
-  <img src="img/reparto.png" alt="Stacked bar: 94.4 % re-reading accumulated context, 4.8 % new context, 0.8 % output.">
-  <figcaption>The 2.36 billion tokens split by type. The red band is <code>cache_read</code>:
+  <picture>
+    <source srcset="img/reparto-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/reparto.png" width="1600" height="550" loading="lazy" alt="Stacked bar: 94.4 % re-reading accumulated context, 4.8 % new context, 0.8 % output.">
+  </picture>
+  <figcaption>The 2.36 billion tokens split by type. The coloured band is <code>cache_read</code>:
   context that was already there and gets read again on every turn.</figcaption>
 </figure>
 
@@ -254,7 +258,10 @@ turns, split each one into ten equal stretches, and averaged how much context th
 each stretch.</p>
 
 <figure>
-  <img src="img/deriva.png" alt="Rising curve: context per turn goes from 69k in the first tenth to 200k in the last.">
+  <picture>
+    <source srcset="img/deriva-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/deriva.png" width="1600" height="880" loading="lazy" alt="Rising curve: context per turn goes from 69k in the first tenth to 200k in the last.">
+  </picture>
   <figcaption>Context read on each turn, by progress through the session. Average of 45 long
   sessions. The last stretch costs 2.9 times the first one, doing the same kind of work.</figcaption>
 </figure>
@@ -278,7 +285,10 @@ times what four 75-turn sessions cost.</p>
 It came out at 1.20.</p>
 
 <figure>
-  <img src="img/curva.png" alt="Log-log scatter of tokens per session against turns, with a fit of exponent 1.20 and R² 0.97.">
+  <picture>
+    <source srcset="img/curva-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/curva.png" width="1600" height="1080" loading="lazy" alt="Log-log scatter of tokens per session against turns, with a fit of exponent 1.20 and R² 0.97.">
+  </picture>
   <figcaption>Each dot is a session. On a log scale a power law shows up as a straight line and
   the slope is the exponent. Fit over 313 sessions, R² 0.97.</figcaption>
 </figure>
@@ -311,7 +321,10 @@ more than a 100-thousand-token one on the last turn. I call that <strong>carry</
 sorting by that column instead of by size completely rearranges the list of culprits.</p>
 
 <figure>
-  <img src="img/arrastre.png" alt="Horizontal bars: reading whole files 54 %, shell commands 28 %, connectors 7 % and 5 %, the rest 3 %, filtered search 2 %.">
+  <picture>
+    <source srcset="img/arrastre-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/arrastre.png" width="1600" height="780" loading="lazy" alt="Horizontal bars: reading whole files 54 %, shell commands 28 %, web and other connectors 7 %, mail and document connectors 6 %, the rest 3 %, filtered search 2 %.">
+  </picture>
   <figcaption>380 million tokens of carry over the window measured, split by type of call.
   Reading whole files takes more than half.</figcaption>
 </figure>
@@ -416,10 +429,10 @@ deliberately and sometimes painfully, what does <em>not</em> get in.</p>
 <p>Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use <code>grep</code> and read the exact range rather than opening whole files; and filter what enters the context <em>before</em> bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 2,730 tokens down to 258.</p>
 
 <h3>Is it better to end the session and open a new one, or keep going?</h3>
-<p>Better to end it. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97), so splitting one long session into ten saves around a third. Beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2.</p>
+<p>It depends on how long your sessions run. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97): with sessions of hundreds of turns, like the ones in this measurement, splitting them saved around a third. With sessions that are already short the sum flips, because every new session writes the instruction prefix to the cache again: in <a href="../small-levers/">the September measurement</a>, cutting mid-task came out between -2.7 % and -0.6 %. Also beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2.</p>
 
 <h3>Does prompt caching not solve this?</h3>
-<p>It makes it cheaper, it does not remove it. In the measurement, 94 % of the 2.36 billion tokens is <code>cache_read</code>: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work.</p>
+<p>It makes it cheaper, it does not remove it. In the measurement, 94 % of the tokens measured is <code>cache_read</code>: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work.</p>
 
 <h3>Do the agent's memory files help, or do they cost?</h3>
 <p>Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 9 thousand tokens each. Split them into sections and read only the section you need.</p>

@@ -20,6 +20,8 @@ from matplotlib.transforms import offset_copy
 
 from palancas_chicas import ANCHO, DPI, RAIZ, TEMAS, Lienzo, ancho_etiquetas, mezclar, num
 
+plt.rcParams.update({"mathtext.fontset": "custom", "mathtext.rm": "Inter", "mathtext.it": "Inter"})
+
 DATOS = json.loads((RAIZ / "_graficos" / "economia_contexto_datos.json").read_text(encoding="utf-8"))
 
 TXT = {
@@ -37,7 +39,7 @@ TXT = {
         mil=lambda v: "0" if v == 0 else f"{v // 1000:.0f} mil",
         cu_tit="Una sesión el doble de larga cuesta 2,3 veces, no 4",
         cu_sub="Tokens por sesión contra turnos, escala logarítmica. Cada punto es una de las 313 sesiones",
-        cu_ajuste="costo ∝ turnos^{b}  ·  R² {r2}",
+        cu_ajuste=r"costo $\propto$ turnos$^{{{b}}}$   ·   R² {r2}",
         cu_lineal="si cada turno costara lo mismo",
         cu_x="turnos de la sesión (llamadas al modelo)",
         cu_y=["100 mil", "1 M", "10 M", "100 M"],
@@ -61,7 +63,7 @@ TXT = {
         mil=lambda v: "0" if v == 0 else f"{v // 1000:.0f}k",
         cu_tit="A session twice as long costs 2.3 times as much, not 4",
         cu_sub="Tokens per session against turns, log scale. Each dot is one of the 313 sessions",
-        cu_ajuste="cost ∝ turns^{b}  ·  R² {r2}",
+        cu_ajuste=r"cost $\propto$ turns$^{{{b}}}$   ·   R² {r2}",
         cu_lineal="if every turn cost the same",
         cu_x="turns in the session (calls to the model)",
         cu_y=["100k", "1M", "10M", "100M"],
@@ -82,7 +84,7 @@ def decimal(v, idioma, dec):
 def reparto(t, L, idioma, destino):
     pct = DATOS["reparto"]["pct"]
     colores = [t["acento"], t["neutro"], t["suave"]]
-    c = Lienzo(t, 2.9, 56, L["re_tit"], L["re_sub"], abajo=150, der=56)
+    c = Lienzo(t, 2.75, 56, L["re_tit"], L["re_sub"], abajo=120, der=56)
     ax = c.ax
     ax.set_xlim(0, 100); ax.set_ylim(1, -0.62)
     ax.set_xticks([]); ax.set_yticks([])
@@ -108,7 +110,7 @@ def deriva(t, L, idioma, destino):
     n = len(m)
     etq = [L["mil"](v) for v in range(0, 200001, 50000)]
     izq = 56 + ancho_etiquetas(etq) + 18
-    c = Lienzo(t, 4.4, izq, L["de_tit"], L["de_sub"], abajo=110, der=90)
+    c = Lienzo(t, 4.4, izq, L["de_tit"], L["de_sub"], abajo=150, der=120)
     ax = c.ax
     xs = list(range(1, n + 1))
     ax.set_xlim(0.6, n + 0.4); ax.set_ylim(0, 225000)
@@ -133,7 +135,7 @@ def curva(t, L, idioma, destino):
     xs = [p[0] for p in d["puntos"]]
     ys = [p[1] for p in d["puntos"]]
     izq = 56 + ancho_etiquetas(L["cu_y"]) + 18
-    c = Lienzo(t, 5.4, izq, L["cu_tit"], L["cu_sub"], abajo=110, der=40)
+    c = Lienzo(t, 5.4, izq, L["cu_tit"], L["cu_sub"], abajo=150, der=40)
     ax = c.ax
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlim(0.8, 800); ax.set_ylim(4e4, 1.6e8)
@@ -150,10 +152,14 @@ def curva(t, L, idioma, destino):
     ax.plot(finos, [k_lin * x for x in finos], color=t["suave"], lw=1.3, ls=(0, (4, 3)), zorder=3)
     b, k = d["recta_exponente"], d["recta_k"]
     ax.plot(finos, [k * x ** b for x in finos], color=t["acento"], lw=2.4, zorder=4)
-    rot = L["cu_ajuste"].format(b=decimal(d["exponente_publicado"], idioma, 2),
+    rot = L["cu_ajuste"].format(b=decimal(d["exponente_publicado"], idioma, 2).replace(",", "{,}"),
                                 r2=decimal(d["r2_publicado"], idioma, 2))
-    c.texto(1.2, 1.05e8, rot, color=t["acento"], fontweight="semibold", va="center")
-    c.texto(x1 * 0.93, k_lin * x1 * 0.62, L["cu_lineal"], color=t["suave"], ha="right", va="top", fontsize=10)
+    # Leyenda en la esquina vacía: muestra de línea y rótulo.
+    for y, color, estilo, ancho, et, peso in ((0.93, t["acento"], "-", 2.4, rot, "semibold"),
+                                             (0.855, t["suave"], (0, (4, 3)), 1.3, L["cu_lineal"], "normal")):
+        ax.plot([0.03, 0.08], [y, y], transform=ax.transAxes, color=color, ls=estilo, lw=ancho)
+        c.texto(0.1, y, et, transform=ax.transAxes, va="center", fontweight=peso,
+                color=color if peso == "semibold" else t["tinta"])
     ax.axhline(4e4, color=t["suave"], lw=0.9)
     ax.set_xlabel(L["cu_x"], color=t["suave"], fontsize=10, labelpad=10)
     c.guardar(destino)
