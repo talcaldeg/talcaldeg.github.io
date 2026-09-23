@@ -158,8 +158,8 @@
   .resumen ul{margin:0 0 12px}
 
   figure{margin:30px 0 34px}
-  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
-             border-radius:12px; padding:10px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
   figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
 
   .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -358,7 +358,10 @@ days after writing the rule, only to go back to 18 % and then to 10 %. Three goo
 off. The same thing had already happened to me with another rule a few weeks earlier.</p>
 
 <figure>
-  <img src="img/regla.png" alt="Bars: 9 to 16 % of calls with two or more tools before the rule, 47 % in the three days after, 18 % from September 14 and 10 % in the next regime.">
+  <picture>
+    <source srcset="img/regla-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/regla.png" width="1600" height="920" loading="lazy" alt="Bars: 9 to 16 % of calls with two or more tools before the rule, 47 % in the three days after, 18 % from September 14 and 10 % in the next regime.">
+  </picture>
   <figcaption>Share of calls that send two or more tools together, which is what the rule asked
   for. It went up in the three days after it was written and went back to its level.</figcaption>
 </figure>
@@ -381,8 +384,11 @@ instructions.</p></div>
 does not exist. The cost column is what you pay for trying.</p>
 
 <figure>
-  <img src="img/palancas.png" alt="Horizontal bars: logging memory with a single command 3.4 % measured; the rest are ceilings between 2.7 % and 0.18 % of weighted cost.">
-  <figcaption>The ceiling of each lever, as a percentage of weighted cost. The red bar is the only
+  <picture>
+    <source srcset="img/palancas-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/palancas.png" width="1600" height="920" loading="lazy" alt="Horizontal bars: logging memory with a single command 3.4 % measured; the rest are ceilings between 2.7 % and 0.18 % of weighted cost.">
+  </picture>
+  <figcaption>The ceiling of each lever, as a percentage of weighted cost. The colored bar is the only
   one measured after applying it, and it belongs to the batch described above.</figcaption>
 </figure>
 
@@ -440,7 +446,10 @@ The second day gave +0.5 %: that day the work was already chained in long sessio
 hardly anywhere to merge.</p>
 
 <figure>
-  <img src="img/sesiones.png" alt="Bars: cutting above 25 thousand tokens of excess -2.7 %, above 50 thousand -0.6 %, from 75 thousand 0 %; an oracle +2.9 %; merging sessions +1.7 to +1.9 % on the first day and +0.53 % on the second.">
+  <picture>
+    <source srcset="img/sesiones-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/sesiones.png" width="1600" height="980" loading="lazy" alt="Bars: cutting above 25 thousand tokens of excess -2.7 %, above 50 thousand -0.6 %, from 75 thousand 0 %; an oracle +2.9 %; merging sessions +1.7 to +1.9 % on the first day and +0.53 % on the second.">
+  </picture>
   <figcaption>Simulated savings on the transcripts, as a percentage of weighted cost. The oracle is
   an impossible ceiling: it cuts at the best moment, knows the future and does not pay the cost of
   reorienting.</figcaption>

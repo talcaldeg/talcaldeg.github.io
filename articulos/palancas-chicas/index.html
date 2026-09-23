@@ -158,8 +158,8 @@
   .resumen ul{margin:0 0 12px}
 
   figure{margin:30px 0 34px}
-  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
-             border-radius:12px; padding:10px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
   figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
 
   .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -357,7 +357,10 @@ subieron a 47 % en los tres días siguientes a escribir la regla, para volver a 
 10 %. Tres días buenos y se soltó. Ya me había pasado lo mismo con otra regla unas semanas antes.</p>
 
 <figure>
-  <img src="img/regla.png" alt="Barras: 9 a 16 % de llamadas con dos o más herramientas antes de la regla, 47 % en los tres días siguientes, 18 % desde el 14 de septiembre y 10 % en el régimen siguiente.">
+  <picture>
+    <source srcset="img/regla-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/regla.png" width="1600" height="920" loading="lazy" alt="Barras: 9 a 16 % de llamadas con dos o más herramientas antes de la regla, 47 % en los tres días siguientes, 18 % desde el 14 de septiembre y 10 % en el régimen siguiente.">
+  </picture>
   <figcaption>Proporción de llamadas que mandan dos o más herramientas juntas, que es lo que la
   regla pedía. Subió en los tres días siguientes a escribirla y volvió a su nivel.</figcaption>
 </figure>
@@ -380,9 +383,12 @@ instrucciones.</p></div>
 existe. La del costo es lo que se paga por intentarlo.</p>
 
 <figure>
-  <img src="img/palancas.png" alt="Barras horizontales: registrar la memoria en un solo comando 3,4 % medido; el resto son techos entre 2,7 % y 0,18 % del costo ponderado.">
-  <figcaption>El techo de cada palanca, en porcentaje del costo ponderado. La barra roja es la
-  única que se midió después de aplicarla, y es la del lote que se describe más arriba.</figcaption>
+  <picture>
+    <source srcset="img/palancas-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/palancas.png" width="1600" height="920" loading="lazy" alt="Barras horizontales: registrar la memoria en un solo comando 3,4 % medido; el resto son techos entre 2,7 % y 0,18 % del costo ponderado.">
+  </picture>
+  <figcaption>El techo de cada palanca, en porcentaje del costo ponderado. La barra en color es
+  la única que se midió después de aplicarla, y es la del lote que se describe más arriba.</figcaption>
 </figure>
 
 <div class="tabla"><table>
@@ -436,7 +442,10 @@ que en realidad habían corrido en paralelo, y sin ellas quedó en +1,7 a +1,9 %
 dio +0,5 %: ese día el trabajo ya venía encadenado en sesiones largas y casi no había dónde juntar.</p>
 
 <figure>
-  <img src="img/sesiones.png" alt="Barras: cortar al pasar 25 mil tokens de exceso -2,7 %, al pasar 50 mil -0,6 %, desde 75 mil 0 %; un oráculo +2,9 %; juntar sesiones +1,7 a +1,9 % el primer día y +0,53 % el segundo.">
+  <picture>
+    <source srcset="img/sesiones-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/sesiones.png" width="1600" height="980" loading="lazy" alt="Barras: cortar al pasar 25 mil tokens de exceso -2,7 %, al pasar 50 mil -0,6 %, desde 75 mil 0 %; un oráculo +2,9 %; juntar sesiones +1,7 a +1,9 % el primer día y +0,53 % el segundo.">
+  </picture>
   <figcaption>Ahorro simulado sobre los transcripts, en porcentaje del costo ponderado. El
   oráculo es un techo imposible: corta en el mejor momento, sabe el futuro y no paga el costo
   de reorientarse.</figcaption>
