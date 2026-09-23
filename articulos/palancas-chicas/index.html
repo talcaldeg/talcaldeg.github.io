@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La medición era el producto | Tomás Alcalde</title>
+<meta name="description" content="Un mes midiendo cada palanca para gastar menos tokens con un agente de código: casi todas rindieron menos de 2 %. Lo que sí rindió fue arreglar la forma de medir.">
+<meta property="og:title" content="La medición era el producto: casi todas las palancas eran chicas">
+<meta property="og:description" content="Un mes midiendo cada palanca para gastar menos tokens con un agente de código: casi todas rindieron menos de 2 %. Lo que sí rindió fue arreglar la forma de medir.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/palancas-chicas/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/palancas-chicas/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="article:published_time" content="2026-09-23">
+<meta property="article:author" content="Tomás Alcalde">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/palancas-chicas/img/palancas.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La medición era el producto: casi todas las palancas eran chicas">
+<meta name="twitter:description" content="Un mes midiendo cada palanca para gastar menos tokens con un agente de código: casi todas rindieron menos de 2 %.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/palancas-chicas/img/palancas.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "La medición era el producto: casi todas las palancas eran chicas",
+ "description": "Un mes midiendo cada palanca para gastar menos tokens con un agente de código: casi todas rindieron menos de 2 %. Lo que sí rindió fue arreglar la forma de medir.",
+ "inLanguage": "es",
+ "url": "https://talcaldeg.github.io/articulos/palancas-chicas/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/palancas-chicas/"
+ },
+ "datePublished": "2026-09-23",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/palancas-chicas/img/palancas.png",
+ "keywords": "consumo de tokens, economía de contexto, agentes de IA, Claude Code, prompt caching, memoria de agentes, costo de LLM",
+ "isBasedOn": "https://github.com/talcaldeg/context-economy",
+ "citation": "https://talcaldeg.github.io/articulos/economia-de-contexto/"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "¿Por qué los scripts que suman el bloque usage de los transcripts dan el doble?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Porque Claude Code escribe una línea por bloque de contenido de cada respuesta (texto, llamada a herramienta) y repite el mismo usage en todas. Sumar líneas contó cada llamada cerca de 1,9 veces. Hay que agrupar por requestId, o por message.id si falta, y contar una vez."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Conviene cortar la sesión o seguir en la misma?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Depende de cuánto duran hoy sus sesiones. Con sesiones ya cortas, cortar a mitad de tarea salió negativo (entre -2,7 % y -0,6 % según el umbral) porque cada sesión nueva vuelve a escribir el prefijo en caché. Seguir con la tarea siguiente en la misma sesión, si va liviana, rindió entre +0,5 % y +1,9 % según el día."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Sirve abreviar o quitar tildes para gastar menos tokens?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Medido sobre el mismo texto de instrucciones, la versión abreviada tuvo 4,8 % menos caracteres y 0,6 % más tokens; sin tildes ni eñes, 1 % más. El tokenizador corta por piezas de vocabulario, no por letra. Lo que mueve el gasto es cuánto texto entra y cuántas llamadas lo releen."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Funciona escribir en las instrucciones del agente que junte las lecturas en una sola llamada?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Funcionó tres días y se soltó. Las llamadas con dos o más herramientas subieron a 47 % y volvieron a 10-18 % desde el cuarto día. Además el techo era chico: juntar todas las lecturas independientes habría ahorrado entre 1,5 % y 1,8 % del gasto."
+   }
+  }
+ ]
+}
+</script>
+<style>
+  :root{
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:var(--chip); border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+      overflow-x:auto; font-size:14px; line-height:1.55; margin:0 0 22px}
+  pre code{background:none; border:0; padding:0}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0}
+  .resumen{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px 6px; margin:26px 0 30px}
+  .resumen p.t{font-weight:700; margin:0 0 10px}
+  .resumen ul{margin:0 0 12px}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; display:block; background:#fff; border:1px solid var(--line);
+             border-radius:12px; padding:10px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px; margin:26px 0 32px}
+  .cifra{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .cifra .n{font-size:27px; font-weight:800; color:var(--teal); line-height:1}
+  .cifra .l{color:var(--muted); font-size:13px; margin-top:7px; line-height:1.45}
+
+  .tabla{overflow-x:auto; margin:22px 0 26px}
+  table{width:100%; border-collapse:collapse; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <a class="otro" href="../economia-de-contexto/">El artículo anterior</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Economía de contexto · segunda parte</p>
+  <h1>La medición era el producto: casi todas las palancas eran chicas</h1>
+  <p class="lede">Un mes probando, una por una, las ideas para que un agente de código gaste
+  menos. Casi ninguna pasó del 2 %. Lo que más rindió fue descubrir que yo estaba midiendo mal.</p>
+  <p class="meta">Septiembre de 2026 · Tomás Alcalde · lectura de 12 minutos</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>En <a href="../economia-de-contexto/">el artículo anterior</a> conté que el 94 % de lo que
+gastaba trabajando con un agente de código se iba en releer contexto, y cerré con cuatro hábitos
+para bajarlo. Después de publicarlo seguí midiendo. La idea era sencilla: tomar cada palanca que
+aparecía (en mis notas, en foros, en lo que hacen los proyectos de memoria para agentes), estimar
+cuánto podía rendir como máximo, aplicarla y medir de nuevo.</p>
+
+<p>El resultado no es el que esperaba. Casi todas las palancas eran chicas. Varias no movieron
+nada. Un par salió negativa. Y la corrección más grande del mes no fue una técnica para ahorrar,
+sino un error en la vara con que medía todo lo demás.</p>
+
+<div class="resumen">
+  <p class="t">Lo corto, para quien no tenga doce minutos</p>
+  <ul>
+    <li>Mis medidores contaban cada llamada 1,9 veces. Los totales del artículo anterior se
+    parten por la mitad; sus conclusiones no cambian.</li>
+    <li>Las palancas que quedaban después del primer diagnóstico rinden, casi todas, menos de
+    2 % del gasto. Abreviar y quitar tildes no rinden nada.</li>
+    <li>Lo que sí rindió fue mecanismo (un hook, un comando que hace tres pasos en uno). Una
+    regla escrita en las instrucciones del agente duró tres días.</li>
+    <li>Con sesiones ya cortas, cortar sesiones sale negativo, y a veces conviene lo contrario:
+    seguir en la misma.</li>
+  </ul>
+</div>
+
+<div class="cifras">
+  <div class="cifra"><div class="n">1,9×</div><div class="l">cuánto inflaban mis medidores cada llamada antes de corregirlos</div></div>
+  <div class="cifra"><div class="n">3 días</div><div class="l">lo que duró una regla escrita antes de dejar de cumplirse</div></div>
+  <div class="cifra"><div class="n">&lt; 2 %</div><div class="l">techo de casi todas las palancas medidas</div></div>
+  <div class="cifra"><div class="n">-2,7 %</div><div class="l">lo que rindió cortar sesiones a mitad de tarea</div></div>
+</div>
+
+<p>Una nota sobre las unidades antes de seguir. Cuando digo «% del gasto» hablo de costo
+ponderado, no de volumen: cada tipo de token pesa según su precio relativo en la API, con el
+input en 1, el output en 5, la lectura de caché en 0,1 y la escritura de caché en 2 (a una
+hora) o 1,25 (a cinco minutos). El volumen dice cuánto se releyó; el ponderado, cuánto pesa.
+Casi todo el volumen es lectura de caché y, aun así, es menos de la mitad del costo.</p>
+
+<h2>Primero hubo que arreglar la vara</h2>
+
+<p>A mediados de mes, revisando ocho días de consumo, los totales no me calzaban con el
+número de llamadas. La causa era trivial y llevaba semanas ahí. Claude Code escribe en el
+transcript una línea por cada bloque de la respuesta (el texto, cada llamada a herramienta) y
+repite en todas el mismo bloque <code>usage</code>. Mis scripts sumaban líneas. Cada llamada
+contaba, en promedio, 1,9 veces.</p>
+
+<p>La corrección fue agrupar por <code>requestId</code> y contar una vez. Esos ocho días pasaron
+de reportar 1.003 millones de tokens a 540 millones. El arrastre de los resultados de
+herramientas cayó casi a la mitad, porque también los turnos posteriores se contaban doble.</p>
+
+<p>Eso toca al artículo anterior. Sus cifras absolutas se calcularon con los scripts viejos. Con
+la misma ventana y el conteo corregido, las 313 sesiones quedan en 294, los 2.356 millones de tokens quedan en 1.212, la relectura sube de 94 % a
+96 %, el exponente de la curva pasa de 1,20 a 1,19 y leer archivos completos sigue siendo el 55
+% del arrastre. <strong>Los totales se partieron por la mitad; la forma del argumento no se
+movió.</strong> Lo aclaro aquí porque esas cifras siguen publicadas, y el repositorio ya imprime
+las corregidas.</p>
+
+<p>La segunda corrección de la vara vino por otro lado. Para estimar cuánto pesaban las notas
+de memoria del agente convertía caracteres a tokens con la regla que circula, unos 3,5
+caracteres por token. Calibrado contra mis propios datos (el salto de contexto entre dos
+llamadas consecutivas, que es exactamente lo que se agregó), el modelo daba 2,1 caracteres por
+token en prosa en español. Con eso, la memoria no pesaba 7 % del gasto, como había calculado,
+sino 10 %.</p>
+
+<div class="destacado"><p>Ninguna de las dos correcciones cambió una conclusión. Las dos
+cambiaron cuánto se podía ganar con cada palanca, que es lo único que sirve para decidir en
+cuál trabajar.</p></div>
+
+<h2>Medir el régimen, no el histórico</h2>
+
+<p>El segundo error fue más sutil. Cuando uno cambia algo en la configuración del agente (una
+instrucción, un hook, un script de lectura), el promedio de los últimos 45 días mezcla dos
+regímenes y no describe ninguno.</p>
+
+<p>Me pasó con las notas de memoria. Sobre el histórico, el diagnóstico era claro: casi la
+mitad de lo que se leía de ellas era historia acumulada que no hacía falta, y la solución
+obvia era partir cada archivo en dos, uno con el estado vigente y otro con la historia. Pero
+tres días antes había cambiado la forma de leerlas. En vez de abrir el archivo entero, el
+agente pedía primero un mapa de secciones con el costo de cada una y después traía solo la
+que servía. Medido solo desde ese cambio, hubo 2 lecturas enteras contra 198 por mapa o por
+sección, y el desperdicio de esa escalera frente a haber leído el archivo completo en esa misma
+sesión fue de 1 %. Partir archivos habría sido trabajo con retorno cero.</p>
+
+<p>Desde entonces todos los medidores aceptan <code>--desde</code> y <code>--hasta</code> con
+hora, y cortan por llamada, no por sesión. Con los dos se puede aislar un régimen que ya
+terminó y compararlo con el siguiente. Y hay un script aparte, <code>regimen.py</code>, que
+avisa arriba de las cifras cuando la ventana cruza un cambio de configuración.</p>
+
+<p>La primera vez que lo usé para verificar un cambio, la estimación falló por los dos lados.
+Había aplicado tres recortes juntos. Uno de ellos, registrar las notas de memoria al cerrar
+la sesión con un solo comando en vez de leer y editar varios archivos, lo había estimado en
+0,9 puntos del gasto; rindió 3,4 (la escritura de memoria bajó de 4,5 % a 1,1 %). Otro,
+achicar a un tercio el archivo de instrucciones de un proyecto, prometía unos 8 mil tokens
+menos por llamada y dio 6 mil, con cuatro sesiones antes y tres después. Y el total bajó 26 %,
+que no le puedo atribuir a nada: la ventana nueva tenía diez sesiones largas contra 35 cortas en
+la anterior. Lo único que se sostiene al comparar ventanas tan distintas es lo que se mide por
+llamada y por sesión sobre las piezas que el cambio tocó.</p>
+
+<h2>Lo que rindió fue mecanismo, no texto</h2>
+
+<p>Las mejoras grandes del mes tienen algo en común: ninguna depende de que el agente se
+acuerde de algo. Son código que se ejecuta solo.</p>
+
+<p><strong>La escalera de costos.</strong> El problema concreto era una nota de memoria de 564
+líneas, unos 10 mil tokens, con 29 secciones. Ante una pregunta puntual sobre una de ellas, la
+única salida realista era abrirla entera. Se agregaron dos opciones al lector: una que lista las
+secciones con su rango de líneas y lo que cuesta cada una, sin leer ninguna (unos 700 tokens), y
+otra que trae una sola sección (unos 740). El principio que quedó es que <em>el costo se ve antes
+de pagarlo</em>, y que cada escalón vale más o menos un décimo del siguiente.</p>
+
+<p><strong>El bloqueo de relecturas.</strong> Al auditar un mes de lecturas de memoria, el 47 %
+eran del mismo archivo en la misma sesión: texto que ya estaba en el contexto. Se resolvió con
+un hook que deniega la segunda lectura completa del mismo archivo. Es el único bloqueo que no
+puede perder información, porque lo que bloquea ya está cargado.</p>
+
+<p><strong>El ruteo.</strong> Un hook sugiere, en cada mensaje, qué notas de memoria podrían
+servir. Antes comparaba el mensaje contra líneas de disparadores escritas a mano; ahora corre un
+BM25 contra el cuerpo de las notas y contra los tres mensajes anteriores de la sesión. Para
+saber si funcionaba armé un banco con los propios transcripts: por cada mensaje mío, qué notas
+se abrieron de verdad para responderlo. Sobre los casos donde el ruteo es el único camino, el
+acierto entre las cuatro primeras sugerencias pasó de 41 % a 76 %, con la mitad de tokens por
+mensaje. El número me pareció demasiado bueno, así que conté solo las notas que todavía no
+estaban en el contexto (sugerir una ya abierta no ahorra nada): 68 % contra 43 %. La ventaja no
+venía de repetir lo ya leído.</p>
+
+<p>Ese banco corrigió además una cifra que yo daba por firme. Había escrito que ningún ruteo por
+palabras podía pasar de 70 % de acierto, porque casi un tercio de los mensajes no trae con qué
+buscar («revisa que haya quedado todo bien»). Lo había medido mirando cada mensaje solo. Con los
+dos anteriores al lado, muchos de esos mensajes sí tienen con qué buscar, y el ruteo instalado
+pasa ese supuesto techo. Dónde está el techo real, no lo sé.</p>
+
+<p>Y una cosa que decidí no hacer. Catorce notas no se habían abierto nunca en 393 sesiones, y
+la poda parecía obvia. Mirándolas una por una, «nunca abierta» no era «redundante»: dos estaban
+en el índice que se carga siempre y funcionan justamente sin abrirse, y varias guardaban reglas
+que no estaban escritas en ninguna otra parte. No se habían abierto porque el tema no había
+salido. Borrarlas era perder conocimiento para ahorrar tokens que, mientras no se abran, no
+cuestan nada.</p>
+
+<h2>Las reglas escritas se sueltan</h2>
+
+<p>La otra cara de lo anterior. Cada llamada a la API relee el contexto entero, así que una
+llamada de más cuesta más que casi cualquier archivo. Medí cuántas llamadas hacía el agente por
+cada mensaje mío y escribí en sus instrucciones una regla explícita: encadenar en un mismo
+comando lo que no depende de un resultado previo, y lanzar juntas las herramientas
+independientes.</p>
+
+<p>Diez días después, las llamadas por mensaje no habían bajado. Se habían duplicado.</p>
+
+<div class="tabla"><table>
+  <tr><th>Ventana</th><th class="num">Media por sesión</th><th class="num">Mediana</th><th class="num">Global</th></tr>
+  <tr><td>Antes de la regla</td><td class="num">18,2</td><td class="num">13,5</td><td class="num">14,6</td></tr>
+  <tr><td>Diez días con la regla escrita</td><td class="num">24,3</td><td class="num">19,5</td><td class="num">23,0</td></tr>
+  <tr><td>Régimen siguiente</td><td class="num">32,7</td><td class="num">27,0</td><td class="num">29,2</td></tr>
+</table></div>
+
+<p>Ese número engaña un poco. Los mensajes por sesión habían caído de 1,7 a 1,1: yo estaba
+mandando tareas más largas en un solo mensaje. Llamadas por mensaje mide el tamaño de la tarea
+tanto como la disciplina, así que sirve de alarma y no de veredicto. Lo comparable es la conducta
+que la regla pedía. Los comandos de shell con dos o más pasos encadenados eran 84-87 % antes de
+escribirla y 86 % después: ya venían encadenados. Y las llamadas con más de una herramienta
+subieron a 47 % en los tres días siguientes a escribir la regla, para volver a 18 % y después a
+10 %. Tres días buenos y se soltó. Ya me había pasado lo mismo con otra regla unas semanas antes.</p>
+
+<figure>
+  <img src="img/regla.png" alt="Barras: 9 a 16 % de llamadas con dos o más herramientas antes de la regla, 47 % en los tres días siguientes, 18 % desde el 14 de septiembre y 10 % en el régimen siguiente.">
+  <figcaption>Proporción de llamadas que mandan dos o más herramientas juntas, que es lo que la
+  regla pedía. Subió en los tres días siguientes a escribirla y volvió a su nivel.</figcaption>
+</figure>
+
+<p>Probé también el mecanismo inverso: sacar instrucciones del archivo que se carga siempre y
+dejarlas en un archivo que Claude Code carga solo cuando se trabaja sobre ciertas rutas
+(<code>.claude/rules/</code> con <code>paths:</code>). Funciona, pero lo dispara solo la lectura
+o edición con las herramientas de archivo. Si el agente lee por shell, no carga. En un mes, de
+las sesiones que tocaron esa carpeta, en el 78 % la regla no habría entrado. Sirve para guías de
+consulta atadas a archivos que se editan, nunca para una regla que no se puede romper.</p>
+
+<div class="destacado"><p>La conclusión que saqué: una instrucción escrita rinde lo que rinde en
+sus primeros días, y después vuelve la conducta de siempre. Si algo importa, va como mecanismo
+(un hook que bloquea, un comando que hace tres pasos en uno), no como otra línea de
+instrucciones.</p></div>
+
+<h2>La tabla de las palancas chicas</h2>
+
+<p>Esto es lo que midió el resto del mes. La columna del techo supone obediencia total, que no
+existe. La del costo es lo que se paga por intentarlo.</p>
+
+<figure>
+  <img src="img/palancas.png" alt="Barras horizontales: registrar la memoria en un solo comando 3,4 % medido; el resto son techos entre 2,7 % y 0,18 % del costo ponderado.">
+  <figcaption>El techo de cada palanca, en porcentaje del costo ponderado. La barra roja es la
+  única que se midió después de aplicarla, y es la del lote que se describe más arriba.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+  <tr><th>Palanca</th><th class="num">Techo</th><th>Lo que cuesta o lo que pasó</th></tr>
+  <tr><td>Juntar en una llamada las lecturas independientes</td><td class="num">1,5-1,8 %</td><td>Un aviso tras cada lectura suelta cuesta 0,25 % y empata recién con 15 % de obediencia.</td></tr>
+  <tr><td>Achicar los argumentos de herramientas (scripts largos, archivos escritos enteros)</td><td class="num">2,7 %</td><td>Es el total de todos los argumentos. La regla «editar en vez de reescribir» toca ~0,1 %.</td></tr>
+  <tr><td>Cargar instrucciones solo por ruta</td><td class="num">0,2 %</td><td>No carga si el agente lee por shell.</td></tr>
+  <tr><td>Recortar el archivo de instrucciones global</td><td class="num">0,18 % por cada 10 %</td><td>Se descartó.</td></tr>
+  <tr><td>Partir las notas de memoria grandes</td><td class="num">~1 %</td><td>La escalera ya lo había resuelto.</td></tr>
+  <tr><td>No buscar en el lugar equivocado (otra casilla, otra carpeta)</td><td class="num">0,25 %</td><td>Es un piso. Se justifica por calidad, no por tokens.</td></tr>
+  <tr><td>Localizar archivos con un mapa de carpetas en vez de buscar</td><td class="num">1,07 %</td><td>Incluye las búsquedas que eran necesarias.</td></tr>
+  <tr><td>Abreviar las instrucciones</td><td class="num">0</td><td>4,8 % menos caracteres, 0,6 % más tokens.</td></tr>
+  <tr><td>Escribir sin tildes ni eñes</td><td class="num">0</td><td>1 % más tokens.</td></tr>
+  <tr><td>Bajar el caché de una hora a cinco minutos</td><td class="num">no aplica</td><td>Con suscripción, la hora ya es el default.</td></tr>
+</table></div>
+
+<p>Lo de abreviar merece una línea más, porque es la pregunta que más me hacen. El tokenizador
+corta por piezas de vocabulario, no por letra. «Que», «memoria» o «después» ya eran un token;
+«q», «mem» o «dsp» siguieron costando uno, y los signos raros («c/», «x») agregaron piezas. La
+forma acentuada correcta resultó ser la más frecuente en el vocabulario, por eso quitarle las
+tildes la encareció. Se recorta quitando contenido, no comprimiéndolo.</p>
+
+<p>Y lo de buscar en el lugar equivocado lo cuento porque me sorprendió lo poco que pesaba. De
+2.064 búsquedas en dos semanas fallaron 99, que etiqueté a mano una por una porque la
+clasificación automática confundía un reintento con otras palabras con un abandono. Las que
+fueron a la fuente equivocada (buscar un correo personal en la casilla del trabajo, sobre todo)
+sumaron 0,25 % del gasto, unas dos llamadas al día. Vale la pena corregirlo igual, pero porque
+concluir «no hay nada» mirando en el lugar equivocado es un error de contenido, no de costo.</p>
+
+<h2>Partir sesiones no paga (y aquí me contradigo)</h2>
+
+<p>En el artículo anterior la palanca número uno era abrir una sesión nueva al cambiar de tema.
+Un mes después, la medición dice que cortar a mitad de tarea sale negativo, y que a veces conviene
+lo contrario.</p>
+
+<p>La cuenta es esta. Cortar obliga a volver a escribir en caché el prefijo de la sesión (las
+instrucciones, las definiciones de herramientas, lo que el agente necesita para arrancar), y
+escribir cuesta 2 donde leer cuesta 0,1. Lo que se ahorra es releer el exceso acumulado en cada
+llamada siguiente. Cortar conviene recién cuando ese exceso, multiplicado por las llamadas que
+quedan, pasa unas 19 veces el tamaño del prefijo. Con sesiones como las mías, casi nunca.</p>
+
+<p>Lo simulé sobre los transcripts. La regla «cortar cuando el exceso pase de 25 mil tokens» dio
+-2,7 %; con 50 mil, -0,6 %; desde 75 mil ya no cortaba ninguna sesión. Un oráculo que corta en
+el mejor momento sabiendo el futuro y sin pagar el costo de reorientarse llegó a 2,9 %, y solo en
+cuatro sesiones.</p>
+
+<p>Lo que sí rindió fue lo inverso: seguir con la tarea siguiente en la misma sesión cuando esta
+va liviana (menos de 20 mil tokens sobre el piso, misma carpeta, menos de una hora entre ambas).
+El primer día que lo medí daba +2,2 %. Después encontré que la simulación aceptaba juntar sesiones
+que en realidad habían corrido en paralelo, y sin ellas quedó en +1,7 a +1,9 %. El segundo día
+dio +0,5 %: ese día el trabajo ya venía encadenado en sesiones largas y casi no había dónde juntar.</p>
+
+<figure>
+  <img src="img/sesiones.png" alt="Barras: cortar al pasar 25 mil tokens de exceso -2,7 %, al pasar 50 mil -0,6 %, desde 75 mil 0 %; un oráculo +2,9 %; juntar sesiones +1,7 a +1,9 % el primer día y +0,53 % el segundo.">
+  <figcaption>Ahorro simulado sobre los transcripts, en porcentaje del costo ponderado. El
+  oráculo es un techo imposible: corta en el mejor momento, sabe el futuro y no paga el costo
+  de reorientarse.</figcaption>
+</figure>
+
+<p>No hay contradicción de fondo, hay un cambio de régimen. El primer artículo midió una época de
+sesiones de cientos de turnos, donde cortar ahorraba un tercio. El hábito funcionó: en el régimen que
+medí, 43 de 54 sesiones tuvieron un solo mensaje, con una mediana de 13 llamadas. Con sesiones así de
+cortas, el margen está del otro lado. Todavía no lo recomiendo: son dos días de regímenes
+distintos, describe y no recomienda, y no mide el otro costo de juntar temas, que es la calidad
+de lo que responde un agente con dos asuntos mezclados en el contexto.</p>
+
+<h2>La caché, con los precios que de verdad se pagan</h2>
+
+<p>En el régimen actual, la lectura de caché es el 46 % del costo ponderado y la escritura, el
+36 %. La escritura pesa más de lo que parece porque se paga a precio doble: toda es a una hora.
+Quise probar bajarla a cinco minutos, que en la API cuesta 1,25 en vez de 2, y resultó que con
+suscripción la hora es el default del uso incluido. El sobreprecio de mi estimación era de la API,
+no de lo que se factura.</p>
+
+<p>Partida por origen, la escritura fue 36 % arranque de sesión y 64 % contenido nuevo. Las
+reescrituras por caché vencido fueron cero en ese régimen. Y el arranque no es escribir el prefijo
+entero: la primera llamada lee unos 42 mil tokens de caché, que es el prefijo común entre sesiones
+y sobrevive incluso más de una hora sin actividad, y escribe unos 22 mil propios de la sesión.
+Aun así, el arranque pesa 14 % del costo, porque la mayoría de mis sesiones son cortas. Es la
+misma cuenta que hace negativo cortarlas.</p>
+
+<h2>Contra los pioneros</h2>
+
+<p>A mitad de mes revisé cómo resuelven la memoria los proyectos que más se citan: las guías de
+Anthropic sobre ingeniería de contexto y su herramienta de memoria, Manus (prefijo estable y el
+sistema de archivos como memoria), claude-mem (divulgación progresiva en tres capas), Letta
+(consolidación mientras el agente no trabaja) y Mem0 y Zep, cuyos benchmarks no se pueden
+reproducir de un arnés a otro.</p>
+
+<p>La sorpresa fue que el sistema que había armado a punta de mediciones ya estaba a la par. El
+ruteo que sugiere, el mapa de secciones y la lectura de una sola sección son la misma
+divulgación progresiva de claude-mem, con el costo a la vista en cada escalón. Separar en cada
+nota un estado vigente que se reescribe y una historia que solo crece cumple lo que Zep hace con
+validez temporal. Descarté instalar cualquiera de ellos o una base vectorial: todos suman texto
+fijo al inicio de cada sesión, que es justo lo que se paga más veces, y el ruteo por palabras ya
+acertaba 75 %.</p>
+
+<p>Y con la calibración de tokens corregida, la memoria completa (instrucciones, índice,
+lecturas, escrituras y ruteo) pesaba 10 % del costo, y lo recortable dentro de eso, entre 2,5 y
+3 %. Se aplicó, y fue el lote del que hablé más arriba.</p>
+
+<h2>Qué medir, y con qué</h2>
+
+<p>Si algo quedó de este mes es el orden. Antes de aplicar una palanca: medir su techo con los
+propios transcripts, asumiendo obediencia total. Si el techo es chico, no vale la pena ni el
+texto que la explica. Si es grande, preferir un mecanismo a una instrucción. Y después de
+aplicarla, medir solo desde el momento del cambio.</p>
+
+<p>Los scripts están en <a href="https://github.com/talcaldeg/context-economy">context-economy</a>,
+que ahora tiene seis. Leen los <code>.jsonl</code> que Claude Code deja en el disco y no mandan
+nada a ninguna parte.</p>
+
+<pre><code>python medir_consumo.py --desde "2026-09-21 11:44"
+python medir_tool_results.py --desde "2026-09-21 11:44" --top 25
+python medir_paralelismo.py --desde "2026-09-21 11:44" --muestra pares.csv
+python medir_juntar.py --desde "2026-09-21 11:44"</code></pre>
+
+<p><code>medir_consumo.py</code> da el gasto por sesión, con volumen y costo ponderado.
+<code>medir_tool_results.py</code> ordena los resultados de herramientas por arrastre.
+<code>medir_paralelismo.py</code> calcula el techo de juntar lecturas y deja una muestra para
+revisar a mano cuánto se equivoca su heurística (en mi caso, bastante: de 30 pares que marcó
+independientes, lo eran 12 y medio). <code>medir_juntar.py</code> simula seguir en la misma
+sesión en vez de abrir otra. <code>regimen.py</code> corre dentro de los anteriores y avisa si la
+ventana cruza un cambio de configuración.</p>
+
+<p>Hay dos cifras de este artículo que no se pueden reproducir con ese repositorio: el acierto
+del ruteo y el costo de buscar en el lugar equivocado. Salen de dos scripts que dependen de mi
+lector de notas y de la estructura de mis carpetas, y publicarlos sería publicar algo que no
+corre en otra máquina. Lo que sí se puede rehacer es el método, que describí arriba: el banco del
+ruteo se arma con los transcripts propios (cada mensaje contra las notas que se abrieron de verdad
+para responderlo), y las búsquedas fallidas se detectan por resultado vacío y se clasifican a
+mano. Tampoco están en el repositorio las simulaciones de cortar sesiones ni la partición de la
+caché, que corrieron una vez sobre una ventana; la de juntar sesiones sí, porque la voy a repetir.</p>
+
+<p>Estas cifras son de una persona y de su forma de trabajar, igual que en el artículo anterior.
+El mensaje que me llevo no depende de eso. Cuando el primer diagnóstico ya se aplicó, lo que
+queda por ganar es chico y está repartido, y la única manera de no gastar un mes en palancas de
+0,2 % es saber cuánto rinde cada una antes de moverla.</p>
+
+<h2>Preguntas frecuentes</h2>
+
+<h3>¿Por qué los scripts que suman el bloque usage de los transcripts dan el doble?</h3>
+<p>Porque Claude Code escribe una línea por bloque de contenido de cada respuesta (texto, llamada a herramienta) y repite el mismo <code>usage</code> en todas. Sumar líneas contó cada llamada cerca de 1,9 veces. Hay que agrupar por <code>requestId</code>, o por <code>message.id</code> si falta, y contar una vez.</p>
+
+<h3>¿Conviene cortar la sesión o seguir en la misma?</h3>
+<p>Depende de cuánto duran hoy sus sesiones. Con sesiones ya cortas, cortar a mitad de tarea salió negativo (entre -2,7 % y -0,6 % según el umbral) porque cada sesión nueva vuelve a escribir el prefijo en caché. Seguir con la tarea siguiente en la misma sesión, si va liviana, rindió entre +0,5 % y +1,9 % según el día.</p>
+
+<h3>¿Sirve abreviar o quitar tildes para gastar menos tokens?</h3>
+<p>No. Medido sobre el mismo texto de instrucciones, la versión abreviada tuvo 4,8 % menos caracteres y 0,6 % más tokens; sin tildes ni eñes, 1 % más. El tokenizador corta por piezas de vocabulario, no por letra. Lo que mueve el gasto es cuánto texto entra y cuántas llamadas lo releen.</p>
+
+<h3>¿Funciona escribir en las instrucciones del agente que junte las lecturas en una sola llamada?</h3>
+<p>Funcionó tres días y se soltó. Las llamadas con dos o más herramientas subieron a 47 % y volvieron a 10-18 % desde el cuarto día. Además el techo era chico: juntar todas las lecturas independientes habría ahorrado entre 1,5 % y 1,8 % del gasto.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · consultor de negocio y BI, IA aplicada a operaciones.
+  <a href="../../">Volver al inicio</a></p>
+</div></footer>
+
+</body>
+</html>
