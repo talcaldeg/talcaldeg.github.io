@@ -16,6 +16,7 @@ import json
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator, NullLocator
+from matplotlib.transforms import offset_copy
 
 from palancas_chicas import ANCHO, DPI, RAIZ, TEMAS, Lienzo, ancho_etiquetas, mezclar, num
 
@@ -94,21 +95,12 @@ def reparto(t, L, idioma, destino):
     c.texto(0, 0.95, L["re_filas"][0], va="top")
     for y, v, col, et in ((0.52, pct[1], colores[1], L["re_filas"][1]),
                           (0.84, pct[2], colores[2], L["re_filas"][2])):
-        c.texto(100, y, f"{et}   ", ha="right", va="top", color=t["suave"])
-        c.texto(100, y, num(v, idioma), ha="right", va="top", color=col, fontweight="semibold",
-                transform=ax.transData)
+        pc = num(v, idioma)
+        c.texto(100, y, pc, ha="right", va="top", fontweight="semibold")
+        corrido = offset_copy(ax.transData, fig=c.fig, units="dots",
+                              x=-(ancho_etiquetas([pc]) + 14))
+        c.texto(100, y, et, ha="right", va="top", color=t["suave"], transform=corrido)
     c.guardar(destino)
-
-
-def reparto_derecha(ax, textos):
-    """Deja el rótulo de texto a la izquierda del porcentaje, sin pisarse."""
-    r = ax.figure.canvas.get_renderer()
-    for et, pc in textos:
-        w = pc.get_window_extent(r).width
-        x, y = et.get_position()
-        inv = ax.transData.inverted()
-        px, py = ax.transData.transform((x, y))
-        et.set_position(inv.transform((px - w - 10, py)))
 
 
 def deriva(t, L, idioma, destino):
