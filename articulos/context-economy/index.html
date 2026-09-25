@@ -210,7 +210,7 @@ article counted each model call about 1.9 times. With the corrected count, the s
 294 sessions, 1,212 million tokens, 96 % re-reading and an exponent of 1.19. The totals halve
 and the diagnosis holds. What did change was the advice to cut sessions: a month later, with
 sessions already short, cutting mid-task came out negative. The details, and what I measured
-afterwards, are in <a href="../small-levers/">the second part</a>. A second correction, on 25 September: to go from characters to tokens I used 4 characters per token, and my data gives 2.1. That made each result about 1.9 times too small, close to how much the double count inflated the turns, so the published 380 million carry was near the mark by accident: with both fixes it is 345. The figures that depended on that conversion are now corrected in the text.</p></div>
+afterwards, are in <a href="../small-levers/">the second part</a>. A second correction, on 25 September: to go from characters to tokens I used 4 characters per token, and my data gives 2.1. That made each result about 1.9 times too small, close to how much the double count inflated the turns, so the published 380 million carry was near the mark by accident: with both fixes it is 345. The figures that depended on that conversion, and the split between short and long sessions, are now corrected in the text.</p></div>
 
 <p>The bill started to hurt before I understood why. The work was the usual: queries against a
 production database, reports, some automation, email. Nothing that sounded expensive. But the
@@ -362,8 +362,8 @@ tokens you never pay.</p>
 <ul>
   <li><strong>A new session per topic.</strong> By far the biggest lever, and the hardest one to
   obey, because the accumulated context always looks like it is about to be useful. It almost
-  never is, and it is paid in full on every turn until the end. In my data, the 142 sessions of
-  30 turns or fewer are 45 % of all sessions and 7 % of the spend; the 20 longest take 39 %.</li>
+  never is, and it is paid in full on every turn until the end. In my data, the 196 sessions of
+  30 turns or fewer are 67 % of all sessions and 18 % of the spend; the 20 longest take 40 %.</li>
   <li><strong>Large outputs go to a file, never into the conversation.</strong> A report, a table
   dump, a log: to disk, and into the conversation only the summary or a <code>head</code>. I
   found a single tool result of 25 thousand tokens in one turn; that poisons everything that
