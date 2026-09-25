@@ -255,7 +255,7 @@ de memoria del agente convertía caracteres a tokens con la regla que circula, u
 caracteres por token. Calibrado contra mis propios datos (el salto de contexto entre dos
 llamadas consecutivas, que es exactamente lo que se agregó), el modelo daba 2,1 caracteres por
 token en prosa en español. Con eso, la memoria no pesaba 7 % del gasto, como había calculado,
-sino 10 %.</p>
+sino 10 %. El medidor de resultados de herramientas dividía por 4, y eso lo corregí recién el 25 de septiembre: las cifras de la primera parte que dependían de esa conversión ya están corregidas allá.</p>
 
 <div class="destacado"><p>Ninguna de las dos correcciones cambió una conclusión. Las dos
 cambiaron cuánto se podía ganar con cada palanca, que es lo único que sirve para decidir en
@@ -297,10 +297,10 @@ llamada y por sesión sobre las piezas que el cambio tocó.</p>
 acuerde de algo. Son código que se ejecuta solo.</p>
 
 <p><strong>La escalera de costos.</strong> El problema concreto era una nota de memoria de 564
-líneas, unos 10 mil tokens, con 29 secciones. Ante una pregunta puntual sobre una de ellas, la
+líneas, unos 17 mil tokens, con 29 secciones. Ante una pregunta puntual sobre una de ellas, la
 única salida realista era abrirla entera. Se agregaron dos opciones al lector: una que lista las
-secciones con su rango de líneas y lo que cuesta cada una, sin leer ninguna (unos 700 tokens), y
-otra que trae una sola sección (unos 740). El principio que quedó es que <em>el costo se ve antes
+secciones con su rango de líneas y lo que cuesta cada una, sin leer ninguna (unos 1.200 tokens), y
+otra que trae una sola sección (unos 1.300). El principio que quedó es que <em>el costo se ve antes
 de pagarlo</em>, y que cada escalón vale más o menos un décimo del siguiente.</p>
 
 <p><strong>El bloqueo de relecturas.</strong> Al auditar un mes de lecturas de memoria, el 47 %

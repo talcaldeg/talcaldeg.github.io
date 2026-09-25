@@ -41,7 +41,7 @@
   "@id": "https://talcaldeg.github.io/articulos/economia-de-contexto/"
  },
  "datePublished": "2026-08-27",
- "dateModified": "2026-09-23",
+ "dateModified": "2026-09-25",
  "author": {
   "@type": "Person",
   "name": "Tomás Alcalde",
@@ -83,7 +83,7 @@
    "name": "¿Cómo reducir el consumo de tokens en Claude Code o en cualquier agente de IA?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con grep y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto antes de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 2.730 a 258 tokens el mismo dato en pantalla."
+    "text": "Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con grep y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto antes de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 5.178 a 495 tokens el mismo dato en pantalla."
    }
   },
   {
@@ -107,7 +107,7 @@
    "name": "¿Los archivos de memoria del agente ayudan o encarecen?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 9 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve."
+    "text": "Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 15 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve."
    }
   },
   {
@@ -213,7 +213,7 @@ la misma ventana da 294 sesiones, 1.212 millones de tokens, 96 % de relectura y 
 1,19. Los totales se parten por la mitad y el diagnóstico se mantiene. Lo que sí cambió fue la
 recomendación de cortar sesiones: un mes después, con sesiones ya cortas, cortar a mitad de tarea
 salió negativo. El detalle, y lo que medí después, está en <a href="../palancas-chicas/">la segunda
-parte</a>.</p></div>
+parte</a>. Una segunda corrección, del 25 de septiembre: para pasar de caracteres a tokens usaba 4 caracteres por token, y en mis datos son 2,1. Eso achicaba cada resultado cerca de 1,9 veces, casi lo mismo que el doble conteo inflaba los turnos, así que el arrastre publicado de 380 millones quedó cerca por casualidad: con las dos correcciones son 345. Las cifras que dependían de esa conversión ya están corregidas en el texto.</p></div>
 
 <p>La cuenta empezó a doler antes de que yo entendiera por qué. El trabajo era el mismo de
 siempre: consultas a una base de producción, reportes, algo de automatización, correo. Nada
@@ -327,7 +327,7 @@ completo el ranking de culpables.</p>
     <source srcset="img/arrastre-oscuro.png" media="(prefers-color-scheme: dark)">
     <img src="img/arrastre.png" width="1600" height="780" loading="lazy" alt="Barras horizontales: leer archivos enteros 54 %, comandos de shell 28 %, web y otros conectores 7 %, conectores de correo y documentos 6 %, resto 3 %, búsqueda filtrada 2 %.">
   </picture>
-  <figcaption>380 millones de tokens de arrastre en la ventana medida, repartidos por tipo de llamada.
+  <figcaption>345 millones de tokens de arrastre en la ventana medida, repartidos por tipo de llamada.
   Leer archivos completos se lleva más de la mitad.</figcaption>
 </figure>
 
@@ -335,7 +335,7 @@ completo el ranking de culpables.</p>
 archivos de código, sino <strong>los archivos de memoria del propio agente</strong>. Las notas
 que uno acumula para que el asistente sepa cómo funciona el negocio. Cada vez que una de esas
 notas se vuelve relevante se carga completa, y las que había dejado crecer sin control pasaban
-de 9 mil tokens cada una. El sistema que existía para hacer al agente más eficiente era la
+de 15 mil tokens cada una. El sistema que existía para hacer al agente más eficiente era la
 principal fuente de gasto variable.</p>
 
 <h2>El patrón: filtrar antes de traer, no después</h2>
@@ -352,13 +352,13 @@ ninguna gracia intelectual. El efecto sí:</p>
 
 <table>
   <tr><th>Listar los últimos seis correos</th><th class="num">tokens que entran al contexto</th></tr>
-  <tr><td>Conector de correo estándar</td><td class="num">2.730 (promedio de 190 llamadas)</td></tr>
-  <tr><td>Lector local filtrado</td><td class="num">258</td></tr>
+  <tr><td>Conector de correo estándar</td><td class="num">5.178 (promedio de 171 llamadas)</td></tr>
+  <tr><td>Lector local filtrado</td><td class="num">495</td></tr>
 </table>
 
 <p>Un orden de magnitud, para el mismo dato en pantalla. Y como el ahorro se multiplica por
 todos los turnos que vengan después, en una sesión de 100 turnos esa sola decisión son unos
-250 mil tokens que no se pagan.</p>
+470 mil tokens que no se pagan.</p>
 
 <p>Las otras tres que quedaron como hábito, en orden de cuánto rindieron:</p>
 
@@ -370,7 +370,7 @@ todos los turnos que vengan después, en una sesión de 100 turnos esa sola deci
   el 39 %.</li>
   <li><strong>Las salidas grandes van a archivo, nunca a la conversación.</strong> Un reporte,
   un volcado de tabla, un log: al disco, y a la conversación el resumen o un <code>head</code>.
-  Llegué a encontrar un resultado de 132 mil tokens en un solo turno; eso envenena todo lo que
+  Llegué a encontrar un resultado de 25 mil tokens en un solo turno; eso envenena todo lo que
   venga después.</li>
   <li><strong>Buscar en vez de leer.</strong> <code>grep</code> con número de línea y después
   el rango exacto, en lugar de abrir el archivo completo para cambiar tres líneas. Las
@@ -432,7 +432,7 @@ instrucciones. Se trata de decidir, con criterio y a veces con dolor, qué es lo
 <p>Porque el modelo no tiene memoria entre llamadas: en cada turno se le vuelve a mandar la conversación completa. Medido sobre 45 sesiones largas, el contexto leído por turno pasa de 69 mil tokens en el primer décimo de la sesión a 200 mil en el último, haciendo el mismo tipo de trabajo. Es 2,9 veces más caro por el solo hecho de llevar más historia detrás.</p>
 
 <h3>¿Cómo reducir el consumo de tokens en Claude Code o en cualquier agente de IA?</h3>
-<p>Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con <code>grep</code> y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto <em>antes</em> de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 2.730 a 258 tokens el mismo dato en pantalla.</p>
+<p>Cuatro medidas, en orden de cuánto rindieron: abrir una sesión nueva al cambiar de tema; mandar las salidas grandes a un archivo en vez de a la conversación; buscar con <code>grep</code> y leer el rango exacto en lugar de abrir archivos completos; y filtrar lo que entra al contexto <em>antes</em> de traerlo, no resumirlo después. Reemplazar un conector de correo por un lector local filtrado bajó de 5.178 a 495 tokens el mismo dato en pantalla.</p>
 
 <h3>¿Conviene cortar la sesión y abrir otra, o seguir en la misma?</h3>
 <p>Depende de cuánto duren sus sesiones. El costo por sesión crece con los turnos elevado a 1,20 (ajuste sobre 313 sesiones, R² 0,97): con sesiones de cientos de turnos, como las de esta medición, partirlas ahorraba alrededor de un tercio. Con sesiones ya cortas la cuenta se da vuelta, porque cada sesión nueva vuelve a escribir en caché el prefijo de instrucciones: en <a href="../palancas-chicas/">la medición de septiembre</a>, cortar a mitad de tarea salió entre -2,7 % y -0,6 %. Ojo también con la regla que circula de que el crecimiento es cuadrático: con exponente 2 el ahorro daría 90 %, y contra datos reales el exponente no da 2.</p>
@@ -441,7 +441,7 @@ instrucciones. Se trata de decidir, con criterio y a veces con dolor, qué es lo
 <p>Lo abarata, no lo elimina. En la medición, el 94 % de los tokens medidos es <code>cache_read</code>: contexto que ya estaba ahí y se vuelve a leer en cada turno. El caché baja el precio unitario, pero no cambia que la cantidad crece sola mientras usted trabaja.</p>
 
 <h3>¿Los archivos de memoria del agente ayudan o encarecen?</h3>
-<p>Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 9 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve.</p>
+<p>Ambas cosas, y hay que medirlo. Leer archivos completos se lleva el 54 % del arrastre, y buena parte no eran archivos de código sino las notas de memoria del propio agente: cada vez que una se vuelve relevante se carga entera, y las que habían crecido sin control pasaban de 15 mil tokens cada una. Conviene partirlas en secciones y leer solo la que sirve.</p>
 
 <h3>¿Cómo medir en qué se van los tokens de un agente, sin telemetría del proveedor?</h3>
 <p>Los transcripts están en su propio disco, como archivos <code>.jsonl</code>, y traen el bloque <code>usage</code> de cada llamada con input, output y tokens leídos de caché. Un script de unas doscientas líneas arma el ranking de sesiones; otro atribuye cada resultado de herramienta a su llamada y lo multiplica por los turnos posteriores, que es el <strong>arrastre</strong>. Los tres están publicados en <a href="https://github.com/talcaldeg/context-economy">context-economy</a>.</p>

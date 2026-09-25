@@ -41,7 +41,7 @@
   "@id": "https://talcaldeg.github.io/articulos/context-economy/"
  },
  "datePublished": "2026-08-27",
- "dateModified": "2026-09-23",
+ "dateModified": "2026-09-25",
  "author": {
   "@type": "Person",
   "name": "Tomás Alcalde",
@@ -83,7 +83,7 @@
    "name": "How do you cut token usage in Claude Code or any AI agent?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use grep and read the exact range rather than opening whole files; and filter what enters the context before bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 2,730 tokens down to 258."
+    "text": "Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use grep and read the exact range rather than opening whole files; and filter what enters the context before bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 5,178 tokens down to 495."
    }
   },
   {
@@ -107,7 +107,7 @@
    "name": "Do the agent's memory files help, or do they cost?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 9 thousand tokens each. Split them into sections and read only the section you need."
+    "text": "Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 15 thousand tokens each. Split them into sections and read only the section you need."
    }
   },
   {
@@ -210,7 +210,7 @@ article counted each model call about 1.9 times. With the corrected count, the s
 294 sessions, 1,212 million tokens, 96 % re-reading and an exponent of 1.19. The totals halve
 and the diagnosis holds. What did change was the advice to cut sessions: a month later, with
 sessions already short, cutting mid-task came out negative. The details, and what I measured
-afterwards, are in <a href="../small-levers/">the second part</a>.</p></div>
+afterwards, are in <a href="../small-levers/">the second part</a>. A second correction, on 25 September: to go from characters to tokens I used 4 characters per token, and my data gives 2.1. That made each result about 1.9 times too small, close to how much the double count inflated the turns, so the published 380 million carry was near the mark by accident: with both fixes it is 345. The figures that depended on that conversion are now corrected in the text.</p></div>
 
 <p>The bill started to hurt before I understood why. The work was the usual: queries against a
 production database, reports, some automation, email. Nothing that sounded expensive. But the
@@ -325,14 +325,14 @@ sorting by that column instead of by size completely rearranges the list of culp
     <source srcset="img/arrastre-oscuro.png" media="(prefers-color-scheme: dark)">
     <img src="img/arrastre.png" width="1600" height="780" loading="lazy" alt="Horizontal bars: reading whole files 54 %, shell commands 28 %, web and other connectors 7 %, mail and document connectors 6 %, the rest 3 %, filtered search 2 %.">
   </picture>
-  <figcaption>380 million tokens of carry over the window measured, split by type of call.
+  <figcaption>345 million tokens of carry over the window measured, split by type of call.
   Reading whole files takes more than half.</figcaption>
 </figure>
 
 <p>54 % is reading whole files. And inside that, the biggest surprise: a good part of it was not
 code files but <strong>the agent's own memory files</strong>. The notes you accumulate so the
 assistant knows how the business works. Every time one of those notes becomes relevant it gets
-loaded in full, and the ones I had let grow unchecked were over 9 thousand tokens each. The
+loaded in full, and the ones I had let grow unchecked were over 15 thousand tokens each. The
 system that existed to make the agent more efficient was the main source of variable cost.</p>
 
 <h2>The pattern: filter before it enters, not after</h2>
@@ -349,12 +349,12 @@ code and has no intellectual charm whatsoever. The effect does:</p>
 
 <table>
   <tr><th>Listing the last six emails</th><th class="num">tokens entering the context</th></tr>
-  <tr><td>Standard mail connector</td><td class="num">2,730 (average of 190 calls)</td></tr>
-  <tr><td>Local filtered reader</td><td class="num">258</td></tr>
+  <tr><td>Standard mail connector</td><td class="num">5,178 (average of 171 calls)</td></tr>
+  <tr><td>Local filtered reader</td><td class="num">495</td></tr>
 </table>
 
 <p>An order of magnitude, for the same data on screen. And because the saving multiplies across
-every turn that comes after, in a 100-turn session that single decision is around 250 thousand
+every turn that comes after, in a 100-turn session that single decision is around 470 thousand
 tokens you never pay.</p>
 
 <p>The other three that stuck as habits, in order of how much they returned:</p>
@@ -366,7 +366,7 @@ tokens you never pay.</p>
   30 turns or fewer are 45 % of all sessions and 7 % of the spend; the 20 longest take 39 %.</li>
   <li><strong>Large outputs go to a file, never into the conversation.</strong> A report, a table
   dump, a log: to disk, and into the conversation only the summary or a <code>head</code>. I
-  found a single tool result of 132 thousand tokens in one turn; that poisons everything that
+  found a single tool result of 25 thousand tokens in one turn; that poisons everything that
   follows.</li>
   <li><strong>Search instead of read.</strong> <code>grep</code> with line numbers and then the
   exact range, rather than opening the whole file to change three lines. Broad searches go to a
@@ -426,7 +426,7 @@ deliberately and sometimes painfully, what does <em>not</em> get in.</p>
 <p>Because the model has no memory between calls: every turn resends the whole conversation. Measured across 45 long sessions, the context read per turn goes from 69 thousand tokens in the first tenth of the session to 200 thousand in the last one, doing the same kind of work. That is 2.9 times more expensive purely for carrying more history behind it.</p>
 
 <h3>How do you cut token usage in Claude Code or any AI agent?</h3>
-<p>Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use <code>grep</code> and read the exact range rather than opening whole files; and filter what enters the context <em>before</em> bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 2,730 tokens down to 258.</p>
+<p>Four measures, ordered by what they actually returned: start a new session when the topic changes; send large outputs to a file instead of into the conversation; use <code>grep</code> and read the exact range rather than opening whole files; and filter what enters the context <em>before</em> bringing it in, not by summarising it afterwards. Replacing a mail connector with a filtered local reader took the same on-screen data from 5,178 tokens down to 495.</p>
 
 <h3>Is it better to end the session and open a new one, or keep going?</h3>
 <p>It depends on how long your sessions run. Cost per session grows with turns raised to 1.20 (fit over 313 sessions, R² 0.97): with sessions of hundreds of turns, like the ones in this measurement, splitting them saved around a third. With sessions that are already short the sum flips, because every new session writes the instruction prefix to the cache again: in <a href="../small-levers/">the September measurement</a>, cutting mid-task came out between -2.7 % and -0.6 %. Also beware the rule of thumb that growth is quadratic: an exponent of 2 would promise 90 %, and against real data the exponent is not 2.</p>
@@ -435,7 +435,7 @@ deliberately and sometimes painfully, what does <em>not</em> get in.</p>
 <p>It makes it cheaper, it does not remove it. In the measurement, 94 % of the tokens measured is <code>cache_read</code>: context that was already there and gets read again every turn. Caching lowers the unit price, but it does not change the fact that the volume grows on its own while you work.</p>
 
 <h3>Do the agent's memory files help, or do they cost?</h3>
-<p>Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 9 thousand tokens each. Split them into sections and read only the section you need.</p>
+<p>Both, and it has to be measured. Reading whole files accounts for 54 % of the carry, and much of it was not source code but the agent's own memory notes: each one loads in full whenever it becomes relevant, and the ones left to grow unchecked were over 15 thousand tokens each. Split them into sections and read only the section you need.</p>
 
 <h3>How do you measure where an agent's tokens go, without vendor telemetry?</h3>
 <p>The transcripts are on your own disk as <code>.jsonl</code> files, carrying the <code>usage</code> block of every call with input, output and cache-read tokens. A script of about two hundred lines builds the session ranking; another attributes each tool result to its call and multiplies it by the turns that came after, which is the <strong>carry</strong>. All three are published in <a href="https://github.com/talcaldeg/context-economy">context-economy</a>.</p>
