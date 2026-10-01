@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentorías en Power BI, SQL e ingeniería de datos - Tomás Alcalde</title>
+<meta name="description" content="Sesiones uno a uno para analistas que quieren pasar a Power BI, SQL o ingeniería de datos. 60 minutos en línea, $35.000 por sesión.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1b2d">
+<link rel="canonical" href="https://talcaldeg.github.io/mentorias/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://talcaldeg.github.io/mentorias/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Mentorías en Power BI, SQL e ingeniería de datos">
+<meta property="og:description" content="Sesiones uno a uno para analistas que quieren dar el salto. 60 minutos en línea, $35.000 por sesión.">
+<meta property="og:image" content="https://talcaldeg.github.io/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Service",
+ "name": "Mentorías uno a uno en Power BI, SQL e ingeniería de datos",
+ "url": "https://talcaldeg.github.io/mentorias/",
+ "inLanguage": "es",
+ "areaServed": "CL",
+ "provider": {"@id": "https://talcaldeg.github.io/#tomas-alcalde"},
+ "offers": [
+  {"@type": "Offer", "name": "Sesión de 60 minutos", "price": "35000", "priceCurrency": "CLP"},
+  {"@type": "Offer", "name": "Paquete de 4 sesiones", "price": "120000", "priceCurrency": "CLP"}
+ ]
+}
+</script>
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      color-scheme: light;
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:860px; margin:0 auto; padding:0 22px}
+  @media (max-width:480px){ .wrap{padding:0 16px} }
+
+  .top{position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .brand{font-weight:700; letter-spacing:.2px; color:var(--ink)}
+  .back{font-size:14px; font-weight:600}
+
+  header.hero{padding:52px 0 34px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 10px}
+  h1{font-size:clamp(30px,5.5vw,44px); line-height:1.12; margin:0 0 14px}
+  .lede{font-size:clamp(16px,2.4vw,19px); color:var(--muted); max-width:640px; margin:0 0 24px}
+  .cta{display:flex; flex-wrap:wrap; gap:10px}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:10px; font-weight:600; font-size:15px; border:1px solid var(--line)}
+  .btn:hover{text-decoration:none}
+  .btn.primary{background:var(--accent); color:#04121f; border-color:transparent}
+  .btn.ghost{background:transparent; color:var(--ink)}
+
+  section{padding:34px 0; border-top:1px solid var(--line)}
+  h2{font-size:22px; margin:0 0 20px; display:flex; align-items:center; gap:10px}
+  h2::before{content:""; width:8px; height:22px; background:var(--accent); border-radius:3px; display:inline-block; flex:none}
+  p{margin:0 0 14px}
+  .muted{color:var(--muted)}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px}
+  .card h3{margin:0 0 8px; font-size:17px}
+  .card p, .card ul{color:var(--muted); font-size:14.5px; margin:0}
+  .card ul{padding-left:18px}
+  .card li{margin:4px 0}
+
+  .steps{counter-reset:paso; list-style:none; padding:0; margin:0; display:grid; gap:12px}
+  .steps li{counter-increment:paso; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px 16px 62px; position:relative; color:var(--muted)}
+  .steps li strong{color:var(--ink)}
+  .steps li::before{content:counter(paso); position:absolute; left:18px; top:15px; width:30px; height:30px; border-radius:50%; background:var(--chip); border:1px solid var(--line); color:var(--teal); font-weight:800; display:flex; align-items:center; justify-content:center}
+
+  .price .n{font-size:34px; font-weight:800; color:var(--teal); line-height:1.1; margin:6px 0 4px}
+  .price .u{color:var(--muted); font-size:14px}
+
+  details{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:10px}
+  summary{cursor:pointer; font-weight:600}
+  details p{color:var(--muted); margin:10px 0 0}
+
+  footer{padding:38px 0 50px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="/">Tomás Alcalde</a>
+    <a class="back" href="/">← Inicio</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Mentorías uno a uno</p>
+    <h1>Del Excel a Power BI, SQL o ingeniería de datos</h1>
+    <p class="lede">Sesiones de una hora para analistas que quieren dar el salto técnico. Trabajamos sobre su caso real: el informe que tiene que sacar, la consulta que no le resulta o el camino para cambiar de rol.</p>
+    <div class="cta">
+      <a class="btn primary" id="reservar" href="mailto:talcaldeg@gmail.com?subject=Mentor%C3%ADa%20uno%20a%20uno">Reservar una hora</a>
+      <a class="btn ghost" href="#precio">Ver precios</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Qué se puede trabajar</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Power BI</h3>
+        <ul>
+          <li>Modelo de datos: tablas de hechos y dimensiones</li>
+          <li>DAX que da el número correcto</li>
+          <li>Power Query para dejar de copiar y pegar</li>
+          <li>Tableros que se entienden en un minuto</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>SQL</h3>
+        <ul>
+          <li>Desde el primer SELECT hasta funciones de ventana</li>
+          <li>Joins que no duplican filas</li>
+          <li>Vistas para que el informe no dependa de una planilla</li>
+          <li>Leer la base de su empresa sin miedo</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Ingeniería de datos y carrera</h3>
+        <ul>
+          <li>Python, BigQuery y cargas automáticas</li>
+          <li>Qué aprender primero y qué dejar para después</li>
+          <li>Proyectos de portafolio y CV para el cambio de rol</li>
+          <li>Uso de IA en el trabajo diario con datos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Quién la da</h2>
+    <p>Soy ingeniero civil industrial de la Pontificia Universidad Católica de Chile, con más de cinco años en analítica, BI e ingeniería de datos para retail, consumo masivo y exportación. Empecé igual que muchos analistas, armando informes a mano en Excel, y pasé por SQL Server, Power BI y Google Cloud hasta montar plataformas de datos completas. Hoy dirijo además <a href="https://verumdata.cl/" target="_blank" rel="noopener">Verum Data</a>, una consultora de datos.</p>
+    <p class="muted">Más detalle de la trayectoria en <a href="/">la página principal</a>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Cómo funciona</h2>
+    <ol class="steps">
+      <li><strong>Reserve una hora</strong> y cuente en dos líneas qué quiere resolver.</li>
+      <li><strong>Confirme con una transferencia.</strong> Los datos llegan por correo al reservar; la hora queda tomada cuando se recibe el pago.</li>
+      <li><strong>Sesión de 60 minutos por Google Meet,</strong> con pantalla compartida. Si trae su archivo o su consulta, mejor.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="precio">
+  <div class="wrap">
+    <h2>Precio</h2>
+    <div class="grid">
+      <div class="card price">
+        <h3>Sesión</h3>
+        <div class="n">$35.000</div>
+        <div class="u">60 minutos, en línea</div>
+      </div>
+      <div class="card price">
+        <h3>Paquete de 4 sesiones</h3>
+        <div class="n">$120.000</div>
+        <div class="u">$30.000 cada una, para usar en dos meses</div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:16px">Valores en pesos chilenos.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Preguntas frecuentes</h2>
+    <details>
+      <summary>¿Necesito saber algo antes?</summary>
+      <p>No. Basta con usar Excel en su trabajo. La sesión se ajusta al punto en que esté.</p>
+    </details>
+    <details>
+      <summary>¿Puedo cambiar la hora?</summary>
+      <p>Sí, avisando con 24 horas de anticipación. Con menos aviso, la sesión se da por hecha.</p>
+    </details>
+    <details>
+      <summary>¿Trabajamos con datos de mi empresa?</summary>
+      <p>Solo si usted puede compartirlos. Si no, armamos un ejemplo equivalente con datos de prueba.</p>
+    </details>
+    <details>
+      <summary>¿Hacen el trabajo por mí?</summary>
+      <p>No. La idea es que usted salga sabiendo hacerlo. Para un proyecto completo, eso es una consultoría y conviene conversarlo aparte.</p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cta" style="margin-bottom:14px">
+      <a class="btn primary" href="mailto:talcaldeg@gmail.com?subject=Mentor%C3%ADa%20uno%20a%20uno">Reservar una hora</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/tomas-alcalde-gdm" target="_blank" rel="noopener">in · LinkedIn</a>
+    </div>
+    <p>Tomás Alcalde Gueneau de Mussy · Santiago, Chile</p>
+  </div>
+</footer>
+
+</body>
+</html>
