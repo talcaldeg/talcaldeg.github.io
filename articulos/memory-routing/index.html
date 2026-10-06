@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The note was fine; finding it was the problem | Tomás Alcalde</title>
+<meta name="description" content="I measured my coding agent's memory the way memory benchmarks do: whether the fact arrives, and at what cost. With the right note, tiered reading beats loose fragments. What fails is choosing the note.">
+<meta property="og:title" content="The note was fine; finding it was the problem">
+<meta property="og:description" content="I measured my coding agent's memory the way memory benchmarks do: whether the fact arrives, and at what cost. With the right note, tiered reading beats loose fragments. What fails is choosing the note.">
+<meta property="og:type" content="article">
+<link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/memoria-ruteo/">
+<link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/memory-routing/">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/memory-routing/">
+<link rel="alternate" hreflang="x-default" href="https://talcaldeg.github.io/articulos/memory-routing/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/memory-routing/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_CL">
+<meta property="article:published_time" content="2026-10-06">
+<meta property="article:author" content="Tomás Alcalde">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/memory-routing/img/acierto.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The note was fine; finding it was the problem">
+<meta name="twitter:description" content="With the right note, tiered reading beats loose fragments. What fails is choosing the note.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/memory-routing/img/acierto.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "The note was fine; finding it was the problem",
+ "description": "I measured my coding agent's memory the way memory benchmarks do: whether the fact arrives, and at what cost. With the right note, tiered reading beats loose fragments. What fails is choosing the note.",
+ "inLanguage": "en",
+ "url": "https://talcaldeg.github.io/articulos/memory-routing/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/memory-routing/"
+ },
+ "datePublished": "2026-10-06",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/memory-routing/img/acierto.png",
+ "keywords": "agent memory, Claude Code, Mem0, LongMemEval, RAG, memory routing, context economy",
+ "citation": [
+  "https://talcaldeg.github.io/articulos/context-economy/",
+  "https://talcaldeg.github.io/articulos/small-levers/"
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Is it better to give the agent loose memory fragments, Mem0-style, or whole notes?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In my data it depends on whether the note is chosen well. With the right note, reading its current state and the section that fits best found the answer in 32 % of the questions with 2.7k tokens; the 40 best fragments reached 26 % with 8.7k. With the real routing, which gets the note right in first place only a third of the time, fragments win by a small margin at an equal budget."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you build a memory test bench without writing questions by hand?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "From the transcripts. In each turn you take the memory lines the agent read, and you mark as answers the ones with at least three uncommon words that reappear in what the agent replied and that were not in the question. You discard the turns where the agent writes memory, because there the match is with what it has just drafted itself."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is the history of the notes the hardest zone to find?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because the question almost never names the date or the episode. With the right note, the current state was found in 18 of 18 cases and the dated history in 21 of 95. It is what LongMemEval calls temporal reasoning, and in my data half of the answers lived there."
+   }
+  }
+ ]
+}
+</script>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0}
+  .resumen{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px 6px; margin:26px 0 30px}
+  .resumen p.t{font-weight:700; margin:0 0 10px}
+  .resumen ul{margin:0 0 12px}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px; margin:26px 0 32px}
+  .cifra{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .cifra .n{font-size:27px; font-weight:800; color:var(--teal); line-height:1}
+  .cifra .l{color:var(--muted); font-size:13px; margin-top:7px; line-height:1.45}
+
+  .tabla{overflow-x:auto; margin:22px 0 26px}
+  table{width:100%; border-collapse:collapse; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <span class="otro"><a href="../small-levers/">Previous article</a> · <a href="../memoria-ruteo/">Leer en español</a></span>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Context economy · part three</p>
+  <h1>The note was fine; finding it was the problem</h1>
+  <p class="lede">In part two I wrote that my agent's memory was on par with the most cited
+  projects. I had compared it by design. This time I measured it by outcome, the way they do, and
+  the answer came out split in two.</p>
+  <p class="meta">October 2026 · Tomás Alcalde · 9-minute read</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>I work with a coding agent that keeps what it learns in text notes: one per topic, with a
+current state at the top that gets rewritten and a dated history at the bottom that only grows.
+Today there are 220 notes and almost a million tokens. Nobody loads them whole. On every message a
+word-based search suggests which ones might help, the agent asks for a map of sections with the
+cost of each, and fetches only the one it needs. I have been calling that the ladder.</p>
+
+<p>In <a href="../small-levers/">the previous article</a> I put it next to Mem0, Zep,
+claude-mem and Letta, and concluded that it was missing nothing. That was a comparison of pieces:
+this is equivalent to that. The other comparison was missing, the one their benchmarks make. Given
+a question, does the line that answers it reach the agent's view, and how many tokens did it cost
+to bring it? This article is that measurement.</p>
+
+<div class="resumen">
+  <p class="t">The short version</p>
+  <ul>
+    <li>With the right note in hand, reading its state and one section found the answer in 32 % of
+    the questions with 2.7k tokens. No number of loose fragments reached that, even with three
+    times the budget.</li>
+    <li>The search puts the answer's note first only one time in three. With that routing, the
+    ladder loses by a small margin against fragments.</li>
+    <li>The current state is always found; the dated history, one time in five. And half of the
+    answers were in the history.</li>
+    <li>The 76 % hit rate I published before measured something else: whether some useful note was
+    opened, not whether the fact arrived.</li>
+  </ul>
+</div>
+
+<div class="cifras">
+  <div class="cifra"><div class="n">32 %</div><div class="l">ladder hit rate with the right note, at 2.7k tokens</div></div>
+  <div class="cifra"><div class="n">1 in 3</div><div class="l">times the search puts the answer's note first</div></div>
+  <div class="cifra"><div class="n">18 of 18</div><div class="l">answers found when they were in the current state</div></div>
+  <div class="cifra"><div class="n">21 of 95</div><div class="l">when they were in the dated history</div></div>
+</div>
+
+<h2>What memory benchmarks measure</h2>
+
+<p>LongMemEval, LoCoMo and the benchmark Mem0 publishes measure against the answer, not against the
+document: whether the evidence that answers reached the model (or whether the answer came out
+right), and how much context it cost. Mem0, for example, publishes the tokens it spends alongside
+the hit rate. Two numbers together, because loading everything always hits and is never useful. I
+measured the evidence part: whether the line that answers ended up inside what was read.</p>
+
+<p>My previous bench measured something else. For each message of mine, it looked at which notes
+had actually been opened to answer it and whether the search had suggested them among the top
+four. It gave 76 %. But opening a note is not finding the answer: the note can have 300 lines, and
+if the agent reads the state and the answer was in an entry from a month ago, the suggestion was
+right and the fact did not arrive.</p>
+
+<h2>A bench built from the transcripts</h2>
+
+<p>I did not want to write questions by hand, because you write the ones your system answers well.
+The bench comes from the session logs that Claude Code keeps on disk. In each turn I gather the
+memory lines the agent read, and a line counts as an answer if at least three of its uncommon
+words reappear in what the agent replied and were not in my message or in the three before it. The
+second condition matters: if the word was already in the question, the match is an echo, not a
+recollection.</p>
+
+<p>I removed the turns where the agent writes memory, because there what it says matches the line
+since it has just drafted the line itself. I also removed each note's header, which already comes
+with the search suggestion. That left 191 pairs over 70 notes. I checked a sample of 15 by hand
+and about 12 were truly the answer: the method has noise, but it points the right way.</p>
+
+<p>Then each line is searched verbatim in today's notes. The ones that no longer exist are
+discarded, and that was the first odd finding: 372 lines that were answers are no longer written
+the same way, almost twice as many as remain. The notes get rewritten faster than the bench can
+stabilize. A hand-made memory bench, on a system that is edited every day, goes stale in
+weeks.</p>
+
+<h2>Four ways to read, the same budget</h2>
+
+<p>On those pairs I simulated several reading policies, all of them single-pass over the current
+notes:</p>
+
+<ul>
+  <li><strong>The ladder with the real routing.</strong> The production search picks one or two
+  notes, and from each one I read the current state and the section that best fits the question,
+  plus the cost of the map.</li>
+  <li><strong>The ladder with the right note given.</strong> The same, but handing it the note
+  where the answer was. It separates the error of choosing the note from the error of choosing the
+  section.</li>
+  <li><strong>Loose fragments.</strong> The notes are split into paragraphs (5,159) and the 5, 10,
+  20 or 40 that fit best are injected, without going through notes. It is the shape of Mem0 or of a
+  typical RAG, with one caveat: I use the same word-based search (BM25), not embeddings.</li>
+  <li><strong>Everything in context.</strong> The LongMemEval baseline: it hits 100 % at a cost of
+  977k tokens per question.</li>
+</ul>
+
+<figure>
+  <picture>
+    <source srcset="img/acierto-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/acierto.png" width="1600" height="1000" loading="lazy" alt="Scatter of hit rate against tokens read per question. Loose fragments: 7 % at 1k tokens, 14 % at 2.2k, 19 % at 4.3k and 26 % at 8.7k. Ladder with the real routing: 11 % at 3.3k and 17 % at 6.1k. Ladder with the right note given: 32 % at 2.7k.">
+  </picture>
+  <figcaption>Each point is a policy. Up and to the left is better: more answers for fewer tokens.
+  191 questions, notes as of October 6, 2026.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+  <tr><th>Policy</th><th class="num">Hit rate</th><th class="num">Tokens per question</th></tr>
+  <tr><td>Ladder, right note given</td><td class="num">32 %</td><td class="num">2.7k</td></tr>
+  <tr><td>Fragments, the 40 best</td><td class="num">26 %</td><td class="num">8.7k</td></tr>
+  <tr><td>Fragments, the 20 best</td><td class="num">19 %</td><td class="num">4.3k</td></tr>
+  <tr><td>Ladder with real routing, 2 notes</td><td class="num">17 %</td><td class="num">6.1k</td></tr>
+  <tr><td>Fragments, the 10 best</td><td class="num">14 %</td><td class="num">2.2k</td></tr>
+  <tr><td>Ladder with real routing, 1 note</td><td class="num">11 %</td><td class="num">3.3k</td></tr>
+  <tr><td>Fragments, the 5 best</td><td class="num">7 %</td><td class="num">1.1k</td></tr>
+  <tr><td>Everything in context</td><td class="num">100 %</td><td class="num">977k</td></tr>
+</table></div>
+
+<p>Both halves are there. With the right note, the ladder is the most efficient policy in the
+table: 32 % with 2.7k tokens, against 26 % for fragments with more than three times as many. Grouping what is
+known by topic, with the current state on top, works. With the real routing, the same ladder falls
+below the fragments curve: 11 % with 3.3k, against 14 % with 2.2k.</p>
+
+<div class="destacado"><p>The structure of the notes is not the problem. The problem is the step
+before: choosing which one to open. And I had measured that step with a yardstick that could not
+see the difference.</p></div>
+
+<p>I tried two obvious fixes. One, searching inside the note for the rarest words of the question,
+which is what the agent really does when the map does not help: it gave 10 % and 15 %, no change.
+The other, routing by paragraph and then reading the note that gathered the most score, a hybrid
+of the two worlds: 7 % and 14 %. Neither moves the needle, because both depend on the same
+search.</p>
+
+<h2>Why the search fails right here</h2>
+
+<p>The search puts the answer's note in first place in 32 % of these pairs, and among the top four
+suggestions in 53 %. In the previous bench, over all my messages, it gave 76 %. The difference is
+in which messages end in a fact. They are the vaguest ones: "carry on with whatever you
+recommend", "how do we move forward?", "check that everything came out right". They bring nothing
+to search with. The agent manages anyway because it has the rest of the conversation and can ask
+for another note if the first does not work, but every round trip is one more call, and every call
+re-reads the entire context.</p>
+
+<p>That is what this measurement does not count. The simulated policies read once and keep what
+they brought. The real agent, by construction, reached all of these answers: if not, they would
+not have made it into the bench. What the simulation shows is how much it costs to get there, not
+whether it gets there. Putting in the same table the calls the agent pays to compensate for the
+routing is what is still missing.</p>
+
+<h2>History is the weak zone</h2>
+
+<p>With the right note, the ladder finds the answer depending on where it was:</p>
+
+<figure>
+  <picture>
+    <source srcset="img/zonas-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/zonas.png" width="1600" height="720" loading="lazy" alt="Bars: current state 100 % (18 of 18), note body 28 % (22 of 78), dated history 22 % (21 of 95).">
+  </picture>
+  <figcaption>Ladder hit rate with the right note given, by zone of the note where the answer
+  was.</figcaption>
+</figure>
+
+<p>The current state is always read, so it always hits. History is read by section, and the
+question almost never names the date or the episode: it says "that thing from last week" or says
+nothing. LongMemEval has a category for this, temporal reasoning, and it is one of the hardest for
+the systems it evaluates. In my data half of the answers lived there.</p>
+
+<p>That changes how I think about the note. The current state works because it is short and gets
+rewritten: if something from the history is asked often, its place is the state, not a dated entry
+that has to be guessed. History is for auditing why something was decided, not for answering
+quickly.</p>
+
+<h2>What I am correcting from part two</h2>
+
+<p>I wrote that the system was "already on par" with the memory projects and that word-based
+routing "was already hitting 75 %". The first was true in design and is half true in outcome: it
+wins with the right note and loses at the choice. The second measured whether a useful note was
+suggested, not whether the fact arrived. By the benchmarks' yardstick, the routing gets the note
+right in first place a third of the time.</p>
+
+<p>I am not changing systems because of this. Installing Mem0 or a vector database adds fixed text
+at the start of every session, which is what gets paid for most often, and the advantage of
+fragments with the real routing is a few points. The lesson is smaller and more useful: before
+saying something is on par, measure it with the same question the others ask themselves.</p>
+
+<h2>The limits, so nobody takes the numbers too far</h2>
+
+<ul>
+  <li><strong>Lexical against lexical.</strong> The fragments use BM25, not embeddings, because I
+  do not have them installed. A semantic search could raise the fragments curve and also the
+  ladder's routing.</li>
+  <li><strong>A hit is not a correct answer.</strong> I measure whether the line ended up inside
+  what was read, not whether the model used it well.</li>
+  <li><strong>A single pass.</strong> The real agent compensates with calls that are not charged
+  here.</li>
+  <li><strong>Exact match.</strong> A line rewritten in other words counts as lost, so the bench
+  discards cases that would in practice be answered.</li>
+  <li><strong>One person.</strong> These are my notes, my messages and my way of asking, which is
+  vague when the conversation already has context.</li>
+</ul>
+
+<p>The script for this bench is not in the
+<a href="https://github.com/talcaldeg/context-economy">context-economy</a> repository, for the same
+reason as the routing one in part two: it depends on my notes reader and would not run on another
+machine. The method can be redone with what is described above, on your own transcripts.</p>
+
+<h2>Frequently asked questions</h2>
+
+<h3>Is it better to give the agent loose memory fragments, Mem0-style, or whole notes?</h3>
+<p>In my data it depends on whether the note is chosen well. With the right note, reading its current state and
+the section that fits best found the answer in 32 % of the questions with 2.7k tokens; the
+40 best fragments reached 26 % with 8.7k. With the real routing, which gets the note right in
+first place only a third of the time, fragments win by a small margin at an equal budget.</p>
+
+<h3>How do you build a memory test bench without writing questions by hand?</h3>
+<p>From the transcripts. In each turn you take the memory lines the agent read, and you mark as answers the ones with at least three uncommon words that reappear in what the
+agent replied and that were not in the question. You discard the turns where the agent writes
+memory, because there the match is with what it has just drafted itself.</p>
+
+<h3>Why is the history of the notes the hardest zone to find?</h3>
+<p>Because the question almost never names the date or the episode. With the right note, the current
+state was found in 18 of 18 cases and the dated history in 21 of 95. It is what LongMemEval
+calls temporal reasoning, and in my data half of the answers lived there.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · business and BI consultant, applied AI for operations.
+  <a href="../../">Back to home</a></p>
+</div></footer>
+
+</body>
+</html>

@@ -223,10 +223,11 @@ medición.</p>
 
 <h2>Lo que miden los benchmarks de memoria</h2>
 
-<p>LongMemEval, LoCoMo y el benchmark que publica Mem0 no preguntan si el sistema abrió el
-documento correcto. Preguntan si el dato que responde quedó dentro de lo que se le pasó al modelo,
-y a cuántos tokens. Son dos números juntos, acierto y costo, porque cargar todo siempre acierta y
-nunca sirve.</p>
+<p>LongMemEval, LoCoMo y el benchmark que publica Mem0 miden contra la respuesta, no contra el
+documento: si la evidencia que responde llegó al modelo (o si la respuesta salió bien), y cuánto
+contexto costó. Mem0, por ejemplo, publica los tokens que gasta junto al acierto. Son dos números
+juntos, porque cargar todo siempre acierta y nunca sirve. Yo medí la parte de la evidencia: si la
+línea que responde quedó dentro de lo leído.</p>
 
 <p>Mi banco anterior medía otra cosa. Por cada mensaje mío, miraba qué notas se habían abierto
 de verdad para responderlo y si el buscador las había sugerido entre las cuatro primeras. Daba 76 %.
