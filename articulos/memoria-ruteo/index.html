@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La nota estaba bien; el problema era encontrarla | Tomás Alcalde</title>
+<meta name="description" content="Medí la memoria de mi agente de código como miden los benchmarks de memoria: si llega el dato y a qué costo. Con la nota correcta, la lectura por escalones le gana a los fragmentos sueltos. Lo que falla es elegir la nota.">
+<meta property="og:title" content="La nota estaba bien; el problema era encontrarla">
+<meta property="og:description" content="Medí la memoria de mi agente de código como miden los benchmarks de memoria: si llega el dato y a qué costo. Con la nota correcta, la lectura por escalones le gana a los fragmentos sueltos. Lo que falla es elegir la nota.">
+<meta property="og:type" content="article">
+<link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/memoria-ruteo/">
+<link rel="alternate" hreflang="en" href="https://talcaldeg.github.io/articulos/memory-routing/">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/memoria-ruteo/">
+<link rel="alternate" hreflang="x-default" href="https://talcaldeg.github.io/articulos/memory-routing/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/memoria-ruteo/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="article:published_time" content="2026-10-06">
+<meta property="article:author" content="Tomás Alcalde">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/memoria-ruteo/img/acierto.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La nota estaba bien; el problema era encontrarla">
+<meta name="twitter:description" content="Con la nota correcta, la lectura por escalones le gana a los fragmentos sueltos. Lo que falla es elegir la nota.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/memoria-ruteo/img/acierto.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "La nota estaba bien; el problema era encontrarla",
+ "description": "Medí la memoria de mi agente de código como miden los benchmarks de memoria: si llega el dato y a qué costo. Con la nota correcta, la lectura por escalones le gana a los fragmentos sueltos. Lo que falla es elegir la nota.",
+ "inLanguage": "es",
+ "url": "https://talcaldeg.github.io/articulos/memoria-ruteo/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/memoria-ruteo/"
+ },
+ "datePublished": "2026-10-06",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/memoria-ruteo/img/acierto.png",
+ "keywords": "memoria de agentes, Claude Code, Mem0, LongMemEval, RAG, ruteo de memoria, economía de contexto",
+ "citation": [
+  "https://talcaldeg.github.io/articulos/economia-de-contexto/",
+  "https://talcaldeg.github.io/articulos/palancas-chicas/"
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "¿Conviene darle al agente fragmentos sueltos de memoria, al estilo de Mem0, o notas enteras?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "En mis datos depende de si se elige bien la nota. Con la nota correcta, leer su estado vigente y la sección que mejor calza encontró la respuesta en 32 % de las preguntas con 2,7 mil tokens; los 40 mejores fragmentos llegaron a 26 % con 8,7 mil. Con el ruteo real, que acierta la nota en el primer puesto solo un tercio de las veces, los fragmentos ganan por poco a igual presupuesto."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Cómo se arma un banco de prueba de memoria sin escribir preguntas a mano?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Con los transcripts. En cada turno se toman las líneas de memoria que el agente leyó y se marcan como respuesta las que tienen al menos tres palabras poco frecuentes que reaparecen en lo que el agente contestó y que no venían en la pregunta. Se descartan los turnos donde el agente escribe memoria, porque ahí el calce es con lo que él mismo acaba de redactar."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Por qué la historia de las notas es la zona más difícil de encontrar?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Porque la pregunta casi nunca nombra la fecha ni el episodio. Con la nota correcta, el estado vigente se encontró en 18 de 18 casos y la historia fechada en 21 de 95. Es lo que LongMemEval llama razonamiento temporal, y en mis datos la mitad de las respuestas vivía ahí."
+   }
+  }
+ ]
+}
+</script>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0}
+  .resumen{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px 6px; margin:26px 0 30px}
+  .resumen p.t{font-weight:700; margin:0 0 10px}
+  .resumen ul{margin:0 0 12px}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .cifras{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:12px; margin:26px 0 32px}
+  .cifra{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px}
+  .cifra .n{font-size:27px; font-weight:800; color:var(--teal); line-height:1}
+  .cifra .l{color:var(--muted); font-size:13px; margin-top:7px; line-height:1.45}
+
+  .tabla{overflow-x:auto; margin:22px 0 26px}
+  table{width:100%; border-collapse:collapse; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <span class="otro"><a href="../palancas-chicas/">El artículo anterior</a> · <a href="../memory-routing/">Read in English</a></span>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Economía de contexto · tercera parte</p>
+  <h1>La nota estaba bien; el problema era encontrarla</h1>
+  <p class="lede">En la segunda parte escribí que la memoria de mi agente estaba a la par de los
+  proyectos que más se citan. La había comparado por diseño. Esta vez la medí por resultado, como
+  miden ellos, y la respuesta salió partida en dos.</p>
+  <p class="meta">Octubre de 2026 · Tomás Alcalde · lectura de 9 minutos</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>Trabajo con un agente de código que guarda lo que aprende en notas de texto: una por tema, con
+un estado vigente arriba que se reescribe y una historia fechada abajo que solo crece. Hoy son
+220 notas y casi un millón de tokens. Nadie las carga enteras. En cada mensaje un buscador por
+palabras sugiere cuáles podrían servir, el agente pide un mapa de secciones con el costo de cada
+una y trae solo la que necesita. A eso le vengo llamando la escalera.</p>
+
+<p>En <a href="../palancas-chicas/">el artículo anterior</a> la puse al lado de Mem0, Zep,
+claude-mem y Letta, y concluí que no les faltaba nada. Era una comparación de piezas: esto
+equivale a aquello. Faltaba la otra, la que hacen sus benchmarks. Dada una pregunta, ¿llega a la
+vista del agente la línea que la responde, y cuántos tokens costó traerla? Este artículo es esa
+medición.</p>
+
+<div class="resumen">
+  <p class="t">Lo corto</p>
+  <ul>
+    <li>Con la nota correcta en la mano, leer su estado y una sección encontró la respuesta en 32 %
+    de las preguntas con 2,7 mil tokens. Ninguna cantidad de fragmentos sueltos llegó a eso, ni con
+    tres veces el presupuesto.</li>
+    <li>El buscador pone primera la nota de la respuesta solo una de cada tres veces. Con ese
+    ruteo, la escalera pierde por poco contra los fragmentos.</li>
+    <li>El estado vigente se encuentra siempre; la historia fechada, una de cada cinco. Y la mitad
+    de las respuestas estaba en la historia.</li>
+    <li>El 76 % de acierto que publiqué antes medía otra cosa: si se abría alguna nota útil, no si
+    llegaba el dato.</li>
+  </ul>
+</div>
+
+<div class="cifras">
+  <div class="cifra"><div class="n">32 %</div><div class="l">acierto de la escalera con la nota correcta, a 2,7 mil tokens</div></div>
+  <div class="cifra"><div class="n">1 de 3</div><div class="l">veces que el buscador pone primera la nota de la respuesta</div></div>
+  <div class="cifra"><div class="n">18 de 18</div><div class="l">respuestas encontradas cuando estaban en el estado vigente</div></div>
+  <div class="cifra"><div class="n">21 de 95</div><div class="l">cuando estaban en la historia fechada</div></div>
+</div>
+
+<h2>Lo que miden los benchmarks de memoria</h2>
+
+<p>LongMemEval, LoCoMo y el benchmark que publica Mem0 no preguntan si el sistema abrió el
+documento correcto. Preguntan si el dato que responde quedó dentro de lo que se le pasó al modelo,
+y a cuántos tokens. Son dos números juntos, acierto y costo, porque cargar todo siempre acierta y
+nunca sirve.</p>
+
+<p>Mi banco anterior medía otra cosa. Por cada mensaje mío, miraba qué notas se habían abierto
+de verdad para responderlo y si el buscador las había sugerido entre las cuatro primeras. Daba 76 %.
+Pero abrir una nota no es encontrar la respuesta: la nota puede tener 300 líneas, y si el agente
+lee el estado y la respuesta estaba en una entrada de hace un mes, la sugerencia fue correcta y
+el dato no llegó.</p>
+
+<h2>Un banco que sale de los transcripts</h2>
+
+<p>No quise escribir preguntas a mano, porque uno escribe las que su sistema responde bien. El
+banco sale de los registros de sesión que Claude Code guarda en el disco. En cada turno se juntan
+las líneas de memoria que el agente leyó, y una línea cuenta como respuesta si al menos tres de
+sus palabras poco frecuentes reaparecen en lo que el agente contestó y no venían en mi mensaje ni
+en los tres anteriores. Lo segundo importa: si la palabra ya estaba en la pregunta, el calce es
+eco, no recuerdo.</p>
+
+<p>Saqué los turnos en que el agente escribe memoria, porque ahí lo que dice calza con la línea
+porque él mismo la acaba de redactar. Saqué también el encabezado de cada nota, que ya llega con
+la sugerencia del buscador. Quedaron 191 pares sobre 70 notas. Revisé a mano una muestra de 15 y
+unos 12 eran de verdad la respuesta: el método tiene ruido, pero apunta bien.</p>
+
+<p>Después cada línea se busca tal cual en las notas de hoy. Las que ya no existen se descartan,
+y ese fue el primer dato raro: 372 líneas que fueron respuesta ya no están escritas igual, casi el
+doble de las que quedan. Las notas se reescriben más rápido de lo que el banco alcanza a
+estabilizarse. Un banco de memoria hecho a mano, sobre un sistema que se edita todos los días,
+envejece en semanas.</p>
+
+<h2>Cuatro maneras de leer, el mismo presupuesto</h2>
+
+<p>Sobre esos pares simulé varias políticas de lectura, todas de una sola pasada sobre las notas
+actuales:</p>
+
+<ul>
+  <li><strong>La escalera con el ruteo real.</strong> El buscador de producción elige una o dos
+  notas, y de cada una se lee el estado vigente y la sección que mejor calza con la pregunta, más
+  el costo del mapa.</li>
+  <li><strong>La escalera con la nota correcta dada.</strong> Lo mismo, pero se le entrega la nota
+  donde estaba la respuesta. Separa el error de elegir la nota del error de elegir la sección.</li>
+  <li><strong>Fragmentos sueltos.</strong> Se parten las notas en párrafos (5.159) y se inyectan
+  los 5, 10, 20 o 40 que mejor calzan, sin pasar por notas. Es la forma de Mem0 o de un RAG
+  típico, con una salvedad: uso el mismo buscador por palabras (BM25), no embeddings.</li>
+  <li><strong>Todo en contexto.</strong> La línea base de LongMemEval: acierta el 100 % a un costo
+  de 977 mil tokens por pregunta.</li>
+</ul>
+
+<figure>
+  <picture>
+    <source srcset="img/acierto-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/acierto.png" width="1600" height="1000" loading="lazy" alt="Dispersión de acierto contra tokens leídos por pregunta. Fragmentos sueltos: 7 % a mil tokens, 14 % a 2,2 mil, 19 % a 4,3 mil y 26 % a 8,7 mil. Escalera con el ruteo real: 11 % a 3,3 mil y 17 % a 6,1 mil. Escalera con la nota correcta dada: 32 % a 2,7 mil.">
+  </picture>
+  <figcaption>Cada punto es una política. Arriba y a la izquierda es mejor: más respuestas por
+  menos tokens. 191 preguntas, notas al 6 de octubre de 2026.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+  <tr><th>Política</th><th class="num">Acierto</th><th class="num">Tokens por pregunta</th></tr>
+  <tr><td>Escalera, nota correcta dada</td><td class="num">32 %</td><td class="num">2,7 mil</td></tr>
+  <tr><td>Fragmentos, los 40 mejores</td><td class="num">26 %</td><td class="num">8,7 mil</td></tr>
+  <tr><td>Fragmentos, los 20 mejores</td><td class="num">19 %</td><td class="num">4,3 mil</td></tr>
+  <tr><td>Escalera con ruteo real, 2 notas</td><td class="num">17 %</td><td class="num">6,1 mil</td></tr>
+  <tr><td>Fragmentos, los 10 mejores</td><td class="num">14 %</td><td class="num">2,2 mil</td></tr>
+  <tr><td>Escalera con ruteo real, 1 nota</td><td class="num">11 %</td><td class="num">3,3 mil</td></tr>
+  <tr><td>Fragmentos, los 5 mejores</td><td class="num">7 %</td><td class="num">1,1 mil</td></tr>
+  <tr><td>Todo en contexto</td><td class="num">100 %</td><td class="num">977 mil</td></tr>
+</table></div>
+
+<p>Las dos mitades están ahí. Con la nota correcta, la escalera es la política más eficiente de
+la tabla: 32 % con 2,7 mil tokens, contra 26 % de los fragmentos con más del triple. Agrupar lo
+que se sabe por tema, con lo vigente arriba, funciona. Con el ruteo de verdad, la misma escalera
+queda debajo de la curva de los fragmentos: 11 % con 3,3 mil, contra 14 % con 2,2 mil.</p>
+
+<div class="destacado"><p>La estructura de las notas no es el problema. El problema es el paso
+anterior: elegir cuál abrir. Y ese paso lo había medido con una vara que no veía la diferencia.</p></div>
+
+<p>Probé dos arreglos obvios. Uno, buscar dentro de la nota por las palabras más raras de la
+pregunta, que es lo que el agente hace de verdad cuando no le sirve el mapa: dio 10 % y 15 %, sin
+cambio. El otro, rutear por párrafo y leer después la nota que más puntaje juntó, un híbrido entre
+los dos mundos: 7 % y 14 %. Ninguno mueve la aguja, porque los dos dependen del mismo buscador.</p>
+
+<h2>Por qué el buscador falla justo aquí</h2>
+
+<p>El buscador pone la nota de la respuesta en el primer puesto en 32 % de estos pares, y entre las
+cuatro sugerencias en 53 %. En el banco anterior, sobre todos mis mensajes, daba 76 %. La
+diferencia está en qué mensajes terminan en un dato. Son los más vagos: «sigue con lo que
+recomiendes», «¿cómo avanzamos?», «revisa que haya quedado todo bien». No traen con qué buscar.
+El agente se las arregla igual porque tiene el resto de la conversación y puede pedir otra nota
+si la primera no sirve, pero cada vuelta es una llamada más, y cada llamada relee el contexto
+entero.</p>
+
+<p>Eso es lo que esta medición no cuenta. Las políticas simuladas leen una vez y se quedan con lo
+que trajeron. El agente real, por construcción, llegó a todas estas respuestas: si no, no
+habrían entrado al banco. Lo que la simulación muestra es cuánto le cuesta llegar, no si llega.
+Poner en la misma tabla las llamadas que el agente paga para compensar el ruteo es lo que falta.</p>
+
+<h2>La historia es la zona débil</h2>
+
+<p>Con la nota correcta, la escalera encuentra la respuesta según dónde estaba:</p>
+
+<figure>
+  <picture>
+    <source srcset="img/zonas-oscuro.png" media="(prefers-color-scheme: dark)">
+    <img src="img/zonas.png" width="1600" height="720" loading="lazy" alt="Barras: estado vigente 100 % (18 de 18), cuerpo de la nota 28 % (22 de 78), historia fechada 22 % (21 de 95).">
+  </picture>
+  <figcaption>Acierto de la escalera con la nota correcta dada, por zona de la nota donde estaba
+  la respuesta.</figcaption>
+</figure>
+
+<p>El estado vigente se lee siempre, así que acierta siempre. La historia se lee por sección, y
+la pregunta casi nunca nombra la fecha ni el episodio: dice «lo de la semana pasada» o no dice
+nada. LongMemEval tiene una categoría para esto, razonamiento temporal, y es de las que más les
+cuestan a los sistemas que evalúa. En mis datos la mitad de las respuestas vivía ahí.</p>
+
+<p>Eso cambia cómo pienso la nota. El estado vigente funciona porque es corto y se reescribe: si
+algo de la historia se pregunta seguido, su lugar es el estado, no una entrada fechada que hay que
+adivinar. La historia sirve para auditar por qué se decidió algo, no para responder rápido.</p>
+
+<h2>Lo que corrijo de la segunda parte</h2>
+
+<p>Escribí que el sistema «ya estaba a la par» de los proyectos de memoria y que el ruteo por
+palabras «ya acertaba 75 %». Lo primero era cierto en diseño y es cierto a medias en resultado:
+gana con la nota correcta y pierde en la elección. Lo segundo medía si se sugería una nota útil, no
+si llegaba el dato. Con la vara de los benchmarks, el ruteo acierta la nota primera un tercio de
+las veces.</p>
+
+<p>No cambio de sistema por esto. Instalar Mem0 o una base vectorial suma texto fijo al inicio de
+cada sesión, que es lo que más veces se paga, y la ventaja de los fragmentos con el ruteo real es
+de unos pocos puntos. La lección es más chica y más útil: antes de decir que algo está a la par, medirlo
+con la misma pregunta que se hacen los otros.</p>
+
+<h2>Los límites, para que nadie se lleve las cifras de más</h2>
+
+<ul>
+  <li><strong>Léxico contra léxico.</strong> Los fragmentos usan BM25, no embeddings, porque no
+  los tengo instalados. Un buscador semántico podría subir la curva de los fragmentos y también el
+  ruteo de la escalera.</li>
+  <li><strong>Acierto no es respuesta correcta.</strong> Mido si la línea quedó dentro de lo
+  leído, no si el modelo la usó bien.</li>
+  <li><strong>Una sola pasada.</strong> El agente real compensa con llamadas que aquí no se
+  cobran.</li>
+  <li><strong>Calce exacto.</strong> Una línea reescrita con otras palabras cuenta como perdida,
+  así que el banco descarta casos que en la práctica sí se responderían.</li>
+  <li><strong>Una persona.</strong> Son mis notas, mis mensajes y mi forma de preguntar, que es
+  vaga cuando la conversación ya tiene contexto.</li>
+</ul>
+
+<p>El script de este banco no está en el repositorio
+<a href="https://github.com/talcaldeg/context-economy">context-economy</a>, por la misma razón que
+el del ruteo en la segunda parte: depende de mi lector de notas y no correría en otra máquina. El
+método sí se puede rehacer con lo que está descrito arriba, sobre los transcripts propios.</p>
+
+<h2>Preguntas frecuentes</h2>
+
+<h3>¿Conviene darle al agente fragmentos sueltos de memoria, al estilo de Mem0, o notas enteras?</h3>
+<p>En mis datos depende de si se elige bien la nota. Con la nota correcta, leer su estado vigente y
+la sección que mejor calza encontró la respuesta en 32 % de las preguntas con 2,7 mil tokens; los
+40 mejores fragmentos llegaron a 26 % con 8,7 mil. Con el ruteo real, que acierta la nota en el
+primer puesto solo un tercio de las veces, los fragmentos ganan por poco a igual presupuesto.</p>
+
+<h3>¿Cómo se arma un banco de prueba de memoria sin escribir preguntas a mano?</h3>
+<p>Con los transcripts. En cada turno se toman las líneas de memoria que el agente leyó y se marcan
+como respuesta las que tienen al menos tres palabras poco frecuentes que reaparecen en lo que el
+agente contestó y que no venían en la pregunta. Se descartan los turnos donde el agente escribe
+memoria, porque ahí el calce es con lo que él mismo acaba de redactar.</p>
+
+<h3>¿Por qué la historia de las notas es la zona más difícil de encontrar?</h3>
+<p>Porque la pregunta casi nunca nombra la fecha ni el episodio. Con la nota correcta, el estado
+vigente se encontró en 18 de 18 casos y la historia fechada en 21 de 95. Es lo que LongMemEval
+llama razonamiento temporal, y en mis datos la mitad de las respuestas vivía ahí.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · consultor de negocio y BI, IA aplicada a operaciones.
+  <a href="../../">Volver al inicio</a></p>
+</div></footer>
+
+</body>
+</html>
