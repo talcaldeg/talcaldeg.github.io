@@ -90,4 +90,18 @@
     <priority>0.9</priority>
   </url>
 
+  <url>
+    <loc>https://talcaldeg.github.io/articulos/licencias-power-bi-pro-sin-uso/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://talcaldeg.github.io/radiografia-power-bi/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
