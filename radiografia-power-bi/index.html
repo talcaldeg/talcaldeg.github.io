@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radiografía de Power BI - Tomás Alcalde</title>
+<meta name="description" content="Una revisión única de su Power BI, con acceso de solo lectura: licencias Pro sin uso, informes y modelos que nadie abre, actualizaciones que fallan, suscripciones y orígenes de datos. Gratis para las tres primeras empresas medianas, a cambio de su opinión.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1b2d">
+<link rel="canonical" href="https://talcaldeg.github.io/radiografia-power-bi/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://talcaldeg.github.io/radiografia-power-bi/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Radiografía de Power BI: qué se paga, qué se usa y qué falla">
+<meta property="og:description" content="Licencias sin uso, informes muertos, actualizaciones fallidas y quién recibe qué, en un solo informe. Gratis para las tres primeras empresas medianas.">
+<meta property="og:image" content="https://talcaldeg.github.io/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350; --campo:#0f1b2d; --ok:#2dd4bf;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0f766e; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa; --campo:#ffffff; --ok:#0f766e;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:860px; margin:0 auto; padding:0 22px}
+  @media (max-width:480px){ .wrap{padding:0 16px} }
+
+  .top{position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 88%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .brand{font-weight:700; letter-spacing:.2px; color:var(--ink)}
+  .back{font-size:14px; font-weight:600}
+
+  header.hero{padding:52px 0 34px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 10px}
+  h1{font-size:clamp(30px,5.5vw,44px); line-height:1.12; margin:0 0 14px}
+  .lede{font-size:clamp(16px,2.4vw,19px); color:var(--muted); max-width:640px; margin:0 0 24px}
+  .cta{display:flex; flex-wrap:wrap; gap:10px}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:10px; font-weight:600; font-size:15px; border:1px solid var(--line); cursor:pointer; font-family:inherit}
+  .btn:hover{text-decoration:none}
+  .btn.primary{background:var(--accent); color:#04121f; border-color:transparent}
+  .btn.ghost{background:transparent; color:var(--ink)}
+
+  section{padding:34px 0; border-top:1px solid var(--line); scroll-margin-top:56px}
+  h2{font-size:22px; margin:0 0 20px; display:flex; align-items:center; gap:10px}
+  h2::before{content:""; width:8px; height:22px; background:var(--accent); border-radius:3px; display:inline-block; flex:none}
+  p{margin:0 0 14px}
+  .muted{color:var(--muted)}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px}
+  .card h3{margin:0 0 8px; font-size:17px}
+  .card p{color:var(--muted); font-size:14.5px; margin:0}
+
+  .steps{counter-reset:paso; list-style:none; padding:0; margin:0; display:grid; gap:12px}
+  .steps li{counter-increment:paso; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px 16px 62px; position:relative; color:var(--muted)}
+  .steps li strong{color:var(--ink)}
+  .steps li::before{content:counter(paso); position:absolute; left:18px; top:15px; width:30px; height:30px; border-radius:50%; background:var(--chip); border:1px solid var(--line); color:var(--teal); font-weight:800; display:flex; align-items:center; justify-content:center}
+
+  details{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-bottom:10px}
+  summary{cursor:pointer; font-weight:600}
+  details p{color:var(--muted); margin:10px 0 0}
+
+  form{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; display:grid; gap:16px}
+  .fila{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+  label{display:block; font-weight:600; font-size:14.5px; margin-bottom:6px}
+  label .opc{font-weight:400; color:var(--muted)}
+  input[type=text],input[type=email],select,textarea{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--campo); color:var(--ink); font:inherit; font-size:15px}
+  textarea{min-height:96px; resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:1px}
+  .check{display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:var(--muted)}
+  .check input{margin-top:5px; flex:none}
+  .check label{font-weight:400; margin:0}
+  .oculto{position:absolute; left:-9999px}
+  .gracias{display:none; background:var(--card); border:1px solid var(--line); border-left:3px solid var(--ok); border-radius:0 12px 12px 0; padding:18px 20px; margin-bottom:16px}
+  .gracias.visible{display:block}
+  .nota{font-size:13.5px; color:var(--muted); margin:0}
+
+  footer{padding:38px 0 50px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="/">Tomás Alcalde</a>
+    <a class="back" href="/articulos/licencias-power-bi-pro-sin-uso/">Guía de licencias Pro</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Radiografía de Power BI · tres cupos sin costo</p>
+    <h1>Qué se paga, qué se usa y qué falla en su Power BI</h1>
+    <p class="lede">Una revisión única, con acceso de solo lectura, que junta en un informe lo que
+    Microsoft deja repartido en cinco lugares: licencias Pro sin uso, informes que nadie abre,
+    actualizaciones que fallan, quién recibe qué y de dónde salen los datos. Las tres primeras
+    empresas medianas la reciben gratis, a cambio de su opinión.</p>
+    <div class="cta">
+      <a class="btn primary" href="#formulario">Pedir la radiografía</a>
+      <a class="btn ghost" href="/articulos/licencias-power-bi-pro-sin-uso/">Hacerlo uno mismo: la guía</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Qué incluye</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Licencias Pro sin uso</h3>
+        <p>Quién tiene Pro y no abrió nada en el período, quién podría pasar a licencia gratuita y
+        cuánto suma en dólares al año.</p>
+      </div>
+      <div class="card">
+        <h3>Informes y modelos muertos</h3>
+        <p>Lo publicado que nadie abre: candidatos a archivar, para que el catálogo muestre lo
+        que de verdad se usa.</p>
+      </div>
+      <div class="card">
+        <h3>Actualizaciones que fallan</h3>
+        <p>Modelos que no se actualizan o fallan seguido, con la fecha del último dato bueno.</p>
+      </div>
+      <div class="card">
+        <h3>Suscripciones y destinatarios</h3>
+        <p>Quién recibe qué por correo, incluidas las personas que ya no están en la empresa.</p>
+      </div>
+      <div class="card">
+        <h3>Orígenes de datos</h3>
+        <p>De qué bases, planillas y sistemas depende cada informe, y cuáles cuelgan de un archivo
+        en el computador de alguien.</p>
+      </div>
+      <div class="card">
+        <h3>Lectura de negocio</h3>
+        <p>No un volcado técnico: qué conviene hacer primero, en español y en una conversación de
+        30 minutos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Cómo funciona</h2>
+    <ol class="steps">
+      <li><strong>Me escribe por el formulario de abajo.</strong> Le respondo para una conversación corta y ver si
+      su caso calza.</li>
+      <li><strong>Su equipo da acceso de solo lectura.</strong> Una cuenta o una aplicación con
+      permiso de lectura de las API de administración de Power BI, que su equipo crea y puede
+      revocar cuando quiera. Nada se modifica.</li>
+      <li><strong>Recibe el informe y lo revisamos juntos.</strong> Treinta minutos para recorrer
+      los hallazgos y qué hacer con cada uno.</li>
+      <li><strong>Me da su opinión honesta.</strong> Qué le sirvió, qué sobra y cuánto pagaría por
+      esto. Es lo único que se pide a cambio.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Para quién es</h2>
+    <p>Empresas medianas que pagan Power BI Pro por usuario, con decenas o cientos de licencias, y
+    que nunca han tenido tiempo de revisar qué pasa adentro. Sirve igual si Power BI lo administra
+    una persona de TI o alguien del negocio a quien se lo encargaron.</p>
+    <p class="muted">Los tres cupos sin costo son para las primeras empresas que calcen. Después
+    la radiografía tendrá un precio fijo, conocido de antemano.</p>
+  </div>
+</section>
+
+<section id="formulario">
+  <div class="wrap">
+    <h2>Pedir la radiografía</h2>
+
+    <div class="gracias" id="gracias" role="status">
+      <p><strong>Recibido, gracias.</strong> Le escribo en los próximos días hábiles al correo que
+      dejó.</p>
+    </div>
+
+    <form action="https://formsubmit.co/talcaldeg@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Radiografía de Power BI: nueva solicitud">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://talcaldeg.github.io/radiografia-power-bi/?enviado=1#formulario">
+      <input type="text" name="_honey" class="oculto" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="fila">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="Nombre" required autocomplete="name">
+        </div>
+        <div>
+          <label for="correo">Correo de trabajo</label>
+          <input type="email" id="correo" name="email" required autocomplete="email">
+        </div>
+      </div>
+      <div class="fila">
+        <div>
+          <label for="empresa">Empresa</label>
+          <input type="text" id="empresa" name="Empresa" required autocomplete="organization">
+        </div>
+        <div>
+          <label for="cargo">Cargo <span class="opc">(opcional)</span></label>
+          <input type="text" id="cargo" name="Cargo" autocomplete="organization-title">
+        </div>
+      </div>
+      <div>
+        <label for="licencias">¿Cuántas licencias Power BI Pro tienen, aproximadamente?</label>
+        <select id="licencias" name="Licencias Pro" required>
+          <option value="">Elija una opción</option>
+          <option>Menos de 20</option>
+          <option>Entre 20 y 50</option>
+          <option>Entre 50 y 150</option>
+          <option>Entre 150 y 500</option>
+          <option>Más de 500</option>
+          <option>No sé</option>
+        </select>
+      </div>
+      <div>
+        <label for="pregunta">¿Qué le gustaría saber de su Power BI? <span class="opc">(opcional)</span></label>
+        <textarea id="pregunta" name="Qué le gustaría saber"></textarea>
+      </div>
+      <div class="check">
+        <input type="checkbox" id="acepto" name="Acepta contacto" value="Sí" required>
+        <label for="acepto">Acepto que use estos datos solo para contactarme por la radiografía. No
+        se comparten con nadie y se borran si no seguimos adelante.</label>
+      </div>
+      <div>
+        <button class="btn primary" type="submit">Enviar</button>
+      </div>
+      <p class="nota">El formulario se envía por FormSubmit, un servicio que reenvía el mensaje a mi
+      correo. Si prefiere, escriba directo a
+      <a href="mailto:talcaldeg@gmail.com?subject=Radiograf%C3%ADa%20de%20Power%20BI">talcaldeg@gmail.com</a>.</p>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Preguntas frecuentes</h2>
+    <details>
+      <summary>¿Qué datos ve la revisión?</summary>
+      <p>Metadatos: nombres de áreas de trabajo, informes y modelos, quién tiene licencia, quién
+      abrió qué y cuándo, el estado de las actualizaciones y los orígenes configurados. No se leen
+      ni se copian los datos que muestran los informes.</p>
+    </details>
+    <details>
+      <summary>¿Qué pasa con la información al terminar?</summary>
+      <p>Se usa solo para el informe. Al entregarlo se borra lo extraído, y su equipo revoca el
+      acceso.</p>
+    </details>
+    <details>
+      <summary>¿Por qué gratis?</summary>
+      <p>Porque estoy validando el servicio y necesito saber, de quienes administran Power BI de
+      verdad, qué parte vale y cuál sobra. Su opinión es el pago.</p>
+    </details>
+    <details>
+      <summary>¿Puedo hacerlo yo mismo?</summary>
+      <p>La parte de licencias, sí, y está explicada paso a paso en
+      <a href="/articulos/licencias-power-bi-pro-sin-uso/">la guía</a>. Lo demás pide cruzar
+      varias API de administración, y ahí está el trabajo.</p>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Quién la hace</h2>
+    <p>Soy ingeniero civil industrial de la Pontificia Universidad Católica de Chile, con más de
+    cinco años en analítica, BI e ingeniería de datos para retail, consumo masivo y exportación.
+    Llevo años construyendo y administrando informes de Power BI, y conozco el desorden que se
+    junta cuando nadie tiene tiempo de mirar el conjunto.</p>
+    <p class="muted">Más detalle en <a href="/">la página principal</a>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cta" style="margin-bottom:14px">
+      <a class="btn primary" href="#formulario">Pedir la radiografía</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/tomas-alcalde-gdm" target="_blank" rel="noopener">in · LinkedIn</a>
+    </div>
+    <p>Tomás Alcalde Gueneau de Mussy · Santiago, Chile</p>
+  </div>
+</footer>
+
+<script>
+  try {
+    if (new URLSearchParams(location.search).get('enviado') === '1') {
+      document.getElementById('gracias').classList.add('visible');
+    }
+  } catch (e) {}
+</script>
+
+</body>
+</html>
