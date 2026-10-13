@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo armar el flujo de caja de una pyme en Excel, paso a paso | Tomás Alcalde</title>
+<meta name="description" content="El método completo para armar el flujo de caja de una pyme en Excel o Google Sheets: una tabla de movimientos, un resumen por mes con SUMAR.SI.CONJUNTO, ventas separadas de la caja y la proyección con lo pendiente.">
+<meta property="og:title" content="Cómo armar el flujo de caja de una pyme en Excel, paso a paso">
+<meta property="og:description" content="Una tabla de movimientos, un resumen por mes con una sola fórmula, ventas separadas de la caja y la proyección con lo pendiente. El método completo, con las fórmulas.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/">
+<link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="article:published_time" content="2026-10-13">
+<meta property="article:author" content="Tomás Alcalde">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/img/panel.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cómo armar el flujo de caja de una pyme en Excel, paso a paso">
+<meta name="twitter:description" content="Una tabla de movimientos, un resumen por mes con una sola fórmula y ventas separadas de la caja.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/img/panel.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Cómo armar el flujo de caja de una pyme en Excel, paso a paso",
+ "description": "El método completo para armar el flujo de caja de una pyme en Excel o Google Sheets: una tabla de movimientos, un resumen por mes con SUMAR.SI.CONJUNTO, ventas separadas de la caja y la proyección con lo pendiente.",
+ "inLanguage": "es",
+ "url": "https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/"
+ },
+ "datePublished": "2026-10-13",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/flujo-de-caja-pyme-excel/img/panel.png",
+ "keywords": "flujo de caja, flujo de caja pyme, flujo de caja en Excel, plantilla flujo de caja, SUMAR.SI.CONJUNTO, Google Sheets, finanzas pyme"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "¿Cuál es la diferencia entre el flujo de caja y el estado de resultados?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "El estado de resultados registra la venta cuando se factura y el gasto cuando se incurre; el flujo de caja los registra cuando el dinero entra o sale de la cuenta. Por eso una empresa puede tener utilidad en el mes y, al mismo tiempo, menos dinero que al empezar."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Conviene llevar el flujo de caja por semana o por mes?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Se anota por movimiento, con su fecha, y así la planilla puede resumirse por mes o por semana sin volver a digitar. El resumen mensual basta mientras la caja cubra más de un par de meses de salidas. Cuando la caja está justa conviene mirar las próximas semanas, porque dentro de un mes que cierra bien puede haber una semana en rojo."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Sirve este método en Google Sheets?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Sí. La fórmula es la misma, SUMAR.SI.CONJUNTO o SUMIFS, y FIN.MES o EOMONTH. Si no usa una tabla con nombre, reemplace Mov[Monto] por el rango de la columna, por ejemplo Movimientos!E2:E5000, y lo mismo con las demás columnas."
+   }
+  }
+ ]
+}
+</script>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:var(--chip); border:1px solid var(--line); border-radius:10px;
+      padding:14px 16px; margin:0 0 18px; overflow-x:auto; line-height:1.55}
+  pre code{background:none; border:0; padding:0; font-size:14px}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0 0 12px}
+  .destacado p:last-child{margin:0}
+  .resumen{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px 6px; margin:26px 0 30px}
+  .resumen p.t{font-weight:700; margin:0 0 10px}
+  .resumen ul{margin:0 0 12px}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .tabla{overflow-x:auto; margin:22px 0 26px}
+  table{width:100%; border-collapse:collapse; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  tr.total td{font-weight:700}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <span class="otro"><a href="../presupuesto-hogar-excel/">Presupuesto del hogar en Excel</a></span>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Excel para la pyme</p>
+  <h1>Cómo armar el flujo de caja de una pyme en Excel, paso a paso</h1>
+  <p class="lede">Una empresa puede tener su mejor mes de ventas y no alcanzar a pagar los sueldos
+  ese mismo mes. El flujo de caja es la planilla que lo avisa antes. Se arma en una tarde, con dos
+  hojas y una sola fórmula.</p>
+  <p class="meta">Octubre de 2026 · Tomás Alcalde · lectura de 8 minutos</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>El estado de resultados dice si el negocio gana plata. El flujo de caja responde otra pregunta:
+si el día de pago va a haber dinero en la cuenta. No es lo mismo. La factura se emitió hoy, el
+cliente paga a 60 días y los sueldos se pagan este mes; en el papel hay utilidad y en el banco
+no hay con qué.</p>
+
+<p>Lo que sigue es el método completo, con las fórmulas escritas. No pide contabilidad ni macros.
+Pide anotar cada movimiento, y esa es la única parte difícil.</p>
+
+<div class="resumen">
+  <p class="t">Lo corto</p>
+  <ul>
+    <li>Una sola tabla de movimientos: una fila por cada entrada o salida, con fecha, categoría,
+    monto y estado (pagado o pendiente).</li>
+    <li>Un resumen por mes que suma solo lo pagado. El saldo final es el saldo inicial más las
+    entradas menos las salidas, y pasa a ser el saldo inicial del mes siguiente.</li>
+    <li>Las ventas facturadas se miran en una fila aparte de la caja cobrada.</li>
+    <li>Lo pendiente, anotado con la fecha en que se espera, es la proyección. No hay que armar
+    otra planilla.</li>
+  </ul>
+</div>
+
+<h2>Antes de abrir Excel: qué cuenta como caja</h2>
+
+<p>Caja es el dinero que entró o salió de verdad de las cuentas de la empresa, sea el banco o el
+efectivo. Una factura emitida todavía no es caja. Una compra a 30 días tampoco es una salida
+hasta el día en que se paga.</p>
+
+<p>De ahí salen tres reglas que evitan casi todas las dudas. Los montos se anotan como se mueven
+en la cuenta, con los impuestos incluidos, y el pago mensual de impuestos va como una salida más
+en su propia categoría. Los retiros del dueño son salidas. Y la depreciación no existe en esta
+planilla, porque nadie la paga.</p>
+
+<h2>Paso 1. La tabla de movimientos</h2>
+
+<p>En una hoja llamada <code>Movimientos</code>, una fila por movimiento y estas columnas:</p>
+
+<div class="tabla"><table>
+  <tr><th>Columna</th><th>Qué va</th></tr>
+  <tr><td>Fecha</td><td>El día en que el dinero se movió, o en que se espera que se mueva</td></tr>
+  <tr><td>Concepto</td><td>Texto libre: «Factura 1042», «Arriendo de octubre»</td></tr>
+  <tr><td>Tipo</td><td>Entrada o Salida</td></tr>
+  <tr><td>Categoría</td><td>De una lista corta (paso 2)</td></tr>
+  <tr><td>Monto</td><td>Siempre positivo; el sentido lo da el Tipo</td></tr>
+  <tr><td>Cliente o proveedor</td><td>Para saber después a quién cobrarle</td></tr>
+  <tr><td>Estado</td><td>Pagado o Pendiente</td></tr>
+</table></div>
+
+<p>Seleccione el rango y conviértalo en tabla con <code>Ctrl + T</code>. En la pestaña de diseño
+de la tabla, cámbiele el nombre a <code>Mov</code>. Con eso las fórmulas del resumen se refieren a
+las columnas por su nombre y alcanzan solas las filas nuevas; no hay que estirar rangos cada
+mes.</p>
+
+<p>El monto va siempre en positivo. Mezclar signos en la misma columna parece más corto y termina
+en una salida digitada sin el menos, que la planilla suma como si fuera plata que entró.</p>
+
+<h2>Paso 2. Pocas categorías, elegidas de una lista</h2>
+
+<p>Con siete u ocho categorías de salida alcanza para una empresa chica: proveedores,
+remuneraciones, arriendo, servicios, marketing, impuestos y otros. En las entradas conviene
+separar las ventas de lo que no es venta: otros ingresos, aportes de socios y préstamos. Un mes
+en que la caja sube porque entró un crédito no fue un buen mes, y si todo está en la misma
+categoría la planilla no lo distingue.</p>
+
+<p>Escriba las categorías en una hoja aparte y úselas como lista desplegable en la columna
+Categoría (<em>Datos &gt; Validación de datos &gt; Lista</em>). Lo mismo con Tipo y Estado. La
+lista no es un detalle de comodidad: «Proveedores» y «Proveedor» escritos a mano son dos
+categorías distintas para una fórmula, y la suma queda corta sin avisar.</p>
+
+<h2>Paso 3. El saldo inicial</h2>
+
+<p>Elija una fecha de partida, sume lo que había ese día en las cuentas y en el efectivo, y anote
+ese número. Nada anterior a esa fecha entra a la tabla. Si parte el primer día de un mes, mejor:
+el primer resumen sale completo.</p>
+
+<h2>Paso 4. El resumen por mes</h2>
+
+<p>En una hoja <code>Resumen</code>, la fila 1 lleva los meses hacia la derecha. Escriba en
+<code>B1</code> el primer día del primer mes como fecha (por ejemplo, 01-07-2026), en
+<code>C1</code> la fórmula <code>=FECHA.MES(B1;1)</code> y cópiela hacia la derecha. Un formato de
+celda <code>mmm-aa</code> las muestra como «jul-26». Debajo van cinco filas: saldo inicial,
+entradas, salidas, flujo del mes y saldo final.</p>
+
+<p>Las entradas del mes, en <code>B3</code>:</p>
+
+<pre><code>=SUMAR.SI.CONJUNTO(Mov[Monto];Mov[Tipo];"Entrada";Mov[Estado];"Pagado";
+   Mov[Fecha];"&gt;="&amp;B$1;Mov[Fecha];"&lt;="&amp;FIN.MES(B$1;0))</code></pre>
+
+<p>Dice: sume los montos que sean entradas, que estén pagados y cuya fecha caiga entre el primer
+y el último día del mes de <code>B1</code>. Las salidas, en <code>B4</code>, son la misma fórmula
+con <code>"Salida"</code>. El resto es aritmética:</p>
+
+<ul>
+  <li>Flujo del mes, en <code>B5</code>: <code>=B3-B4</code></li>
+  <li>Saldo final, en <code>B6</code>: <code>=B2+B5</code></li>
+  <li>Saldo inicial del mes siguiente, en <code>C2</code>: <code>=B6</code></li>
+</ul>
+
+<p>En <code>B2</code> va el saldo inicial del paso 3. Copie la columna hacia la derecha y tiene
+el flujo de caja de todos los meses. En Excel en inglés las funciones se llaman
+<code>SUMIFS</code>, <code>EOMONTH</code> y <code>EDATE</code>; si su configuración regional separa
+los argumentos con coma, cambie cada punto y coma por una coma.</p>
+
+<p>Con tres meses de un ejemplo inventado se ve así:</p>
+
+<div class="tabla"><table>
+  <tr><th></th><th class="num">Jul</th><th class="num">Ago</th><th class="num">Sep</th></tr>
+  <tr><td>Saldo inicial</td><td class="num">4.000.000</td><td class="num">4.700.000</td><td class="num">3.900.000</td></tr>
+  <tr><td>Entradas cobradas</td><td class="num">7.200.000</td><td class="num">6.100.000</td><td class="num">8.000.000</td></tr>
+  <tr><td>Salidas pagadas</td><td class="num">6.500.000</td><td class="num">6.900.000</td><td class="num">7.100.000</td></tr>
+  <tr><td>Flujo del mes</td><td class="num">700.000</td><td class="num">-800.000</td><td class="num">900.000</td></tr>
+  <tr class="total"><td>Saldo final</td><td class="num">4.700.000</td><td class="num">3.900.000</td><td class="num">4.800.000</td></tr>
+</table></div>
+
+<h2>Paso 5. Venta no es caja</h2>
+
+<p>Agosto es el mes que importa en ese ejemplo. La caja bajó 800.000. Suponga que ese mismo mes
+la empresa facturó 8.400.000, más que en julio y que en septiembre. Quien mire solo las ventas
+celebra; quien mire solo la caja se asusta. Hacen falta las dos filas, una al lado de la
+otra.</p>
+
+<p>Las ventas facturadas del mes son la misma fórmula, sin la condición de estado y limitada a la
+categoría de ventas:</p>
+
+<pre><code>=SUMAR.SI.CONJUNTO(Mov[Monto];Mov[Categoría];"Ventas";
+   Mov[Fecha];"&gt;="&amp;B$1;Mov[Fecha];"&lt;="&amp;FIN.MES(B$1;0))</code></pre>
+
+<p>Y lo que está por cobrar, todo lo que sea entrada y siga pendiente:</p>
+
+<pre><code>=SUMAR.SI.CONJUNTO(Mov[Monto];Mov[Tipo];"Entrada";Mov[Estado];"Pendiente")</code></pre>
+
+<p>Cambiando <code>"Entrada"</code> por <code>"Salida"</code> sale lo que está por pagar.</p>
+
+<p>Para que esto funcione, cada factura se anota el día en que se emite, con estado Pendiente.
+Cuando el cliente paga, se cambia a Pagado y se corrige la fecha al día en que el dinero entró.
+Ese cambio de fecha es el paso que más se olvida. Sin él, un cobro de septiembre queda sumado en
+agosto y el saldo de la planilla deja de parecerse al del banco.</p>
+
+<h2>Paso 6. Lo pendiente es la proyección</h2>
+
+<p>No hace falta una segunda planilla para proyectar. Si las facturas por cobrar tienen la fecha
+en que se espera el pago, y los sueldos, el arriendo y los impuestos de los próximos meses están
+anotados por adelantado como pendientes, el resumen ya sabe lo que viene. Agregue dos filas con
+la fórmula del paso 4 y el estado <code>"Pendiente"</code>, una para entradas y otra para
+salidas. En los meses futuros, el saldo proyectado es el saldo final anterior más las entradas
+esperadas menos las salidas comprometidas.</p>
+
+<p>Un número resume el estado de la caja: cuántos meses de salidas cubre. Es el saldo final
+dividido por el promedio de salidas de los últimos tres meses. En el ejemplo, 4.800.000 contra un
+promedio de 6.833.000 da 0,7 meses, unas tres semanas.</p>
+
+<p>No hay una cifra correcta para todos. Un negocio que cobra al contado vive tranquilo con menos
+caja que uno que cobra a 60 días. Lo que sirve es mirar hacia dónde se mueve ese número de un mes
+a otro.</p>
+
+<h2>La rutina que lo mantiene vivo</h2>
+
+<p>Una vez por semana, con el estado de cuenta del banco al lado: anotar los movimientos nuevos,
+pasar a Pagado lo que se cobró o se pagó, y comparar el saldo de la planilla con el del banco.
+Tienen que ser iguales. Si no lo son, falta un movimiento o sobra uno, y se encuentra en minutos
+porque solo hay una semana que revisar.</p>
+
+<p>Esa comparación es lo que hace confiable la planilla. Un flujo de caja que no se compara con
+el banco se va desviando de a poco, y el día en que hace falta para decidir algo ya nadie le
+cree.</p>
+
+<h2>Errores que lo arruinan</h2>
+
+<ul>
+  <li><strong>Dejar la fecha de la factura en lo cobrado.</strong> La caja queda en el mes
+  equivocado.</li>
+  <li><strong>Mezclar la cuenta personal con la de la empresa.</strong> Si se paga algo del
+  negocio con plata propia, se anota como aporte de socios y como salida; si no, el saldo nunca
+  va a calzar.</li>
+  <li><strong>Olvidar los pagos que no son mensuales.</strong> Seguros, patentes, impuestos
+  anuales, aguinaldos. Se anotan como pendientes apenas se conocen, aunque falten meses.</li>
+  <li><strong>Usar «Otros» para todo.</strong> Cuando esa categoría es de las más grandes, hay
+  una categoría que falta.</li>
+</ul>
+
+<h2>Preguntas frecuentes</h2>
+
+<h3>¿Cuál es la diferencia entre el flujo de caja y el estado de resultados?</h3>
+<p>El estado de resultados registra la venta cuando se factura y el gasto cuando se incurre; el
+flujo de caja los registra cuando el dinero entra o sale de la cuenta. Por eso una empresa puede
+tener utilidad en el mes y, al mismo tiempo, menos dinero que al empezar.</p>
+
+<h3>¿Conviene llevar el flujo de caja por semana o por mes?</h3>
+<p>Se anota por movimiento, con su fecha, y así la planilla puede resumirse por mes o por semana
+sin volver a digitar. El resumen mensual basta mientras la caja cubra más de un par de meses de
+salidas. Cuando la caja está justa conviene mirar las próximas semanas, porque dentro de un mes
+que cierra bien puede haber una semana en rojo.</p>
+
+<h3>¿Sirve este método en Google Sheets?</h3>
+<p>Sí. La fórmula es la misma, <code>SUMAR.SI.CONJUNTO</code> o <code>SUMIFS</code>, y
+<code>FIN.MES</code> o <code>EOMONTH</code>. Si no usa una tabla con nombre, reemplace
+<code>Mov[Monto]</code> por el rango de la columna, por ejemplo
+<code>Movimientos!E2:E5000</code>, y lo mismo con las demás columnas.</p>
+
+<div class="destacado">
+  <p><strong>Para seguir.</strong> Si prefiere ver la mecánica funcionando antes de armarla, hay
+  una planilla gratuita armada con la misma idea: una tabla de movimientos y un resumen del mes
+  que se calcula solo. Está pensada para el hogar, pero la mecánica es la de este artículo:
+  <a href="https://talcrafter.gumroad.com/l/presupuesto-simple-gratis">Presupuesto mensual simple, gratis</a>.</p>
+  <p>Y si quiere el flujo de caja ya armado, con panel de una pantalla (ventas contra la meta,
+  saldo de caja de 12 meses, salidas contra presupuesto y lo que falta por cobrar y por pagar),
+  está en <a href="https://talcrafter.gumroad.com/l/flujo-caja-pyme">Flujo de caja y ventas para pyme</a>,
+  por USD 9. Funciona en Excel y en Google Sheets, sin macros.</p>
+</div>
+
+<figure>
+  <img src="img/panel.png" width="2086" height="1377" loading="lazy" alt="Panel de la plantilla de flujo de caja con datos de ejemplo: ventas del mes 8.369.000, un 7 % bajo la meta; salidas 8.551.000; saldo de caja al cierre 14.570.000; por cobrar 1.729.000. Tabla de salidas por categoría contra presupuesto y gráficos de saldo de caja y ventas de 12 meses.">
+  <figcaption>El panel de la plantilla, con datos de ejemplo de una empresa ficticia.</figcaption>
+</figure>
+
+<p>Para las cuentas de la casa, el método es parecido y está en
+<a href="../presupuesto-hogar-excel/">Presupuesto del hogar en Excel paso a paso</a>.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · consultor de negocio y BI, IA aplicada a operaciones.
+  <a href="../../">Volver al inicio</a></p>
+</div></footer>
+
+</body>
+</html>

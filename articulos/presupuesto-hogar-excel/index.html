@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presupuesto del hogar en Excel paso a paso | Tomás Alcalde</title>
+<meta name="description" content="Cómo hacer un presupuesto del hogar en Excel o Google Sheets paso a paso: anotar los movimientos, elegir las categorías, fijar el presupuesto con el gasto real de tres meses y comparar cada mes con una sola fórmula.">
+<meta property="og:title" content="Presupuesto del hogar en Excel paso a paso">
+<meta property="og:description" content="Anotar los movimientos, elegir las categorías, fijar el presupuesto con el gasto real de tres meses y comparar cada mes con una sola fórmula.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/">
+<link rel="alternate" hreflang="es" href="https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/">
+<meta name="author" content="Tomás Alcalde">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:url" content="https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/">
+<meta property="og:site_name" content="Tomás Alcalde">
+<meta property="og:locale" content="es_CL">
+<meta property="article:published_time" content="2026-10-13">
+<meta property="article:author" content="Tomás Alcalde">
+<meta property="og:image" content="https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/img/panel.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Presupuesto del hogar en Excel paso a paso">
+<meta name="twitter:description" content="El presupuesto se fija con el gasto real de tres meses y se compara cada mes con una sola fórmula.">
+<meta name="twitter:image" content="https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/img/panel.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f1b2d">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Presupuesto del hogar en Excel paso a paso",
+ "description": "Cómo hacer un presupuesto del hogar en Excel o Google Sheets paso a paso: anotar los movimientos, elegir las categorías, fijar el presupuesto con el gasto real de tres meses y comparar cada mes con una sola fórmula.",
+ "inLanguage": "es",
+ "url": "https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/",
+ "mainEntityOfPage": {
+  "@type": "WebPage",
+  "@id": "https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/"
+ },
+ "datePublished": "2026-10-13",
+ "author": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/",
+  "jobTitle": "Consultor de negocio y BI, IA aplicada",
+  "sameAs": [
+   "https://github.com/talcaldeg"
+  ]
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "Tomás Alcalde",
+  "url": "https://talcaldeg.github.io/"
+ },
+ "image": "https://talcaldeg.github.io/articulos/presupuesto-hogar-excel/img/panel.png",
+ "keywords": "presupuesto del hogar, presupuesto familiar en Excel, control de gastos, plantilla de presupuesto, finanzas personales, SUMAR.SI.CONJUNTO, Google Sheets"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "¿Cuántas categorías debe tener un presupuesto del hogar?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Entre ocho y doce. Con menos, una sola categoría se lleva la mitad del gasto y no dice nada; con más, anotar se vuelve lento y se abandona. Si la categoría Otros queda entre las tres más grandes, falta una categoría."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Cómo se anotan las compras con tarjeta de crédito?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "El día de la compra, en la categoría de lo que se compró. El pago de la tarjeta a fin de mes no se anota como gasto, porque sería contar lo mismo dos veces. Una compra en cuotas se anota cuota por cuota, cada una en su mes; los intereses y comisiones de la tarjeta sí son un gasto propio."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "¿Sirve este método en Google Sheets?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Sí. La fórmula es la misma, SUMAR.SI.CONJUNTO o SUMIFS, y FIN.MES o EOMONTH. Si no usa una tabla con nombre, reemplace Mov[Monto] por el rango de la columna, por ejemplo Movimientos!E2:E5000, y lo mismo con las demás columnas."
+   }
+  }
+ ]
+}
+</script>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#0f1b2d; --bg2:#13233b; --card:#17293f; --line:#26405e;
+    --ink:#eaf1f9; --muted:#9db2ca; --teal:#2dd4bf; --teal2:#5e7fb8;
+    --accent:#2dd4bf; --chip:#1d3350; --rojo:#ff8f8f;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f5f8fc; --bg2:#eef3f9; --card:#ffffff; --line:#dbe4ef;
+      --ink:#132338; --muted:#4d637f; --teal:#0d9488; --teal2:#2a5b93;
+      --accent:#0d9488; --chip:#e7f0fa; --rojo:#b42318;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.72 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px; margin:0 auto; padding:0 22px}
+
+  .top{border-bottom:1px solid var(--line); background:var(--bg2)}
+  .top .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .top a.home{font-weight:700; color:var(--ink); font-size:15px}
+  .top .otro{font-size:14px}
+
+  header.hero{padding:52px 0 26px; background:linear-gradient(180deg,var(--bg2),var(--bg))}
+  .eyebrow{color:var(--teal); font-weight:700; font-size:12.5px; letter-spacing:1.6px;
+           text-transform:uppercase; margin:0 0 12px}
+  h1{font-size:clamp(28px,5vw,41px); line-height:1.15; margin:0 0 16px; letter-spacing:-.5px}
+  .lede{font-size:19px; color:var(--muted); margin:0 0 18px}
+  .meta{color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:14px}
+
+  article{padding:12px 0 40px}
+  h2{font-size:23px; margin:44px 0 14px; line-height:1.25; letter-spacing:-.2px}
+  h3{font-size:18px; margin:30px 0 8px}
+  p{margin:0 0 18px}
+  ul,ol{margin:0 0 18px; padding-left:20px}
+  li{margin:0 0 9px}
+  strong{color:var(--ink)}
+  code{background:var(--chip); border:1px solid var(--line); border-radius:5px;
+       padding:1px 6px; font-size:14.5px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:var(--chip); border:1px solid var(--line); border-radius:10px;
+      padding:14px 16px; margin:0 0 18px; overflow-x:auto; line-height:1.55}
+  pre code{background:none; border:0; padding:0; font-size:14px}
+
+  .destacado{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--accent);
+             border-radius:0 12px 12px 0; padding:18px 20px; margin:28px 0}
+  .destacado p{margin:0 0 12px}
+  .destacado p:last-child{margin:0}
+  .resumen{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px 6px; margin:26px 0 30px}
+  .resumen p.t{font-weight:700; margin:0 0 10px}
+  .resumen ul{margin:0 0 12px}
+
+  figure{margin:30px 0 34px}
+  figure img{width:100%; height:auto; display:block; background:var(--card); border:1px solid var(--line);
+             border-radius:12px}
+  figcaption{color:var(--muted); font-size:14px; margin-top:10px; line-height:1.55}
+
+  .tabla{overflow-x:auto; margin:22px 0 26px}
+  table{width:100%; border-collapse:collapse; font-size:15.5px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.6px}
+  td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  tr.total td{font-weight:700}
+  tr.pasada td.num.d{color:var(--rojo); font-weight:700}
+
+  footer{border-top:1px solid var(--line); padding:28px 0 56px; color:var(--muted); font-size:15px}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <a class="home" href="../../">Tomás Alcalde</a>
+  <span class="otro"><a href="../flujo-de-caja-pyme-excel/">Flujo de caja de una pyme en Excel</a></span>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Excel para la casa</p>
+  <h1>Presupuesto del hogar en Excel paso a paso</h1>
+  <p class="lede">Muchos presupuestos familiares se abandonan a las pocas semanas, y suele ser
+  por lo mismo: se escribieron con lo que uno quisiera gastar. Este se arma al revés, primero con
+  lo que de verdad se gasta.</p>
+  <p class="meta">Octubre de 2026 · Tomás Alcalde · lectura de 8 minutos</p>
+</div></header>
+
+<article><div class="wrap">
+
+<p>Un presupuesto no es una lista de buenos propósitos. Es una comparación: cuánto se dijo que se
+iba a gastar en cada cosa y cuánto se gastó. Para que sirva hacen falta las dos mitades, y la que
+suele fallar es la segunda, porque nadie anota.</p>
+
+<p>Por eso este método parte por anotar y deja el presupuesto para después. Usa dos hojas y una
+fórmula, sirve igual en Excel y en Google Sheets, y no tiene macros.</p>
+
+<div class="resumen">
+  <p class="t">Lo corto</p>
+  <ul>
+    <li>Una tabla de movimientos, una fila por cada ingreso o gasto.</li>
+    <li>Entre ocho y doce categorías, elegidas de una lista desplegable.</li>
+    <li>El presupuesto de cada categoría sale del promedio real de los últimos tres meses. El
+    ahorro se resta primero, no se espera a ver qué sobra.</li>
+    <li>Un resumen que suma cada categoría del mes elegido y la compara con su presupuesto.</li>
+    <li>Diez minutos a la semana para anotar y una revisión al mes.</li>
+  </ul>
+</div>
+
+<h2>Paso 1. Junte tres meses de gastos reales</h2>
+
+<p>Antes de fijar ningún número, baje del sitio de su banco los estados de cuenta de los últimos
+tres meses, de la cuenta y de las tarjetas. Tres meses alcanzan para ver qué se repite y qué fue
+un gasto aislado.</p>
+
+<p>Ese es el paso que la mayoría se salta. Quien calcula de memoria cuánto gasta en supermercado
+suele quedarse corto, y un presupuesto con cifras optimistas se rompe en la segunda semana.
+Cuando un presupuesto se rompe siempre, uno deja de mirarlo.</p>
+
+<h2>Paso 2. La tabla de movimientos</h2>
+
+<p>En una hoja llamada <code>Movimientos</code>, una fila por movimiento:</p>
+
+<div class="tabla"><table>
+  <tr><th>Columna</th><th>Qué va</th></tr>
+  <tr><td>Fecha</td><td>El día del gasto o del ingreso</td></tr>
+  <tr><td>Descripción</td><td>Texto libre: «Feria», «Cuenta de la luz»</td></tr>
+  <tr><td>Tipo</td><td>Ingreso o Gasto</td></tr>
+  <tr><td>Categoría</td><td>De una lista corta (paso 3)</td></tr>
+  <tr><td>Monto</td><td>Siempre positivo</td></tr>
+</table></div>
+
+<p>Seleccione el rango, conviértalo en tabla con <code>Ctrl + T</code> y, en la pestaña de diseño
+de la tabla, cámbiele el nombre a <code>Mov</code>. Así las fórmulas alcanzan solas las filas
+nuevas. Después pase a esta tabla los tres meses que juntó en el paso 1. Es la parte más larga de
+todo el método, una hora o dos, y se hace una sola vez.</p>
+
+<h2>Paso 3. Entre ocho y doce categorías</h2>
+
+<p>Con menos de ocho, una sola categoría se lleva la mitad del gasto y no dice nada. Con más de
+doce, cada anotación obliga a pensar dónde va, y eso basta para dejar de anotar. Una lista que
+funciona para la mayoría de las casas: vivienda, supermercado, servicios básicos, transporte,
+salud, educación, restaurantes, entretención, ropa y otros.</p>
+
+<p>Escríbalas en una hoja aparte, que aquí se llama <code>Config</code>, y úselas como lista
+desplegable en la columna Categoría (<em>Datos &gt; Validación de datos &gt; Lista</em>). Escrita
+a mano, «Supermercado» con un espacio al final ya es otra categoría para la fórmula.</p>
+
+<p>Mire la categoría Otros después del primer mes. Si quedó entre las tres más grandes, hay un
+gasto que merece nombre propio.</p>
+
+<h2>Paso 4. El presupuesto sale de lo que ya gasta</h2>
+
+<p>Al lado de cada categoría, en <code>Config</code>, escriba su presupuesto mensual. El punto de
+partida es el promedio de los tres meses anotados, redondeado. Recién ahí se decide dónde
+recortar, y conviene elegir una o dos categorías, no todas a la vez.</p>
+
+<p>El orden importa. Primero se decide cuánto se quiere ahorrar al mes, después se resta de los
+ingresos, y lo que queda es el total que las categorías pueden sumar. El que espera a ver qué
+sobra a fin de mes descubre, casi siempre, que no sobró.</p>
+
+<p>La regla 50/30/20 (la mitad a necesidades, un 30 % a gustos y un 20 % a ahorro) sirve como
+referencia para saber si uno está lejos. No sirve como punto de partida: una familia que hoy
+ahorra un 3 % no pasa a un 20 % porque lo diga la planilla.</p>
+
+<h2>Paso 5. El resumen del mes</h2>
+
+<p>En una hoja <code>Resumen</code>, escriba en <code>B1</code> el primer día del mes que quiere
+mirar, como fecha (por ejemplo, 01-09-2026). Desde la fila 5 hacia abajo, las categorías en la
+columna A y su presupuesto en la B. El gasto real de cada categoría va en la columna C:</p>
+
+<pre><code>=SUMAR.SI.CONJUNTO(Mov[Monto];Mov[Tipo];"Gasto";Mov[Categoría];$A5;
+   Mov[Fecha];"&gt;="&amp;$B$1;Mov[Fecha];"&lt;="&amp;FIN.MES($B$1;0))</code></pre>
+
+<p>Dice: sume los montos que sean gastos, de la categoría de esta fila, con fecha entre el primer
+y el último día del mes de <code>B1</code>. Cópiela hacia abajo. Las otras dos columnas son
+aritmética: la diferencia es <code>=B5-C5</code> y el porcentaje usado es <code>=C5/B5</code>.
+Para cambiar de mes basta con cambiar la fecha de <code>B1</code>.</p>
+
+<p>En Excel en inglés las funciones se llaman <code>SUMIFS</code> y <code>EOMONTH</code>; si su
+configuración regional separa los argumentos con coma, cambie cada punto y coma por una coma.</p>
+
+<p>Con un mes de un ejemplo inventado, queda así:</p>
+
+<div class="tabla"><table>
+  <tr><th>Categoría</th><th class="num">Presupuesto</th><th class="num">Real</th><th class="num">Diferencia</th><th class="num">% usado</th></tr>
+  <tr><td>Vivienda</td><td class="num">500.000</td><td class="num">500.000</td><td class="num d">0</td><td class="num">100 %</td></tr>
+  <tr class="pasada"><td>Supermercado</td><td class="num">300.000</td><td class="num">324.000</td><td class="num d">-24.000</td><td class="num">108 %</td></tr>
+  <tr><td>Servicios básicos</td><td class="num">90.000</td><td class="num">84.000</td><td class="num d">6.000</td><td class="num">93 %</td></tr>
+  <tr><td>Transporte</td><td class="num">100.000</td><td class="num">96.000</td><td class="num d">4.000</td><td class="num">96 %</td></tr>
+  <tr><td>Salud</td><td class="num">60.000</td><td class="num">41.000</td><td class="num d">19.000</td><td class="num">68 %</td></tr>
+  <tr class="pasada"><td>Restaurantes</td><td class="num">60.000</td><td class="num">97.000</td><td class="num d">-37.000</td><td class="num">162 %</td></tr>
+  <tr><td>Otros</td><td class="num">90.000</td><td class="num">78.000</td><td class="num d">12.000</td><td class="num">87 %</td></tr>
+  <tr class="total"><td>Total</td><td class="num">1.200.000</td><td class="num">1.220.000</td><td class="num d">-20.000</td><td class="num">102 %</td></tr>
+</table></div>
+
+<p>El total se pasó por 20.000, que es poco. Lo que dice la tabla está más arriba: restaurantes
+gastó un 62 % más de lo previsto, y salud dejó sin usar casi lo mismo que supermercado se pasó.
+Con solo el total, ese mes habría parecido normal.</p>
+
+<p>Para que las pasadas salten a la vista, seleccione la columna de diferencia y aplique un
+formato condicional que pinte de rojo los valores menores que cero (<em>Inicio &gt; Formato
+condicional &gt; Reglas para resaltar celdas &gt; Es menor que</em>).</p>
+
+<h2>Paso 6. Ingresos, ahorro y tasa de ahorro</h2>
+
+<p>Los ingresos del mes son la misma fórmula con <code>"Ingreso"</code> y sin la condición de
+categoría:</p>
+
+<pre><code>=SUMAR.SI.CONJUNTO(Mov[Monto];Mov[Tipo];"Ingreso";
+   Mov[Fecha];"&gt;="&amp;$B$1;Mov[Fecha];"&lt;="&amp;FIN.MES($B$1;0))</code></pre>
+
+<p>El ahorro es ingresos menos gastos, y la tasa de ahorro es el ahorro dividido por los
+ingresos. En el ejemplo, con ingresos de 1.500.000 y gastos de 1.220.000, el ahorro fue de
+280.000 y la tasa, de un 19 %.</p>
+
+<p>De los números del resumen, la tasa de ahorro es el que mejor se compara de un mes a otro. El
+monto ahorrado sube solo en un mes con un ingreso extra. La tasa muestra si, además, se guardó
+una parte mayor.</p>
+
+<h2>Lo que descuadra un presupuesto</h2>
+
+<ul>
+  <li><strong>La tarjeta de crédito.</strong> Cada compra se anota el día en que se hace, en su
+  categoría. El pago de la tarjeta a fin de mes no se anota como gasto: sería contar lo mismo dos
+  veces. Los intereses y las comisiones sí son un gasto.</li>
+  <li><strong>Las compras en cuotas.</strong> Cuota por cuota, cada una en su mes. Así el
+  presupuesto de los meses que vienen ya muestra lo que está comprometido.</li>
+  <li><strong>Los gastos que llegan una vez al año.</strong> Seguros, contribuciones, matrículas,
+  el permiso de circulación del auto. Súmelos, divida por doce y trate esa cifra como una
+  categoría más que se aparta todos los meses. Si no, marzo o diciembre siempre van a salir en
+  rojo y no será por descuido.</li>
+  <li><strong>Los traspasos entre cuentas propias.</strong> Pasar plata de la cuenta corriente a
+  una de ahorro no es un gasto ni un ingreso. No se anota.</li>
+</ul>
+
+<h2>La rutina</h2>
+
+<p>Diez minutos, una vez por semana, con la aplicación del banco abierta: se anotan los
+movimientos de esos siete días. Una vez al mes se abre el resumen y se miran las filas en
+rojo.</p>
+
+<p>Frente a una categoría que se pasó hay dos salidas honestas. Una es gastar menos el mes
+siguiente. La otra es reconocer que el presupuesto estaba mal puesto y subirlo, bajando otro para
+compensar. Lo que no sirve es hacer las dos cosas a medias cada mes, porque entonces nunca se
+sabe si el problema era el gasto o el número.</p>
+
+<h2>Preguntas frecuentes</h2>
+
+<h3>¿Cuántas categorías debe tener un presupuesto del hogar?</h3>
+<p>Entre ocho y doce. Con menos, una sola categoría se lleva la mitad del gasto y no dice nada;
+con más, anotar se vuelve lento y se abandona. Si la categoría Otros queda entre las tres más
+grandes, falta una categoría.</p>
+
+<h3>¿Cómo se anotan las compras con tarjeta de crédito?</h3>
+<p>El día de la compra, en la categoría de lo que se compró. El pago de la tarjeta a fin de mes
+no se anota como gasto, porque sería contar lo mismo dos veces. Una compra en cuotas se anota
+cuota por cuota, cada una en su mes; los intereses y comisiones de la tarjeta sí son un gasto
+propio.</p>
+
+<h3>¿Sirve este método en Google Sheets?</h3>
+<p>Sí. La fórmula es la misma, <code>SUMAR.SI.CONJUNTO</code> o <code>SUMIFS</code>, y
+<code>FIN.MES</code> o <code>EOMONTH</code>. Si no usa una tabla con nombre, reemplace
+<code>Mov[Monto]</code> por el rango de la columna, por ejemplo
+<code>Movimientos!E2:E5000</code>, y lo mismo con las demás columnas.</p>
+
+<div class="destacado">
+  <p><strong>Para seguir.</strong> Si prefiere partir de una planilla hecha, hay una gratuita con
+  la tabla de movimientos, las listas desplegables y el resumen del mes por categoría:
+  <a href="https://talcrafter.gumroad.com/l/presupuesto-simple-gratis">Presupuesto mensual simple, gratis</a>.
+  No trae presupuesto por categoría; sirve para empezar a anotar, que es el paso 2.</p>
+  <p>La versión completa suma lo demás de este artículo en un panel de una pantalla: presupuesto
+  por categoría con las pasadas en rojo, ahorro y tasa de ahorro comparados con el mes anterior,
+  y gráficos de 12 meses. Está en
+  <a href="https://talcrafter.gumroad.com/l/presupuesto-hogar">Presupuesto y control de gastos del hogar</a>,
+  por USD 9. Funciona en Excel y en Google Sheets, sin macros.</p>
+</div>
+
+<figure>
+  <img src="img/panel.png" width="2086" height="1377" loading="lazy" alt="Panel de la plantilla de presupuesto con datos de ejemplo: ingresos del mes 2.100.000, gastos 1.763.200, ahorro 336.800 y tasa de ahorro de 16 %. Tabla de gasto por categoría contra presupuesto, con transporte, restaurantes y ropa en rojo, y gráficos de gastos y ahorro de 12 meses.">
+  <figcaption>El panel de la plantilla completa, con datos de ejemplo de una familia
+  ficticia.</figcaption>
+</figure>
+
+<p>Si además lleva las cuentas de un negocio, el método para la caja de la empresa está en
+<a href="../flujo-de-caja-pyme-excel/">Cómo armar el flujo de caja de una pyme en Excel</a>.</p>
+
+</div></article>
+
+<footer><div class="wrap">
+  <p>Tomás Alcalde · consultor de negocio y BI, IA aplicada a operaciones.
+  <a href="../../">Volver al inicio</a></p>
+</div></footer>
+
+</body>
+</html>
