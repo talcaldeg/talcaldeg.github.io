@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Paraguas">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f3f6fa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f1720" media="(prefers-color-scheme: dark)">
@@ -331,6 +336,7 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     if (!document.hidden && Date.now() - cargadoEn > 15 * 60 * 1000) cargar();
   });
 
+  try { if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js"); } catch (e) {}
   marcar();
   cargar();
 })();
