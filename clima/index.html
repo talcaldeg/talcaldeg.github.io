@@ -88,6 +88,14 @@ svg { display: block; width: 100%; height: auto; }
 svg text { fill: var(--muted); font: 12px system-ui, sans-serif; }
 svg .mm { fill: var(--rain); font-weight: 650; font-size: 11px; }
 svg .day { fill: var(--ink); font-weight: 650; }
+.dias { list-style: none; margin: 10px 0 0; padding: 0; }
+.dias li { display: grid; grid-template-columns: 3.6rem minmax(0, 1fr) auto; gap: 8px; align-items: start; padding: 9px 0; border-top: 1px solid var(--line); }
+.dias .d { font-weight: 600; text-transform: capitalize; }
+.dias .t { text-align: right; font-size: .85rem; color: var(--muted); }
+.dias .sub2 { font-size: .82rem; color: var(--muted); }
+.v-si { color: var(--rain); font-weight: 700; }
+.v-op { color: var(--warn); font-weight: 700; }
+.v-no { color: var(--muted); }
 .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-top: 8px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 .foot { font-size: .78rem; color: var(--muted); }
@@ -132,10 +140,10 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     </div>
   </section>
 
-  <section id="manana" class="card">
-    <p class="label">Mañana</p>
-    <p class="mid">…</p>
-    <p class="sub"></p>
+  <section id="semana" class="card">
+    <p class="label">Próximos 7 días</p>
+    <p class="mid" id="semana-res">…</p>
+    <ul class="dias" id="dias"></ul>
   </section>
 
   <div class="foot">
@@ -197,6 +205,14 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
       var fin = parseInt(g[1].t.slice(11, 13), 10) + 1;
       var f = fin >= 24 ? "24:00" : pad(fin) + ":00";
       return g[0].t === g[1].t ? "a las " + hh(g[0].t) : "de " + hh(g[0].t) + " a " + f;
+    }).join(" y ");
+  }
+
+  function rangoDia(r) {
+    return r.rangos.map(function (g) {
+      var a = parseInt(g[0].t.slice(11, 13), 10), b = parseInt(g[1].t.slice(11, 13), 10) + 1;
+      if (a === 0 && b === 24) return "todo el día";
+      return pad(a) + ":00 a " + (b >= 24 ? "24" : pad(b)) + ":00";
     }).join(" y ");
   }
 
@@ -291,13 +307,22 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
 
     var fechas = [];
     horas.forEach(function (h) { var f = h.t.slice(0, 10); if (fechas.indexOf(f) < 0) fechas.push(f); });
-    var man = horas.filter(function (h) { return h.t.slice(0, 10) === fechas[fechas.indexOf(hoyFecha) + 1]; });
-    var m = $("manana");
-    if (man.length) {
-      var rm = resumir(man), vm = veredicto(rm, false);
-      m.querySelector(".mid").textContent = vm.pill.replace("Paraguas: sí", "Lleve paraguas").replace("Paraguas: opcional", "Paraguas opcional").replace("Paraguas: no", "Sin lluvia");
-      m.querySelector(".sub").textContent = (rm.rangos.length ? "Lluvia probable " + textoRangos(rm) + ". " : rm.maxProb >= 20 ? "Hasta " + rm.maxProb + "% a las " + rm.horaMax + ". " : "") + "Mínima " + num(Math.min.apply(null, man.map(function (h) { return h.temp; }))) + " °, máxima " + num(Math.max.apply(null, man.map(function (h) { return h.temp; }))) + " °.";
-    }
+    var lista = "", conLluvia = [];
+    fechas.slice(fechas.indexOf(hoyFecha) + 1).forEach(function (f, n) {
+      var dh = horas.filter(function (h) { return h.t.slice(0, 10) === f; });
+      var rd = resumir(dh);
+      var nombre = n === 0 ? "mañana" : new Intl.DateTimeFormat("es-CL", { timeZone: "UTC", weekday: "short", day: "numeric" }).format(new Date(f + "T12:00:00Z")).replace(".", "");
+      var cls, txt;
+      if (rd.rangos.length) { cls = "v-si"; txt = "Paraguas"; conLluvia.push(nombre); }
+      else if (rd.maxProb >= 20) { cls = "v-op"; txt = "Opcional"; }
+      else { cls = "v-no"; txt = "Sin lluvia"; }
+      var det = rd.rangos.length ? rangoDia(rd) : rd.maxProb >= 20 ? "hasta " + rd.maxProb + "% a las " + rd.horaMax : "";
+      var tmin = Math.min.apply(null, dh.map(function (h) { return h.temp; }));
+      var tmax = Math.max.apply(null, dh.map(function (h) { return h.temp; }));
+      lista += '<li><span class="d">' + nombre + '</span><span class="v"><span class="' + cls + '">' + txt + '</span>' + (det ? '<br><span class="sub2">' + det + (rd.sumMm >= 0.1 ? ", " + mm(rd.sumMm) + " mm" : "") + '</span>' : '') + '</span><span class="t">' + rd.maxProb + '%<br>' + num(tmin) + '° / ' + num(tmax) + '°</span></li>';
+    });
+    $("dias").innerHTML = lista;
+    $("semana-res").textContent = conLluvia.length ? "Lleve paraguas " + conLluvia.length + (conLluvia.length === 1 ? " de los próximos 7 días" : " de los próximos 7 días") : "Ningún otro día requiere paraguas";
 
     cargadoEn = Date.now();
     var d2 = new Date();
@@ -310,7 +335,7 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     var url = "https://api.open-meteo.com/v1/forecast?latitude=" + p.lat + "&longitude=" + p.lon +
       "&current=temperature_2m,apparent_temperature,precipitation" +
       "&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,wind_gusts_10m" +
-      "&timezone=America%2FSantiago&forecast_days=3";
+      "&timezone=America%2FSantiago&forecast_days=8";
     $("estado").textContent = "Consultando…";
     fetch(url).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
