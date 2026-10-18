@@ -1,8 +1,12 @@
 # https://talcaldeg.github.io/
 # Sitio abierto: se permite el rastreo completo, incluidos los rastreadores de
 # sistemas de IA que citan fuentes.
+# search=yes    : buscadores pueden indexar el sitio.
+# ai-input=yes  : los sistemas de IA pueden leer el sitio para responder y citarlo.
+# ai-train=yes  : se autoriza usar el contenido para entrenar modelos (igual que verumdata.cl).
 
 User-agent: *
+Content-Signal: search=yes,ai-input=yes,ai-train=yes
 Allow: /
 
 User-agent: Googlebot
@@ -36,3 +40,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://talcaldeg.github.io/sitemap.xml
+Sitemap: https://talcaldeg.github.io/fenix/sitemap.xml
