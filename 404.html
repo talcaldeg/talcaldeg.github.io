@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página no encontrada</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%230f1b2d%22/%3E%20%3Ctext%20x%3D%2232%22%20y%3D%2244%22%20text-anchor%3D%22middle%22%20font-family%3D%22Segoe%20UI%2C%20Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20fill%3D%22%232dd4bf%22%3ETA%3C/text%3E%20%3C/svg%3E">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<!-- 404 de todo talcaldeg.github.io. GitHub Pages lo sirve en cualquier dirección que no existe; si
+     la ruta empieza con /fenix/, se viste de Proyecto Fénix y ofrece la biblioteca y un buscador
+     (index.html de Fénix lee ?q= y abre la biblioteca con esa búsqueda). Las rutas van absolutas
+     porque la página se sirve desde cualquier carpeta. -->
+<script>
+(function(){
+  var r = document.documentElement;
+  if (location.pathname.indexOf("/fenix/") !== 0) return;
+  r.classList.add("fenix");
+  // Mismo origen que Fénix: se respetan el tema y el idioma que el visitante eligió allá.
+  try{
+    var tema = JSON.parse(localStorage.getItem("fenix:tema"));
+    if (tema === "light" || tema === "dark") r.dataset.theme = tema;
+    var idioma = JSON.parse(localStorage.getItem("fenix:idioma"));
+  }catch(e){}
+  var en = /\/en\/?$/.test(location.pathname) || (idioma ? idioma === "en" : (navigator.language || "es").indexOf("en") === 0);
+  if (en) r.lang = "en";
+})();
+</script>
+<style>
+  /* Sitio personal (talcaldeg.github.io): oscuro de base y teal, como index.html. */
+  :root{
+    --bg:#0f1b2d; --card:#17293f; --line:#26405e; --ink:#eaf1f9; --muted:#9db2ca;
+    --acento:#2dd4bf; --acento-ink:#06231f; --enlace:#5eead4;
+    --serif:system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f5f8fc; --card:#ffffff; --line:#dbe4ef; --ink:#132338; --muted:#4d637f;
+      --acento:#0f766e; --acento-ink:#ffffff; --enlace:#0f766e;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f8fc; --card:#ffffff; --line:#dbe4ef; --ink:#132338; --muted:#4d637f;
+    --acento:#0f766e; --acento-ink:#ffffff; --enlace:#0f766e;
+  }
+  /* Proyecto Fénix: papel y vino en claro; noche y oro en oscuro, como fenix/index.html. */
+  :root.fenix{
+    --bg:#faf6ef; --card:#fffdf8; --line:#e4d8c4; --ink:#2a1f1a; --muted:#6e5d50;
+    --acento:#6b1d24; --acento-ink:#fff8ec; --enlace:#6b1d24;
+    --serif:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root.fenix:not([data-theme="light"]){
+      --bg:#16110f; --card:#231b17; --line:#3a2e27; --ink:#f2e9dc; --muted:#bfae9c;
+      --acento:#e8b04a; --acento-ink:#1d1206; --enlace:#e8b04a;
+    }
+  }
+  :root.fenix[data-theme="dark"]{
+    --bg:#16110f; --card:#231b17; --line:#3a2e27; --ink:#f2e9dc; --muted:#bfae9c;
+    --acento:#e8b04a; --acento-ink:#1d1206; --enlace:#e8b04a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; min-height:100vh; display:grid; place-items:center; padding:24px 16px; background:var(--bg); color:var(--ink); font:17px/1.6 var(--serif)}
+  main{width:100%; max-width:560px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:32px 28px}
+  .marca{display:flex; align-items:center; gap:10px; font:700 17px var(--serif); color:var(--ink); text-decoration:none; margin-bottom:22px}
+  .marca img{width:34px; height:34px}
+  .codigo{font:600 13px/1 system-ui,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  h1{font-size:clamp(26px,6vw,34px); line-height:1.15; margin:0 0 12px}
+  p{margin:0 0 16px; color:var(--muted)}
+  a{color:var(--enlace)}
+  form{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 18px}
+  input[type=search]{flex:1 1 220px; min-height:46px; padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--ink); font:16px system-ui,sans-serif}
+  .btn{display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:10px 18px; border-radius:10px; border:1px solid var(--line); background:transparent; color:var(--ink); font:600 16px system-ui,sans-serif; text-decoration:none; cursor:pointer}
+  .btn.prim{background:var(--acento); color:var(--acento-ink); border-color:transparent}
+  .acciones{display:flex; gap:10px; flex-wrap:wrap}
+  .solo-fenix{display:none}
+  :root.fenix .solo-fenix{display:block}
+  :root.fenix .solo-sitio{display:none}
+  :root.fenix .acciones.solo-fenix, :root.fenix form.solo-fenix{display:flex}
+</style>
+</head>
+<body>
+<main>
+  <!-- Sitio personal -->
+  <div class="solo-sitio">
+    <a class="marca" href="/"><img src="/favicon.svg" alt="" width="34" height="34">Tomás Alcalde</a>
+    <p class="codigo">Error 404</p>
+    <h1>Esta página no existe</h1>
+    <p>Puede que la dirección esté mal escrita o que la página se haya movido.</p>
+    <div class="acciones"><a class="btn prim" href="/">Ir al inicio</a><a class="btn" href="/fenix/">Proyecto Fénix</a></div>
+  </div>
+
+  <!-- Proyecto Fénix -->
+  <div class="solo-fenix">
+    <a class="marca" href="/fenix/"><img src="/fenix/img/favicon.svg" alt="" width="34" height="34">Proyecto Fénix</a>
+    <p class="codigo" data-en="Error 404">Error 404</p>
+    <h1 data-en="This page is not in the library">Esta página no está en la biblioteca</h1>
+    <p data-en="The address may be mistyped, or the book may have changed address. Search for it in the library:">Puede que la dirección esté mal escrita o que el libro haya cambiado de dirección. Búscalo en la biblioteca:</p>
+  </div>
+  <form class="solo-fenix" action="/fenix/" method="get" role="search">
+    <input type="hidden" name="l" value="es" id="idioma">
+    <input type="search" name="q" id="q" placeholder="Título o autor" data-en-ph="Title or author" aria-label="Buscar título o autor">
+    <button class="btn prim" type="submit" data-en="Search">Buscar</button>
+  </form>
+  <div class="acciones solo-fenix">
+    <a class="btn" href="/fenix/#biblioteca" data-en="Browse the library">Ver la biblioteca</a>
+    <a class="btn" href="/fenix/#todos" data-en="Search any book">Buscar cualquier libro</a>
+  </div>
+</main>
+<script>
+(function(){
+  var r = document.documentElement;
+  if (!r.classList.contains("fenix")) return;
+  document.title = r.lang === "en" ? "Page not found · Proyecto Fénix" : "Página no encontrada · Proyecto Fénix";
+  var icono = document.querySelector('link[rel="icon"]');
+  if (icono){ icono.href = "/fenix/img/favicon.svg"; icono.type = "image/svg+xml"; }
+  document.getElementById("idioma").value = r.lang === "en" ? "en" : "es";
+  if (r.lang === "en"){
+    [].forEach.call(document.querySelectorAll("[data-en]"), function(el){ el.textContent = el.getAttribute("data-en"); });
+    var q0 = document.getElementById("q");
+    q0.placeholder = q0.getAttribute("data-en-ph"); q0.setAttribute("aria-label", q0.getAttribute("data-en-ph"));
+  }
+  // La dirección rota suele traer el nombre del libro (/fenix/libro/don-quijote/): se propone como búsqueda.
+  var pedazos = decodeURIComponent(location.pathname).replace(/^\/fenix\//, "").split("/").filter(function(s){
+    return s && !/^(libro|libros|en|es|index\.html)$/i.test(s);
+  });
+  var q = document.getElementById("q");
+  if (pedazos.length) q.value = pedazos[pedazos.length - 1].replace(/\.(html?|epub|pdf)$/i, "").replace(/[-_]+/g, " ").trim();
+})();
+</script>
+</body>
+</html>
