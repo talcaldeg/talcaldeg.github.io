@@ -134,7 +134,7 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     <p class="label">Modelos que ven lluvia en cada hora, próximas 24 horas</p>
     <div class="chart-wrap" id="grafico"></div>
     <div class="legend">
-      <span><i style="background:var(--rain)"></i>lluvia probable (2 de cada 3 modelos)</span>
+      <span><i style="background:var(--rain)"></i>lluvia probable (sobre la línea: 2 de cada 3 modelos)</span>
       <span><i style="background:var(--dry)"></i>menos acuerdo</span>
       <span><b style="color:var(--rain)">0,4</b> mm por hora (mediana)</span>
     </div>
@@ -265,7 +265,6 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     var svg = '<svg viewBox="0 0 ' + (win.length * W) + ' ' + (top + H + 44) + '" role="img" aria-label="Modelos que ven lluvia por hora">';
     var yl = top + H - H * 2 / 3;
     svg += '<line x1="0" x2="' + (win.length * W) + '" y1="' + yl + '" y2="' + yl + '" stroke="var(--rain)" stroke-width="0.8" stroke-dasharray="4 3"/>';
-    svg += '<text x="' + (win.length * W - 1) + '" y="' + (yl - 3) + '" text-anchor="end" style="fill:var(--rain)">paraguas desde 2 de cada 3</text>';
     win.forEach(function (h, i) {
       var x = i * W, bh = Math.max(1.5, h.n ? H * h.votos / h.n : 0);
       var col = llueve(h) ? "var(--rain)" : "var(--dry)";
