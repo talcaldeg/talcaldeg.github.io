@@ -1,5 +1,5 @@
 // Red primero: siempre la versión publicada; el caché solo cubre un arranque sin señal.
-var CACHE = "paraguas-v1";
+var CACHE = "paraguas-v2";
 var ARCHIVOS = ["./", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-180.png"];
 
 self.addEventListener("install", function (e) {

@@ -131,12 +131,12 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
   </div>
 
   <section class="card">
-    <p class="label">Probabilidad de lluvia por hora (%), próximas 24 horas</p>
+    <p class="label">Modelos que ven lluvia en cada hora, próximas 24 horas</p>
     <div class="chart-wrap" id="grafico"></div>
     <div class="legend">
-      <span><i style="background:var(--rain)"></i>lluvia probable</span>
-      <span><i style="background:var(--dry)"></i>baja probabilidad</span>
-      <span><b style="color:var(--rain)">0.4</b> milímetros</span>
+      <span><i style="background:var(--rain)"></i>lluvia probable (2 de cada 3 modelos)</span>
+      <span><i style="background:var(--dry)"></i>menos acuerdo</span>
+      <span><b style="color:var(--rain)">0,4</b> mm (mediana)</span>
     </div>
   </section>
 
@@ -147,8 +147,8 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
   </section>
 
   <div class="foot">
-    <p>Pronóstico (no medición) de <a href="https://open-meteo.com" style="color:var(--rain)">Open-Meteo</a>, que combina modelos de servicios meteorológicos oficiales. Las dos comunas están a pocos kilómetros y a veces dan casi lo mismo.</p>
-    <p>Criterio: «lleve paraguas» si alguna hora tiene 40% o más de probabilidad, o 0,3 mm o más. «Parca» si la sensación térmica baja de 13 °.</p>
+    <p>Pronóstico (no medición) de seis modelos (europeo ECMWF, estadounidense GFS, alemán ICON, francés, canadiense y japonés) más el modelo de inteligencia artificial del centro europeo (AIFS), vía <a href="https://open-meteo.com" style="color:var(--rain)">Open-Meteo</a>. Las dos comunas están a pocos kilómetros y a veces dan casi lo mismo.</p>
+    <p>Criterio: una hora tiene lluvia probable si 2 de cada 3 modelos con dato ponen 0,2 mm o más; un día de la semana lleva paraguas si AIFS suma 3 mm o más. Fueron las reglas que mejor acertaron contra la lluvia observada en Pudahuel y Tobalaba entre abril y octubre de 2026 (el día AIFS detectó 43 de 44 días de lluvia). Un solo modelo, aunque sea el europeo, no basta: el 23 de octubre anunciaba lluvia en la tarde y llovió solo de madrugada. «Parca» si la sensación térmica baja de 13 °.</p>
     <p id="estado"></p>
   </div>
 </main>
@@ -177,15 +177,29 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     return v("year") + "-" + v("month") + "-" + v("day") + "T" + v("hour") + ":00";
   }
 
-  function llueve(h) { return h.prob >= 40 || h.mm >= 0.3; }
+  // Reglas verificadas contra los METAR de Pudahuel y Tobalaba, abril-octubre 2026
+  var MODELOS = ["ecmwf_ifs025", "gfs_seamless", "icon_seamless", "meteofrance_seamless", "gem_seamless", "jma_seamless"];
+  var AIFS = "ecmwf_aifs025_single";
+  var MM_HORA = 0.2, AIFS_DIA = 3;
+
+  function mediana(xs) {
+    if (!xs.length) return 0;
+    var s = xs.slice().sort(function (a, b) { return a - b; }), m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  }
+
+  // Lluvia probable: 2 de cada 3 modelos con dato (4 de 6) sobre MM_HORA; con menos de 3 modelos no se opina
+  function llueve(h) { return h.n >= 3 && h.votos >= Math.ceil(h.n * 2 / 3); }
 
   function resumir(horas) {
-    var r = { maxProb: 0, horaMax: "", maxMm: 0, sumMm: 0, rangos: [], minSens: 99, maxSens: -99, rafaga: 0 };
+    var r = { maxVotos: 0, maxN: 0, horaMax: "", maxMm: 0, sumMm: 0, aifs: 0, rangos: [], minSens: 99, maxSens: -99, rafaga: 0 };
     var ini = null, ult = null;
     horas.forEach(function (h) {
-      if (h.prob > r.maxProb) { r.maxProb = h.prob; r.horaMax = hh(h.t); }
+      if (h.votos > r.maxVotos) { r.maxVotos = h.votos; r.horaMax = hh(h.t); }
+      if (h.n > r.maxN) r.maxN = h.n;
       if (h.mm > r.maxMm) r.maxMm = h.mm;
       r.sumMm += h.mm;
+      r.aifs += h.aifs;
       if (h.sens < r.minSens) r.minSens = h.sens;
       if (h.sens > r.maxSens) r.maxSens = h.sens;
       if (h.rafaga > r.rafaga) r.rafaga = h.rafaga;
@@ -222,14 +236,14 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
       return {
         clase: "alert", pill: "Paraguas: sí",
         big: "Lleve paraguas",
-        sub: "Lluvia probable " + textoRangos(r) + ". Probabilidad máxima " + r.maxProb + "%, acumulado cerca de " + mm(r.sumMm) + " mm."
+        sub: "Lluvia probable " + textoRangos(r) + ". Hasta " + r.maxVotos + " de " + r.maxN + " modelos la ven, acumulado cerca de " + mm(r.sumMm) + " mm."
       };
     }
-    if (r.maxProb >= 20) {
+    if (r.maxVotos >= 2) {
       return {
         clase: "warn", pill: "Paraguas: opcional",
         big: "Poco probable",
-        sub: "Hasta " + r.maxProb + "% a las " + r.horaMax + ". Si sale temprano o vuelve tarde, mejor llevarlo."
+        sub: "Solo " + r.maxVotos + " de " + r.maxN + " modelos ven lluvia, a las " + r.horaMax + ". Si sale temprano o vuelve tarde, mejor llevarlo."
       };
     }
     return { clase: "ok", pill: "Paraguas: no", big: "No necesita paraguas", sub: "No se espera lluvia el resto del día." };
@@ -248,12 +262,12 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
   function dibujar(horas, ahoraIdx) {
     var win = horas.slice(ahoraIdx, ahoraIdx + 24);
     var W = 16, H = 100, top = 6;
-    var svg = '<svg viewBox="0 0 ' + (win.length * W) + ' ' + (top + H + 34) + '" role="img" aria-label="Probabilidad de lluvia por hora">';
-    var yl = top + H - 40;
+    var svg = '<svg viewBox="0 0 ' + (win.length * W) + ' ' + (top + H + 34) + '" role="img" aria-label="Modelos que ven lluvia por hora">';
+    var yl = top + H - H * 2 / 3;
     svg += '<line x1="0" x2="' + (win.length * W) + '" y1="' + yl + '" y2="' + yl + '" stroke="var(--rain)" stroke-width="0.8" stroke-dasharray="4 3"/>';
-    svg += '<text x="' + (win.length * W - 1) + '" y="' + (yl - 3) + '" text-anchor="end" style="fill:var(--rain)">paraguas desde 40%</text>';
+    svg += '<text x="' + (win.length * W - 1) + '" y="' + (yl - 3) + '" text-anchor="end" style="fill:var(--rain)">paraguas desde 2 de cada 3</text>';
     win.forEach(function (h, i) {
-      var x = i * W, bh = Math.max(1.5, h.prob);
+      var x = i * W, bh = Math.max(1.5, h.n ? H * h.votos / h.n : 0);
       var col = llueve(h) ? "var(--rain)" : "var(--dry)";
       svg += '<rect x="' + (x + 2) + '" y="' + (top + H - bh) + '" width="' + (W - 4) + '" height="' + bh + '" rx="2" fill="' + col + '"/>';
       var hora = parseInt(h.t.slice(11, 13), 10);
@@ -272,13 +286,26 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     $("grafico").innerHTML = svg;
   }
 
-  function pintar(d) {
+  function pintar(d, pm) {
     var t = d.hourly.time, horas = [];
+    var ph = pm.hourly, pos = {};
+    ph.time.forEach(function (x, j) { pos[x] = j; });
     for (var i = 0; i < t.length; i++) {
+      var j = pos[t[i]], votos = 0, vals = [];
+      if (j !== undefined) {
+        MODELOS.forEach(function (m) {
+          var v = ph["precipitation_" + m][j];
+          if (v === null || v === undefined) return;
+          vals.push(v);
+          if (v >= MM_HORA) votos++;
+        });
+      }
       horas.push({
         t: t[i],
-        prob: d.hourly.precipitation_probability[i] || 0,
-        mm: d.hourly.precipitation[i] || 0,
+        votos: votos,
+        n: vals.length,
+        mm: mediana(vals),
+        aifs: j !== undefined ? ph["precipitation_" + AIFS][j] || 0 : 0,
         temp: d.hourly.temperature_2m[i],
         sens: d.hourly.apparent_temperature[i],
         rafaga: d.hourly.wind_gusts_10m[i] || 0
@@ -312,14 +339,18 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
       var dh = horas.filter(function (h) { return h.t.slice(0, 10) === f; });
       var rd = resumir(dh);
       var nombre = n === 0 ? "mañana" : new Intl.DateTimeFormat("es-CL", { timeZone: "UTC", weekday: "short", day: "numeric" }).format(new Date(f + "T12:00:00Z")).replace(".", "");
-      var cls, txt;
-      if (rd.rangos.length) { cls = "v-si"; txt = "Paraguas"; conLluvia.push(nombre); }
-      else if (rd.maxProb >= 20) { cls = "v-op"; txt = "Opcional"; }
-      else { cls = "v-no"; txt = "Sin lluvia"; }
-      var det = rd.rangos.length ? rangoDia(rd) : rd.maxProb >= 20 ? "hasta " + rd.maxProb + "% a las " + rd.horaMax : "";
+      // El día lo decide AIFS (3 mm o más); el consenso horario solo dice a qué hora
+      var cls, txt, det;
+      if (rd.aifs >= AIFS_DIA) {
+        cls = "v-si"; txt = "Paraguas"; conLluvia.push(nombre);
+        det = rd.rangos.length ? rangoDia(rd) : "hora incierta";
+      } else if (rd.rangos.length || rd.aifs >= 1) {
+        cls = "v-op"; txt = "Opcional";
+        det = rd.rangos.length ? rangoDia(rd) : "lluvia débil posible";
+      } else { cls = "v-no"; txt = "Sin lluvia"; det = ""; }
       var tmin = Math.min.apply(null, dh.map(function (h) { return h.temp; }));
       var tmax = Math.max.apply(null, dh.map(function (h) { return h.temp; }));
-      lista += '<li><span class="d">' + nombre + '</span><span class="v"><span class="' + cls + '">' + txt + '</span>' + (det ? '<br><span class="sub2">' + det + (rd.sumMm >= 0.1 ? ", " + mm(rd.sumMm) + " mm" : "") + '</span>' : '') + '</span><span class="t">' + rd.maxProb + '%<br>' + num(tmin) + '° / ' + num(tmax) + '°</span></li>';
+      lista += '<li><span class="d">' + nombre + '</span><span class="v"><span class="' + cls + '">' + txt + '</span>' + (det ? '<br><span class="sub2">' + det + (rd.sumMm >= 0.1 ? ", " + mm(rd.sumMm) + " mm" : "") + '</span>' : '') + '</span><span class="t">' + (rd.maxN ? rd.maxVotos + '/' + rd.maxN + ' modelos' : '-') + '<br>' + num(tmin) + '° / ' + num(tmax) + '°</span></li>';
     });
     $("dias").innerHTML = lista;
     $("semana-res").textContent = conLluvia.length ? "Lleve paraguas " + conLluvia.length + (conLluvia.length === 1 ? " de los próximos 7 días" : " de los próximos 7 días") : "Ningún otro día requiere paraguas";
@@ -334,13 +365,19 @@ button.link { background: none; border: 0; color: var(--rain); font: inherit; te
     var p = COMUNAS[comuna];
     var url = "https://api.open-meteo.com/v1/forecast?latitude=" + p.lat + "&longitude=" + p.lon +
       "&current=temperature_2m,apparent_temperature,precipitation" +
-      "&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,wind_gusts_10m" +
+      "&hourly=temperature_2m,apparent_temperature,wind_gusts_10m" +
       "&timezone=America%2FSantiago&forecast_days=8";
+    var urlModelos = "https://api.open-meteo.com/v1/forecast?latitude=" + p.lat + "&longitude=" + p.lon +
+      "&hourly=precipitation&models=" + MODELOS.concat([AIFS]).join(",") +
+      "&timezone=America%2FSantiago&forecast_days=8";
+    function pedir(u) {
+      return fetch(u).then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      });
+    }
     $("estado").textContent = "Consultando…";
-    fetch(url).then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.json();
-    }).then(pintar).catch(function (e) {
+    Promise.all([pedir(url), pedir(urlModelos)]).then(function (rs) { pintar(rs[0], rs[1]); }).catch(function (e) {
       $("estado").innerHTML = '<span class="err">No se pudo obtener el pronóstico (' + e.message + ').</span> <button class="link" type="button" id="reintento">Reintentar</button>';
       var b = $("reintento"); if (b) b.addEventListener("click", cargar);
     });
